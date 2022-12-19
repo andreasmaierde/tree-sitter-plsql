@@ -716,15 +716,15 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "comment_ml"
+          "name": "_comment_ml"
         },
         {
           "type": "SYMBOL",
-          "name": "comment_sl"
+          "name": "_comment_sl"
         }
       ]
     },
-    "comment_ml": {
+    "_comment_ml": {
       "type": "TOKEN",
       "content": {
         "type": "SEQ",
@@ -744,7 +744,7 @@
         ]
       }
     },
-    "comment_sl": {
+    "_comment_sl": {
       "type": "TOKEN",
       "content": {
         "type": "SEQ",

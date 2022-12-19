@@ -160,13 +160,13 @@ module.exports = grammar({
         ),
         identifier: $ => choice($._unquoted_identifier, $._quoted_identifier),
         comment: $ => choice(
-            $.comment_ml,
-            $.comment_sl,
+            $._comment_ml,
+            $._comment_sl,
         ),
-        comment_ml: $ => token(
+        _comment_ml: $ => token(
             seq("/*", /[^*]*\*+([^/*][^*]*\*+)*/, "/")
         ),
-        comment_sl: $ => token(
+        _comment_sl: $ => token(
             seq("--", /.*/)
         ),
     },

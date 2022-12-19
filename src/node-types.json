@@ -162,21 +162,7 @@
   {
     "type": "comment",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "comment_ml",
-          "named": true
-        },
-        {
-          "type": "comment_sl",
-          "named": true
-        }
-      ]
-    }
+    "fields": {}
   },
   {
     "type": "compile_clause",
@@ -298,14 +284,6 @@
   {
     "type": "body",
     "named": false
-  },
-  {
-    "type": "comment_ml",
-    "named": true
-  },
-  {
-    "type": "comment_sl",
-    "named": true
   },
   {
     "type": "compile",
