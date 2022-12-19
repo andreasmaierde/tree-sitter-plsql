@@ -1,11 +1,354 @@
 [
   {
-    "type": "source_file",
+    "type": "alter_function",
+    "named": true,
+    "fields": {
+      "obj_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "compile_clause",
+          "named": true
+        },
+        {
+          "type": "editionable_noneditionable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_library",
+    "named": true,
+    "fields": {
+      "obj_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "compile_clause",
+          "named": true
+        },
+        {
+          "type": "editionable_noneditionable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_package",
+    "named": true,
+    "fields": {
+      "obj_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "compile_clause",
+          "named": true
+        },
+        {
+          "type": "editionable_noneditionable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_procedure",
+    "named": true,
+    "fields": {
+      "obj_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "compile_clause",
+          "named": true
+        },
+        {
+          "type": "editionable_noneditionable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "comment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "comment_ml",
+          "named": true
+        },
+        {
+          "type": "comment_sl",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "compile_clause",
+    "named": true,
+    "fields": {
+      "compile_parameter_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "compile_parameter_value": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "reuse_settings",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "editionable_noneditionable",
     "named": true,
     "fields": {}
   },
   {
-    "type": "hello",
+    "type": "identifier",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "reuse_settings",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "source_file",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "sql_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sql_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "alter_function",
+          "named": true
+        },
+        {
+          "type": "alter_library",
+          "named": true
+        },
+        {
+          "type": "alter_package",
+          "named": true
+        },
+        {
+          "type": "alter_procedure",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "\"",
+    "named": false
+  },
+  {
+    "type": ".",
+    "named": false
+  },
+  {
+    "type": ";",
+    "named": false
+  },
+  {
+    "type": "=",
+    "named": false
+  },
+  {
+    "type": "alter",
+    "named": false
+  },
+  {
+    "type": "body",
+    "named": false
+  },
+  {
+    "type": "comment_ml",
+    "named": true
+  },
+  {
+    "type": "comment_sl",
+    "named": true
+  },
+  {
+    "type": "compile",
+    "named": false
+  },
+  {
+    "type": "debug",
+    "named": false
+  },
+  {
+    "type": "editionable",
+    "named": false
+  },
+  {
+    "type": "function",
+    "named": false
+  },
+  {
+    "type": "library",
+    "named": false
+  },
+  {
+    "type": "noneditionable",
+    "named": false
+  },
+  {
+    "type": "package",
+    "named": false
+  },
+  {
+    "type": "procedure",
+    "named": false
+  },
+  {
+    "type": "reuse",
+    "named": false
+  },
+  {
+    "type": "settings",
+    "named": false
+  },
+  {
+    "type": "specification",
     "named": false
   }
 ]
