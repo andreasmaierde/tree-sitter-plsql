@@ -2,4 +2,7 @@
 Oracle PL/SQL grammar for tree-sitter
 
 # Status
-At the moment no Oracle PL/SQL code will be parsed, but I hope that will change very fast
+Inital development - many changes will be made and things will possible break in future.
+
+The first very simple Oracle statements will be parsed.
+
