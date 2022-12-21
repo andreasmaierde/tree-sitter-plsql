@@ -1,5 +1,50 @@
 [
   {
+    "type": "accessible_by_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "accessor",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "accessor",
+    "named": true,
+    "fields": {
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "unit_kind",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "alter_function",
     "named": true,
     "fields": {
@@ -160,6 +205,11 @@
     }
   },
   {
+    "type": "byte_char",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "comment",
     "named": true,
     "fields": {}
@@ -183,7 +233,23 @@
         "required": false,
         "types": [
           {
-            "type": "identifier",
+            "type": "keyword_false",
+            "named": true
+          },
+          {
+            "type": "keyword_null",
+            "named": true
+          },
+          {
+            "type": "keyword_true",
+            "named": true
+          },
+          {
+            "type": "literal_number",
+            "named": true
+          },
+          {
+            "type": "literal_string",
             "named": true
           }
         ]
@@ -201,9 +267,104 @@
     }
   },
   {
+    "type": "create_package",
+    "named": true,
+    "fields": {
+      "obj_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "accessible_by_clause",
+          "named": true
+        },
+        {
+          "type": "default_collation_clause",
+          "named": true
+        },
+        {
+          "type": "editionable_noneditionable",
+          "named": true
+        },
+        {
+          "type": "end_obj",
+          "named": true
+        },
+        {
+          "type": "invoker_rights_clause",
+          "named": true
+        },
+        {
+          "type": "is_as",
+          "named": true
+        },
+        {
+          "type": "sharing_clause",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "datatype",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "byte_char",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "default_collation_clause",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "editionable_noneditionable",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "end_obj",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "identifier",
@@ -211,7 +372,47 @@
     "fields": {}
   },
   {
+    "type": "invoker_rights_clause",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "is_as",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "keyword_false",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "keyword_null",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "keyword_true",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "literal_number",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "literal_string",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "reuse_settings",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "sharing_clause",
     "named": true,
     "fields": {}
   },
@@ -257,12 +458,33 @@
         {
           "type": "alter_procedure",
           "named": true
+        },
+        {
+          "type": "create_package",
+          "named": true
         }
       ]
     }
   },
   {
+    "type": "unit_kind",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "\"",
+    "named": false
+  },
+  {
+    "type": "(",
+    "named": false
+  },
+  {
+    "type": ")",
+    "named": false
+  },
+  {
+    "type": ",",
     "named": false
   },
   {
@@ -278,7 +500,47 @@
     "named": false
   },
   {
+    "type": "accessible",
+    "named": false
+  },
+  {
     "type": "alter",
+    "named": false
+  },
+  {
+    "type": "anydata",
+    "named": false
+  },
+  {
+    "type": "anydataset",
+    "named": false
+  },
+  {
+    "type": "anytype",
+    "named": false
+  },
+  {
+    "type": "as",
+    "named": false
+  },
+  {
+    "type": "authid",
+    "named": false
+  },
+  {
+    "type": "bfile",
+    "named": false
+  },
+  {
+    "type": "binary_double",
+    "named": false
+  },
+  {
+    "type": "binary_float",
+    "named": false
+  },
+  {
+    "type": "blob",
     "named": false
   },
   {
@@ -286,7 +548,51 @@
     "named": false
   },
   {
+    "type": "by",
+    "named": false
+  },
+  {
+    "type": "byte",
+    "named": false
+  },
+  {
+    "type": "char",
+    "named": false
+  },
+  {
+    "type": "character",
+    "named": false
+  },
+  {
+    "type": "clob",
+    "named": false
+  },
+  {
+    "type": "collation",
+    "named": false
+  },
+  {
     "type": "compile",
+    "named": false
+  },
+  {
+    "type": "create",
+    "named": false
+  },
+  {
+    "type": "current_user",
+    "named": false
+  },
+  {
+    "type": "cursor",
+    "named": false
+  },
+  {
+    "type": "date",
+    "named": false
+  },
+  {
+    "type": "day",
     "named": false
   },
   {
@@ -294,7 +600,39 @@
     "named": false
   },
   {
+    "type": "dec",
+    "named": false
+  },
+  {
+    "type": "decimal",
+    "named": false
+  },
+  {
+    "type": "default",
+    "named": false
+  },
+  {
+    "type": "definer",
+    "named": false
+  },
+  {
+    "type": "double",
+    "named": false
+  },
+  {
     "type": "editionable",
+    "named": false
+  },
+  {
+    "type": "end",
+    "named": false
+  },
+  {
+    "type": "false",
+    "named": false
+  },
+  {
+    "type": "float",
     "named": false
   },
   {
@@ -302,7 +640,55 @@
     "named": false
   },
   {
+    "type": "in",
+    "named": false
+  },
+  {
+    "type": "int",
+    "named": false
+  },
+  {
+    "type": "integer",
+    "named": false
+  },
+  {
+    "type": "interval",
+    "named": false
+  },
+  {
+    "type": "is",
+    "named": false
+  },
+  {
     "type": "library",
+    "named": false
+  },
+  {
+    "type": "local",
+    "named": false
+  },
+  {
+    "type": "long",
+    "named": false
+  },
+  {
+    "type": "metadata",
+    "named": false
+  },
+  {
+    "type": "month",
+    "named": false
+  },
+  {
+    "type": "nchar",
+    "named": false
+  },
+  {
+    "type": "nclob",
+    "named": false
+  },
+  {
+    "type": "none",
     "named": false
   },
   {
@@ -310,7 +696,31 @@
     "named": false
   },
   {
+    "type": "null",
+    "named": false
+  },
+  {
+    "type": "number",
+    "named": false
+  },
+  {
+    "type": "numeric",
+    "named": false
+  },
+  {
+    "type": "nvarchar2",
+    "named": false
+  },
+  {
+    "type": "or",
+    "named": false
+  },
+  {
     "type": "package",
+    "named": false
+  },
+  {
+    "type": "precision",
     "named": false
   },
   {
@@ -318,7 +728,39 @@
     "named": false
   },
   {
+    "type": "raw",
+    "named": false
+  },
+  {
+    "type": "real",
+    "named": false
+  },
+  {
+    "type": "replace",
+    "named": false
+  },
+  {
     "type": "reuse",
+    "named": false
+  },
+  {
+    "type": "rowid",
+    "named": false
+  },
+  {
+    "type": "sdo_geometry",
+    "named": false
+  },
+  {
+    "type": "sdo_georaster",
+    "named": false
+  },
+  {
+    "type": "sdo_topo_geometry",
+    "named": false
+  },
+  {
+    "type": "second",
     "named": false
   },
   {
@@ -326,7 +768,79 @@
     "named": false
   },
   {
+    "type": "smallint",
+    "named": false
+  },
+  {
     "type": "specification",
+    "named": false
+  },
+  {
+    "type": "sys",
+    "named": false
+  },
+  {
+    "type": "time",
+    "named": false
+  },
+  {
+    "type": "timestamp",
+    "named": false
+  },
+  {
+    "type": "to",
+    "named": false
+  },
+  {
+    "type": "trigger",
+    "named": false
+  },
+  {
+    "type": "true",
+    "named": false
+  },
+  {
+    "type": "type",
+    "named": false
+  },
+  {
+    "type": "uritype",
+    "named": false
+  },
+  {
+    "type": "urowid",
+    "named": false
+  },
+  {
+    "type": "using_nls_comp",
+    "named": false
+  },
+  {
+    "type": "varchar",
+    "named": false
+  },
+  {
+    "type": "varchar2",
+    "named": false
+  },
+  {
+    "type": "varying",
+    "named": false
+  },
+  {
+    "type": "with",
+    "named": false
+  },
+  {
+    "type": "xmltype",
+    "named": false
+  },
+  {
+    "type": "year",
+    "named": false
+  },
+  {
+    "type": "zone",
     "named": false
   }
 ]
