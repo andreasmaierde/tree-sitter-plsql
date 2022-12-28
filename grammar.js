@@ -3,7 +3,7 @@
 -----------------------------------------------------------------------------------------------*/
 
 function reservedWord(word) {
-    return alias(reserved(caseInsensitive(word)), word)
+     return reserved(caseInsensitive(word.toLowerCase()))
 }
 
 function reserved(regex) {
@@ -12,7 +12,7 @@ function reserved(regex) {
 
 function caseInsensitive(word) {
     return word.split('')
-        .map(letter => `[${letter.toLowerCase()}${letter.toUpperCase()}]`)
+        .map(letter => `[${letter}${letter.toUpperCase()}]`)
         .join('')
 }
 
@@ -40,16 +40,27 @@ const QUOTE_DOUBLE = '"'
 module.exports = grammar({
     name: 'plsql',
     conflicts: $ => [
+        [$.expression],
+        [$._expression_boolean],
+        [$.expression_boolean_ref],
+        [$._other_boolean_form_expression_in],
+        [$._other_boolean_form_expression_between],
+        [$._other_boolean_form_expression,$._other_boolean_form_expression_in],
+        [$._other_boolean_form_expression,$._other_boolean_form_expression_relational_operation],
+        [$._other_boolean_form_expression,$._other_boolean_form_expression_between],
+        [$.conditional_predicate],
     ],
     extras: $ => [
-        $.comment,
+        $.comment_sl,
+        $.comment_ml,
         /[\s\f\uFEFF\u2060\u200B]|\\\r?\n/,
     ],
     rules: {
         source_file: $ => repeat($._element),
         _element: $ => choice(
             $.sql_statement,
-            $.comment,
+            $.comment_ml,
+            $.comment_sl,
         ),
         sql_statement: $ => seq(
             choice(
@@ -59,8 +70,8 @@ module.exports = grammar({
             optional(SEMICOLON),
         ),
         _ddl_statement: $ => choice(
-            $._alter_statement,
-            $._create_statement,
+             $._alter_statement,
+             $._create_statement,
             // $._drop_statement,
         ),
         _create_statement: $ => seq(
@@ -70,15 +81,9 @@ module.exports = grammar({
             ),
         ),
         create_package: $ => seq(
-            reservedWord("create"),
-            optional(
-                seq(
-                    reservedWord("or"),
-                    reservedWord("replace"),
-                ),
-            ),
+            $.create_obj,
             optional($.editionable_noneditionable),
-            reservedWord("package"),
+            $.kw_package,
             optional($._schema),
             field("obj_name", $.identifier),
             optional($.sharing_clause),
@@ -91,7 +96,7 @@ module.exports = grammar({
             ),
             $.is_as,
             repeat1(
-                $.package_item_list,
+                $._package_item_list,
             ),
             $.end_obj,
         ),
@@ -106,8 +111,8 @@ module.exports = grammar({
             ),
         ),
         alter_package: $ => seq(
-            reservedWord("alter"),
-            reservedWord("package"),
+            $.kw_alter,
+            $.kw_package,
             optional($._schema),
             field("obj_name", $.identifier),
             repeat(
@@ -118,8 +123,8 @@ module.exports = grammar({
             ),
         ),
         alter_procedure: $ => seq(
-            reservedWord("alter"),
-            reservedWord("procedure"),
+            $.kw_alter,
+            $.kw_procedure,
             optional($._schema),
             field("obj_name", $.identifier),
             repeat(
@@ -130,8 +135,8 @@ module.exports = grammar({
             ),
         ),
         alter_function: $ => seq(
-            reservedWord("alter"),
-            reservedWord("function"),
+            $.kw_alter,
+            $.kw_function,
             optional($._schema),
             field("obj_name", $.identifier),
             repeat(
@@ -142,8 +147,8 @@ module.exports = grammar({
             ),
         ),
         alter_library: $ => seq(
-            reservedWord("alter"),
-            reservedWord("library"),
+            $.kw_alter,
+            $.kw_library,
             optional($._schema),
             field("obj_name", $.identifier),
             repeat(
@@ -155,48 +160,48 @@ module.exports = grammar({
 
         ),
         compile_clause: $ => seq(
-            reservedWord("compile"),
-            optional(reservedWord("debug")),
+            $.kw_compile,
+            optional($.kw_debug),
             optional(
                 choice(
-                    reservedWord("package"),
-                    reservedWord("specification"),
-                    reservedWord("body"),
+                    $.kw_package,
+                    $.kw_specification,
+                    $.kw_body,
                 ),
             ),
-            repeat($._compiler_parameter_clause),
+            repeat($.compiler_parameter_clause),
             optional($.reuse_settings),
         ),
-        _compiler_parameter_clause: $ => seq(
+        compiler_parameter_clause: $ => seq(
             field("compile_parameter_name", $.identifier),
             EQUAL,
             field("compile_parameter_value", $._literal),
         ),
         editionable_noneditionable: $ => choice(
-            reservedWord("editionable"),
-            reservedWord("noneditionable"),
+            $.kw_editionable,
+            $.kw_noneditionable,
         ),
         sharing_clause: $ => choice(
-            reservedWord("metadata"),
-            reservedWord("none"),
+            $.kw_metadata,
+            $.kw_none,
         ),
         default_collation_clause: $ => seq(
-            reservedWord("default"),
-            reservedWord("collation"),
+            $.kw_default,
+            $.kw_collation,
             choice(
-                reservedWord("using_nls_comp"),
+                $.kw_using_nls_comp,
             )
         ),
         invoker_rights_clause: $ => seq(
-            reservedWord("authid"),
+            $.kw_authid,
             choice(
-                reservedWord("current_user"),
-                reservedWord("definer"),
+                $.kw_current_user,
+                $.kw_definer,
             )
         ),
         accessible_by_clause: $ => seq(
-            reservedWord("accessible"),
-            reservedWord("by"),
+            $.kw_accessible,
+            $.kw_by,
             BRACKET_LEFT,
             repeat1(
                 $.accessor,
@@ -209,52 +214,75 @@ module.exports = grammar({
             $.identifier,
         ),
         unit_kind: $ => choice(
-            reservedWord("function"),
-            reservedWord("procedure"),
-            reservedWord("package"),
-            reservedWord("trigger"),
-            reservedWord("type"),
+            $.kw_function,
+            $.kw_procedure,
+            $.kw_package,
+            $.kw_trigger,
+            $.kw_type,
         ),
         reuse_settings: $ => seq(
-            reservedWord("reuse"),
-            reservedWord("settings"),
+            $.kw_reuse,
+            $.kw_settings,
         ),
         _schema: $ => seq(
             field("schema_name",$.identifier),
             POINT,
         ),
         byte_char: $ => choice(
-            reservedWord("byte"),
-            reservedWord("char"),
+            $.kw_byte,
+            $.kw_char,
         ),
         is_as: $ => choice(
-            reservedWord("is"),
-            reservedWord("as"),
+            $.kw_is,
+            $.kw_as,
         ),
         end_obj: $ => seq(
-            reservedWord("end"),
+            $.kw_end,
             optional($.identifier),
             SEMICOLON,
         ),
-        package_item_list: $ => choice(
-            //$.package_function_declaration,
+        _package_item_list: $ => choice(
+            $.package_function_declaration,
             //$.package_procedure_declaration,
             //$.cursor_declaration,
             //$.type_definition,
             //$.item_declaration,
+        ),
+        create_obj: $ => seq(
+            $.kw_create,
+            optional(
+                seq(
+                    $.kw_or,
+                    $.kw_replace,
+                ),
+            ),
+        ),
+        package_function_declaration: $ => seq(
+            $.kw_function,
+            field("fnc_name", $.identifier),
+            optional($.parameter_declaration),
+            $.return_declaration,
+            repeat($.function_properties),
+            SEMICOLON,
+        ),
+        function_properties: $ => choice(
+            $.kw_deterministic,
+            $.kw_pipelined,
+            $.kw_parallel_enable,
+            $.kw_result_cache,
         ),
         _is_null_or_is_not_null: $ => choice(
             $.is_null,
             $.is_not_null,
         ),
         is_null: $ => seq(
-            reservedWord("is"),
-            reservedWord("null"),
+            $.kw_is,
+            $.kw_null,
         ),
         is_not_null: $ => seq(
-            reservedWord("is"),
-            reservedWord("not"),
-            reservedWord("null"),
+            $.kw_is,
+            $.kw_not,
+            $.kw_null,
         ),
         expression: $ => seq(
             optional(BRACKET_LEFT),
@@ -265,9 +293,113 @@ module.exports = grammar({
             $._expression_boolean,
         ),
         _expression_boolean: $ => seq(
-            reservedWord("todo"),
-            //optional(reservedWord("not")),
-            //$.expression_boolean_elements,
+            optional($.kw_not),
+            $._expression_boolean_elements,
+        ),
+        _expression_boolean_elements: $ => choice(
+            $.literal_boolean,
+            $.expression_boolean_ref,
+            $.conditional_predicate,
+            $._other_boolean_form,
+        ),
+        expression_boolean_ref: $ => seq(
+            optional(
+                seq(
+                    field("ref_obj_name",$.identifier),
+                    POINT,
+                ),
+            ),
+            field("ref_element_name",$.identifier),
+            optional($.parameter),
+        ),
+        _other_boolean_form: $ => choice(
+            $._other_boolean_form_collection,
+            $._other_boolean_form_expression,
+            $._other_boolean_form_named_cursor,
+        ),
+        _other_boolean_form_collection: $ => seq(
+            $.identifier,
+            POINT,
+            $.kw_exists,
+            BRACKET_LEFT,
+            $._number,
+            BRACKET_RIGHT,
+        ),
+        _other_boolean_form_expression: $ => seq(
+            $.expression,
+            choice(
+                $._other_boolean_form_expression_is,
+                $._other_boolean_form_expression_between,
+                $._other_boolean_form_expression_in,
+                $._other_boolean_form_expression_like,
+                $._other_boolean_form_expression_relational_operation,
+            ),
+        ),
+        _other_boolean_form_named_cursor: $ => seq(
+            $.identifier,
+            PERCENT,
+            choice(
+                $.kw_found,
+                $.kw_isopen,
+                $.kw_notfound,
+            ),
+        ),
+        _other_boolean_form_expression_is: $ => choice(
+            $._is_null_or_is_not_null,
+        ),
+        _other_boolean_form_expression_between: $ => seq(
+            optional(
+                $.kw_not,
+            ),
+            $.kw_between,
+            $.expression,
+            $.kw_and,
+            $.expression,
+        ),
+        _other_boolean_form_expression_in: $ => seq(
+            optional(
+                $.kw_not,
+            ),
+            $.kw_in,
+            repeat1(
+                seq(
+                    $.expression,
+                    optional(
+                        COMMA,
+                    ),
+                ),
+            ),
+        ),
+        _other_boolean_form_expression_like: $ => seq(
+            optional(
+                $.kw_not,
+            ),
+            $.kw_like,
+            $.literal_string,
+        ),
+        _other_boolean_form_expression_relational_operation: $ => seq(
+            $.relational_operator,
+            $.expression,
+        ),
+        conditional_predicate: $ => choice(
+            $.kw_inserting,
+            $.kw_deleting,
+            seq(
+                $.kw_updating,
+                optional(
+                    seq(
+                        BRACKET_LEFT,
+                        QUOTE_SINGLE,
+                        $.identifier,
+                        QUOTE_SINGLE,
+                        BRACKET_RIGHT,
+                    ),
+                ),
+            ),
+        ),
+        return_declaration: $ => seq(
+            $.kw_return,
+            $.datatype,
         ),
         datatype: $ => choice(
             $.character_datatypes,
@@ -296,19 +428,19 @@ module.exports = grammar({
             $._ansi_supported_datatypes_national,
         ),
         _character_datatypes_char: $ => seq(
-            reservedWord("char"),
+            $.kw_char,
             optional($._size_byte_char),
         ),
         _character_datatypes_varchar2: $ => seq(
-            reservedWord("varchar2"),
+            $.kw_varchar2,
             $._size_byte_char,
         ),
         _character_datatypes_nchar: $ => seq(
-            reservedWord("nchar"),
+            $.kw_nchar,
             optional($._size),
         ),
         _character_datatypes_nvarchar2: $ => seq(
-            reservedWord("nvarchar2"),
+            $.kw_nvarchar2,
             $._size,
         ),
         number_datatypes: $ => choice(
@@ -319,29 +451,29 @@ module.exports = grammar({
             $._ansi_supported_datatypes_double_precision,
         ),
         _number_datatypes_keyword: $ => choice(
-            reservedWord("int"),
-            reservedWord("smallint"),
-            reservedWord("real"),
-            reservedWord("binary_float"),
-            reservedWord("binary_double"),
-            reservedWord("simple_float"),
-            reservedWord("simple_double"),
-            reservedWord("binary_interger"),
-            reservedWord("pls_interger"),
-            reservedWord("natural"),
-            reservedWord("naturaln"),
-            reservedWord("positive"),
-            reservedWord("positiven"),
-            reservedWord("signtype"),
-            reservedWord("simple_interger"),
-            reservedWord("integer"),
+            $.kw_int,
+            $.kw_smallint,
+            $.kw_real,
+            $.kw_binary_float,
+            $.kw_binary_double,
+            $.kw_simple_float,
+            $.kw_simple_double,
+            $.kw_binary_integer,
+            $.kw_pls_integer,
+            $.kw_natural,
+            $.kw_naturaln,
+            $.kw_positive,
+            $.kw_positiven,
+            $.kw_signtype,
+            $.kw_simple_integer,
+            $.kw_integer,
         ),
         _number_datatypes_number: $ => seq(
-            reservedWord("number"),
+            $.kw_number,
             optional($._size_precision_scale),
         ),
         _number_datatypes_float: $ => seq(
-            reservedWord("float"),
+            $.kw_float,
             optional($._size),
         ),
         long_and_raw_datatypes: $ => choice(
@@ -349,11 +481,11 @@ module.exports = grammar({
             $._long_and_raw_datatypes_raw,
         ),
         _long_and_raw_datatypes_long_raw: $ => seq(
-            reservedWord("long"),
-            optional(reservedWord("raw")),
+            $.kw_long,
+            optional($.kw_raw),
         ),
         _long_and_raw_datatypes_raw: $ => seq(
-            reservedWord("raw"),
+            $.kw_raw,
             $._size,
         ),
         datetime_datatypes: $ => choice(
@@ -363,45 +495,45 @@ module.exports = grammar({
             $._datetime_datatypes_date_interval_day,
         ),
         _datetime_datatypes_keyword: $ => choice(
-            reservedWord("date"),
+            $.kw_date,
         ),
         _datetime_datatypes_date_timestamp: $ => seq(
-            reservedWord("timestamp"),
+            $.kw_timestamp,
             optional($._size),
             optional(
                 seq(
-                    reservedWord("with"),
+                    $.kw_with,
                     optional(
-                        reservedWord("local"),
+                        $.kw_local,
                     ),
-                    reservedWord("time"),
-                    reservedWord("zone"),
+                    $.kw_time,
+                    $.kw_zone,
                 ),
             ),
         ),
         _datetime_datatypes_date_interval_year: $ => seq(
-            reservedWord("interval"),
-            reservedWord("year"),
+            $.kw_interval,
+            $.kw_year,
             optional($._size),
-            reservedWord("to"),
-            reservedWord("month"),
+            $.kw_to,
+            $.kw_month,
         ),
         _datetime_datatypes_date_interval_day: $ => seq(
-            reservedWord("interval"),
-            reservedWord("day"),
+            $.kw_interval,
+            $.kw_day,
             optional($._size),
-            reservedWord("to"),
-            reservedWord("second"),
+            $.kw_to,
+            $.kw_second,
             optional($._size),
         ),
         large_object_datatypes: $ => choice(
-            reservedWord("blob"),
-            reservedWord("clob"),
-            reservedWord("nclob"),
-            reservedWord("bfile"),
+            $.kw_blob,
+            $.kw_clob,
+            $.kw_nclob,
+            $.kw_bfile,
         ),
         rowid_datatypes: $ => choice(
-            reservedWord("rowid"),
+            $.kw_rowid,
             $._rowid_datatypes_urowid,
         ),
         referenced_datatypes: $ => choice(
@@ -410,95 +542,92 @@ module.exports = grammar({
         ),
         _referenced_datatypes_type: $ => seq(
             $.identifier,
-            optional(
-                seq(
-                    POINT,
-                    $.identifier,),
-            ),
+            POINT,
+            $.identifier,
             PERCENT,
-            reservedWord("type"),
+            $.kw_type,
         ),
         _referenced_datatypes_rowtype: $ => seq(
             $.identifier,
             PERCENT,
-            reservedWord("rowtype"),
+            $.kw_rowtype,
         ),
         logical_datatypes: $ => choice(
-            reservedWord("boolean"),
+            $.kw_boolean,
         ),
         subtype_datatypes: $ => choice(
             $.identifier,
         ),
         _rowid_datatypes_urowid: $ => seq(
-            reservedWord("urowid"),
+            $.kw_urowid,
             optional($._size),
         ),
         _ansi_supported_datatypes_character: $ => seq(
-            reservedWord("character"),
-            optional(reservedWord("varying")),
+            $.kw_character,
+            optional($.kw_varying),
             $._size,
         ),
         _ansi_supported_datatypes_char_nchar: $ => seq(
             choice(
-                reservedWord("char"),
-                reservedWord("nchar"),
+                $.kw_char,
+                $.kw_nchar,
             ),
-            reservedWord("varying"),
+            $.kw_varying,
             $._size,
         ),
         _ansi_supported_datatypes_varchar: $ => seq(
-            reservedWord("varchar"),
+            $.kw_varchar,
             $._size,
         ),
         _ansi_supported_datatypes_national: $ => seq(
-            reservedWord("varchar"),
+            $.kw_varchar,
             choice(
-                reservedWord("character"),
-                reservedWord("char"),
+                $.kw_char,
+                $.kw_character,
             ),
-            optional(reservedWord("varying")),
+            optional($.kw_varying),
             $._size,
         ),
         _ansi_supported_datatypes_numeric_decimal_dec: $ => seq(
             choice(
-                reservedWord("numeric"),
-                reservedWord("decimal"),
-                reservedWord("dec"),
+                $.kw_numeric,
+                $.kw_decimal,
+                $.kw_dec,
             ),
             optional($._size_precision_scale),
         ),
         _ansi_supported_datatypes_float: $ => seq(
-            reservedWord("float"),
+            $.kw_float,
             optional($._size),
         ),
         _ansi_supported_datatypes_double_precision: $ => seq(
-            reservedWord("double"),
-            reservedWord("precision"),
+            $.kw_double,
+            $.kw_precision,
         ),
         supplied_datatypes_any_types: $ => seq(
-            reservedWord("sys"),
+            $.kw_sys,
             POINT,
             choice(
-                reservedWord("anydata"),
-                reservedWord("anytype"),
-                reservedWord("anydataset"),
+                $.kw_anydata,
+                $.kw_anytype,
+                $.kw_anydataset,
             ),
         ),
         supplied_datatypes_xml_types: $ => choice(
-            reservedWord("xmltype"),
-            reservedWord("uritype"),
+            $.kw_xmltype,
+            $.kw_uritype,
         ),
         supplied_datatypes_spatial_types: $ => choice(
-            reservedWord("sdo_geometry"),
-            reservedWord("sdo_topo_geometry"),
-            reservedWord("sdo_georaster"),
+            $.kw_sdo_geometry,
+            $.kw_sdo_topo_geometry,
+            $.kw_sdo_georaster,
         ),
         object_datatypes: $ => choice(
-            reservedWord("json_element_t"),
-            reservedWord("json_array_t"),
-            reservedWord("json_object_t"),
-            reservedWord("json_scalar_t"),
-            reservedWord("json_key_list"),
+            $.kw_json_element_t,
+            $.kw_json_array_t,
+            $.kw_json_object_t,
+            $.kw_json_scalar_t,
+            $.kw_json_key_list,
         ),
         prc_fnc_call: $ => seq(
             optional(
@@ -510,6 +639,37 @@ module.exports = grammar({
             field("prc_fnc_name",$.identifier),
             optional($.parameter),
             SEMICOLON,
+        ),
+        parameter_declaration: $ => seq(
+            BRACKET_LEFT,
+            repeat($.parameter_declaration_element),
+            BRACKET_RIGHT,
+        ),
+        parameter_declaration_element: $ => seq(
+            $.identifier,
+            choice(
+                $.parameter_declaration_element_in,
+                $.parameter_declaration_element_in_out_or_out,
+            ),
+            optional(COMMA),
+        ),
+        parameter_declaration_element_in: $ => seq(
+            optional($.kw_in),
+            $.datatype,
+            optional($.default_expression),
+        ),
+        parameter_declaration_element_in_out_or_out: $ => seq(
+            optional($.kw_in),
+            $.kw_out,
+            optional($.kw_nocopy),
+            $.datatype,
+        ),
+        default_expression: $ => seq(
+            choice(
+                $.kw_default,
+                ASSIGNMENT,
+            ),
+            $.expression,
         ),
         parameter: $ => seq(
             BRACKET_LEFT,
@@ -595,9 +755,9 @@ module.exports = grammar({
             $.literal_boolean,
         ),
         literal_boolean: $ => choice(
-            reservedWord("true"),
-            reservedWord("false"),
-            reservedWord("null"),
+            $.kw_true,
+            $.kw_false,
+            $.kw_null,
         ),
         literal_number: $ => choice(
             $._number,
@@ -607,16 +767,136 @@ module.exports = grammar({
         ),
         _single_quote_string: $ => /'([^']''|''[^']|[^'])*'/,
         _number: $ => /\d+/,
-        comment: $ => choice(
-            $.comment_ml,
-            $.comment_sl,
-        ),
         comment_ml: $ => token(
             seq("/*", /[^*]*\*+([^/*][^*]*\*+)*/, "/")
         ),
         comment_sl: $ => token(
             seq("--", /.*/)
         ),
+        kw_create: _ => reservedWord("create"),
+        kw_alter: _ => reservedWord("alter"),
+        kw_package: _ => reservedWord("package"),
+        kw_function: _ => reservedWord("function"),
+        kw_procedure: _ => reservedWord("procedure"),
+        kw_trigger: _ => reservedWord("trigger"),
+        kw_type: _ => reservedWord("type"),
+        kw_rowtype: _ => reservedWord("rowtype"),
+        kw_library: _ => reservedWord("library"),
+        kw_true: _ => reservedWord("true"),
+        kw_false: _ => reservedWord("false"),
+        kw_null: _ => reservedWord("null"),
+        kw_not: _ => reservedWord("not"),
+        kw_row: _ => reservedWord("row"),
+        kw_compile: _ => reservedWord("compile"),
+        kw_debug: _ => reservedWord("debug"),
+        kw_specification: _ => reservedWord("specification"),
+        kw_body: _ => reservedWord("body"),
+        kw_declare: _ => reservedWord("declare"),
+        kw_begin: _ => reservedWord("begin"),
+        kw_end: _ => reservedWord("end"),
+        kw_or: _ => reservedWord("or"),
+        kw_and: _ => reservedWord("and"),
+        kw_replace: _ => reservedWord("replace"),
+        kw_editionable: _ => reservedWord("editionable"),
+        kw_noneditionable: _ => reservedWord("noneditionable"),
+        kw_metadata: _ => reservedWord("metadata"),
+        kw_none: _ => reservedWord("none"),
+        kw_default: _ => reservedWord("default"),
+        kw_collation: _ => reservedWord("collation"),
+        kw_using_nls_comp: _ => reservedWord("using_nls_comp"),
+        kw_authid: _ => reservedWord("authid"),
+        kw_current_user: _ => reservedWord("current_user"),
+        kw_definer: _ => reservedWord("definer"),
+        kw_accessible: _ => reservedWord("accessible"),
+        kw_by: _ => reservedWord("by"),
+        kw_reuse: _ => reservedWord("reuse"),
+        kw_settings: _ => reservedWord("settings"),
+        kw_byte: _ => reservedWord("byte"),
+        kw_char: _ => reservedWord("char"),
+        kw_is: _ => reservedWord("is"),
+        kw_as: _ => reservedWord("as"),
+        kw_deterministic: _ => reservedWord("deterministic"),
+        kw_pipelined: _ => reservedWord("pipelined"),
+        kw_parallel_enable: _ => reservedWord("parallel_enable"),
+        kw_result_cache: _ => reservedWord("result_cache"),
+        kw_exists: _ => reservedWord("exists"),
+        kw_between: _ => reservedWord("between"),
+        kw_found: _ => reservedWord("found"),
+        kw_isopen: _ => reservedWord("isopen"),
+        kw_notfound: _ => reservedWord("notfound"),
+        kw_in: _ => reservedWord("in"),
+        kw_out: _ => reservedWord("out"),
+        kw_nocopy: _ => reservedWord("nocopy"),
+        kw_like: _ => reservedWord("like"),
+        kw_inserting: _ => reservedWord("inserting"),
+        kw_deleting: _ => reservedWord("deleting"),
+        kw_updating: _ => reservedWord("updating"),
+        kw_return: _ => reservedWord("return"),
+        kw_varchar: _ => reservedWord("varchar"),
+        kw_varchar2: _ => reservedWord("varchar2"),
+        kw_nvarchar2: _ => reservedWord("nvarchar2"),
+        kw_nchar: _ => reservedWord("nchar"),
+        kw_int: _ => reservedWord("int"),
+        kw_smallint: _ => reservedWord("smallint"),
+        kw_real: _ => reservedWord("real"),
+        kw_binary_float: _ => reservedWord("binary_float"),
+        kw_binary_double: _ => reservedWord("binary_double"),
+        kw_simple_float: _ => reservedWord("simple_float"),
+        kw_simple_double: _ => reservedWord("simple_double"),
+        kw_binary_integer: _ => reservedWord("binary_integer"),
+        kw_pls_integer: _ => reservedWord("pls_integer"),
+        kw_natural: _ => reservedWord("natural"),
+        kw_naturaln: _ => reservedWord("naturaln"),
+        kw_positive: _ => reservedWord("positive"),
+        kw_positiven: _ => reservedWord("positiven"),
+        kw_signtype: _ => reservedWord("signtype"),
+        kw_simple_integer: _ => reservedWord("simple_integer"),
+        kw_integer: _ => reservedWord("integer"),
+        kw_number: _ => reservedWord("number"),
+        kw_float: _ => reservedWord("float"),
+        kw_long: _ => reservedWord("long"),
+        kw_raw: _ => reservedWord("raw"),
+        kw_date: _ => reservedWord("date"),
+        kw_timestamp: _ => reservedWord("timestamp"),
+        kw_with: _ => reservedWord("with"),
+        kw_local: _ => reservedWord("local"),
+        kw_time: _ => reservedWord("time"),
+        kw_zone: _ => reservedWord("zone"),
+        kw_interval: _ => reservedWord("interval"),
+        kw_year: _ => reservedWord("year"),
+        kw_month: _ => reservedWord("month"),
+        kw_day: _ => reservedWord("day"),
+        kw_minute: _ => reservedWord("minute"),
+        kw_second: _ => reservedWord("second"),
+        kw_to: _ => reservedWord("to"),
+        kw_blob: _ => reservedWord("blob"),
+        kw_clob: _ => reservedWord("clob"),
+        kw_nclob: _ => reservedWord("nclob"),
+        kw_bfile: _ => reservedWord("bfile"),
+        kw_rowid: _ => reservedWord("rowid"),
+        kw_urowid: _ => reservedWord("urowid"),
+        kw_boolean: _ => reservedWord("boolean"),
+        kw_character: _ => reservedWord("character"),
+        kw_varying: _ => reservedWord("varying"),
+        kw_numeric: _ => reservedWord("numeric"),
+        kw_decimal: _ => reservedWord("decimal"),
+        kw_dec: _ => reservedWord("dec"),
+        kw_double: _ => reservedWord("double"),
+        kw_precision: _ => reservedWord("precision"),
+        kw_sys: _ => reservedWord("sys"),
+        kw_anydata: _ => reservedWord("anydata"),
+        kw_anytype: _ => reservedWord("anytype"),
+        kw_anydataset: _ => reservedWord("anydataset"),
+        kw_xmltype: _ => reservedWord("xmltype"),
+        kw_uritype: _ => reservedWord("uritype"),
+        kw_sdo_geometry: _ => reservedWord("sdo_geometry"),
+        kw_sdo_topo_geometry: _ => reservedWord("sdo_topo_geometry"),
+        kw_sdo_georaster: _ => reservedWord("sdo_georaster"),
+        kw_json_element_t: _ => reservedWord("json_element_t"),
+        kw_json_array_t: _ => reservedWord("json_array_t"),
+        kw_json_object_t: _ => reservedWord("json_object_t"),
+        kw_json_scalar_t: _ => reservedWord("json_scalar_t"),
+        kw_json_key_list: _ => reservedWord("json_key_list"),
     },
 });
 
