@@ -19,7 +19,10 @@ function caseInsensitive(word) {
 const SEMICOLON = ';'
 const POINT = '.'
 const COMMA = ','
+const PLUS = '+'
 const MINUS = '-'
+const MULTIPLICATION = '*'
+const DIVISON= '/'
 const EQUAL = '='
 const NOT_EQUAL_1 = '<>'
 const NOT_EQUAL_2 = '!='
@@ -43,6 +46,7 @@ module.exports = grammar({
         [$.expression],
         [$._expression_boolean],
         [$.expression_boolean_ref],
+        [$.expression_boolean_ref,$.prc_fnc_call],
         [$._other_boolean_form_expression_in],
         [$._other_boolean_form_expression_between],
         [$._other_boolean_form_expression,$._other_boolean_form_expression_in],
@@ -87,18 +91,19 @@ module.exports = grammar({
             optional($._schema),
             field("obj_name", $.identifier),
             optional($.sharing_clause),
-            repeat(
-                choice(
-                    $.default_collation_clause,
-                    $.invoker_rights_clause,
-                    $.accessible_by_clause,
-                ),
-            ),
-            $.is_as,
-            repeat1(
-                $._package_item_list,
-            ),
+            optional($.package_properties),
+            $._is_as,
+            repeat1($._package_item_list),
             $.end_obj,
+            optional(DIVISON),
+        ),
+        package_properties: $ => repeat1(
+            $._package_property_element,
+        ),
+        _package_property_element: $ => choice(
+            $.default_collation_clause,
+            $.invoker_rights_clause,
+            $.accessible_by_clause,
         ),
         _alter_statement: $ => seq(
             choice(
@@ -232,7 +237,7 @@ module.exports = grammar({
             $.kw_byte,
             $.kw_char,
         ),
-        is_as: $ => choice(
+        _is_as: $ => choice(
             $.kw_is,
             $.kw_as,
         ),
@@ -242,8 +247,8 @@ module.exports = grammar({
             SEMICOLON,
         ),
         _package_item_list: $ => choice(
-            $.package_function_declaration,
-            //$.package_procedure_declaration,
+            $.function_declaration,
+            $.procedure_declaration,
             //$.cursor_declaration,
             //$.type_definition,
             //$.item_declaration,
@@ -257,15 +262,33 @@ module.exports = grammar({
                 ),
             ),
         ),
-        package_function_declaration: $ => seq(
+        procedure_declaration: $ => seq(
+            $.kw_procedure,
+            field("prc_name", $.identifier),
+            optional($.parameter_declaration),
+            optional($.procedure_properties),
+            SEMICOLON,
+        ),
+        procedure_properties: $ => repeat1(
+            $._procedure_property_element,
+        ),
+        _procedure_property_element: $ => choice(
+            $.default_collation_clause,
+            $.invoker_rights_clause,
+            $.accessible_by_clause,
+        ),
+        function_declaration: $ => seq(
             $.kw_function,
             field("fnc_name", $.identifier),
             optional($.parameter_declaration),
             $.return_declaration,
-            repeat($.function_properties),
+            optional($.function_properties),
             SEMICOLON,
         ),
-        function_properties: $ => choice(
+        function_properties: $ => repeat1(
+            $._function_property_element,
+        ),
+        _function_property_element: $ => choice(
             $.kw_deterministic,
             $.kw_pipelined,
             $.kw_parallel_enable,
@@ -289,17 +312,45 @@ module.exports = grammar({
             $._expression_elements,
             optional(BRACKET_RIGHT),
         ),
-        _expression_elements: $ => seq(
+        _expression_elements: $ => choice(
             $._expression_boolean,
+            $._expression_numeric,
+        ),
+        _expression_character: $ => seq(
+           //TODO
+        ),
+        _expression_numeric: $ => seq(
+          $._expression_numeric_sub,
+          repeat(
+              seq(
+                  $.relational_operator_compute,
+                  $._expression_numeric_sub,
+              ),
+          ),
+        ),
+        _expression_numeric_sub: $ => seq(
+            choice(
+                $.literal_number,
+            ),
         ),
         _expression_boolean: $ => seq(
             optional($.kw_not),
             $._expression_boolean_elements,
+            repeat(
+                seq(
+                    choice(
+                        $.kw_and,
+                        $.kw_or,
+                    ),
+                    $._expression_boolean_elements,
+                ),
+            ),
         ),
         _expression_boolean_elements: $ => choice(
-            $.literal_boolean,
+            $._literal_boolean,
             $.expression_boolean_ref,
             $.conditional_predicate,
+            $.prc_fnc_call,
             $._other_boolean_form,
         ),
         expression_boolean_ref: $ => seq(
@@ -402,22 +453,22 @@ module.exports = grammar({
             $.datatype,
         ),
         datatype: $ => choice(
-            $.character_datatypes,
-            $.number_datatypes,
-            $.long_and_raw_datatypes,
-            $.datetime_datatypes,
-            $.large_object_datatypes,
-            $.rowid_datatypes,
-            $.logical_datatypes,
-            $.referenced_datatypes,
-            $.supplied_datatypes_any_types,
-            $.supplied_datatypes_xml_types,
-            $.supplied_datatypes_spatial_types,
-            $.object_datatypes,
-            $.subtype_datatypes,
+            $._character_datatypes,
+            $._number_datatypes,
+            $._long_and_raw_datatypes,
+            $._datetime_datatypes,
+            $._large_object_datatypes,
+            $._rowid_datatypes,
+            $._logical_datatypes,
+            $._referenced_datatypes,
+            $._supplied_datatypes_any_types,
+            $._supplied_datatypes_xml_types,
+            $._supplied_datatypes_spatial_types,
+            $._object_datatypes,
+            $._subtype_datatypes,
             // TODO user_defined_types
         ),
-        character_datatypes: $ => choice(
+        _character_datatypes: $ => choice(
             $._character_datatypes_char,
             $._character_datatypes_varchar2,
             $._character_datatypes_nchar,
@@ -433,7 +484,7 @@ module.exports = grammar({
         ),
         _character_datatypes_varchar2: $ => seq(
             $.kw_varchar2,
-            $._size_byte_char,
+            optional($._size_byte_char),
         ),
         _character_datatypes_nchar: $ => seq(
             $.kw_nchar,
@@ -441,9 +492,9 @@ module.exports = grammar({
         ),
         _character_datatypes_nvarchar2: $ => seq(
             $.kw_nvarchar2,
-            $._size,
+            optional($._size),
         ),
-        number_datatypes: $ => choice(
+        _number_datatypes: $ => choice(
             $._number_datatypes_number,
             $._number_datatypes_float,
             $._number_datatypes_keyword,
@@ -476,7 +527,7 @@ module.exports = grammar({
             $.kw_float,
             optional($._size),
         ),
-        long_and_raw_datatypes: $ => choice(
+        _long_and_raw_datatypes: $ => choice(
             $._long_and_raw_datatypes_long_raw,
             $._long_and_raw_datatypes_raw,
         ),
@@ -488,7 +539,7 @@ module.exports = grammar({
             $.kw_raw,
             $._size,
         ),
-        datetime_datatypes: $ => choice(
+        _datetime_datatypes: $ => choice(
             $._datetime_datatypes_keyword,
             $._datetime_datatypes_date_timestamp,
             $._datetime_datatypes_date_interval_year,
@@ -526,17 +577,17 @@ module.exports = grammar({
             $.kw_second,
             optional($._size),
         ),
-        large_object_datatypes: $ => choice(
+        _large_object_datatypes: $ => choice(
             $.kw_blob,
             $.kw_clob,
             $.kw_nclob,
             $.kw_bfile,
         ),
-        rowid_datatypes: $ => choice(
+        _rowid_datatypes: $ => choice(
             $.kw_rowid,
             $._rowid_datatypes_urowid,
         ),
-        referenced_datatypes: $ => choice(
+        _referenced_datatypes: $ => choice(
             $._referenced_datatypes_type,
             $._referenced_datatypes_rowtype,
         ),
@@ -544,18 +595,18 @@ module.exports = grammar({
             $.identifier,
             POINT,
             $.identifier,
-            PERCENT,
-            $.kw_type,
+            $.kw_datatype_type,
+            // PERCENT,
+            // $.kw_type,
         ),
         _referenced_datatypes_rowtype: $ => seq(
             $.identifier,
-            PERCENT,
-            $.kw_rowtype,
+            $.kw_datatype_type,
         ),
-        logical_datatypes: $ => choice(
+        _logical_datatypes: $ => choice(
             $.kw_boolean,
         ),
-        subtype_datatypes: $ => choice(
+        _subtype_datatypes: $ => choice(
             $.identifier,
         ),
         _rowid_datatypes_urowid: $ => seq(
@@ -604,7 +655,7 @@ module.exports = grammar({
             $.kw_double,
             $.kw_precision,
         ),
-        supplied_datatypes_any_types: $ => seq(
+        _supplied_datatypes_any_types: $ => seq(
             $.kw_sys,
             POINT,
             choice(
@@ -613,16 +664,16 @@ module.exports = grammar({
                 $.kw_anydataset,
             ),
         ),
-        supplied_datatypes_xml_types: $ => choice(
+        _supplied_datatypes_xml_types: $ => choice(
             $.kw_xmltype,
             $.kw_uritype,
         ),
-        supplied_datatypes_spatial_types: $ => choice(
+        _supplied_datatypes_spatial_types: $ => choice(
             $.kw_sdo_geometry,
             $.kw_sdo_topo_geometry,
             $.kw_sdo_georaster,
         ),
-        object_datatypes: $ => choice(
+        _object_datatypes: $ => choice(
             $.kw_json_element_t,
             $.kw_json_array_t,
             $.kw_json_object_t,
@@ -638,7 +689,7 @@ module.exports = grammar({
             ),
             field("prc_fnc_name",$.identifier),
             optional($.parameter),
-            SEMICOLON,
+            optional(SEMICOLON),
         ),
         parameter_declaration: $ => seq(
             BRACKET_LEFT,
@@ -648,17 +699,17 @@ module.exports = grammar({
         parameter_declaration_element: $ => seq(
             $.identifier,
             choice(
-                $.parameter_declaration_element_in,
-                $.parameter_declaration_element_in_out_or_out,
+                $._parameter_declaration_element_in,
+                $._parameter_declaration_element_in_out_or_out,
             ),
             optional(COMMA),
         ),
-        parameter_declaration_element_in: $ => seq(
+        _parameter_declaration_element_in: $ => seq(
             optional($.kw_in),
             $.datatype,
             optional($.default_expression),
         ),
-        parameter_declaration_element_in_out_or_out: $ => seq(
+        _parameter_declaration_element_in_out_or_out: $ => seq(
             optional($.kw_in),
             $.kw_out,
             optional($.kw_nocopy),
@@ -741,6 +792,16 @@ module.exports = grammar({
             NOT_EQUAL_3,
             NOT_EQUAL_4,
         ),
+        _sign_pos_neg: $ => choice(
+            PLUS,
+            MINUS,
+        ),
+        relational_operator_compute: $ => choice(
+            PLUS,
+            MINUS,
+            MULTIPLICATION,
+            DIVISON,
+        ),
         identifier: $ => choice(
             $._unquoted_identifier,
             $._quoted_identifier
@@ -752,21 +813,23 @@ module.exports = grammar({
         _literal: $ => choice(
             $.literal_number,
             $.literal_string,
-            $.literal_boolean,
+            $._literal_boolean,
         ),
-        literal_boolean: $ => choice(
+        _literal_boolean: $ => choice(
             $.kw_true,
             $.kw_false,
             $.kw_null,
         ),
         literal_number: $ => choice(
             $._number,
+            $._float,
         ),
         literal_string: $ => choice(
             $._single_quote_string,
         ),
         _single_quote_string: $ => /'([^']''|''[^']|[^'])*'/,
         _number: $ => /\d+/,
+        _float: $ => /\d*[.]\d+/,
         comment_ml: $ => token(
             seq("/*", /[^*]*\*+([^/*][^*]*\*+)*/, "/")
         ),
@@ -780,7 +843,8 @@ module.exports = grammar({
         kw_procedure: _ => reservedWord("procedure"),
         kw_trigger: _ => reservedWord("trigger"),
         kw_type: _ => reservedWord("type"),
-        kw_rowtype: _ => reservedWord("rowtype"),
+        kw_datatype_type: _ => reservedWord("%type"),
+        kw_datatype_rowtype: _ => reservedWord("%rowtype"),
         kw_library: _ => reservedWord("library"),
         kw_true: _ => reservedWord("true"),
         kw_false: _ => reservedWord("false"),
