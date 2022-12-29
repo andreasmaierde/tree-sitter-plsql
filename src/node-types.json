@@ -46,7 +46,23 @@
           "named": true
         },
         {
-          "type": "unit_kind",
+          "type": "kw_function",
+          "named": true
+        },
+        {
+          "type": "kw_package",
+          "named": true
+        },
+        {
+          "type": "kw_procedure",
+          "named": true
+        },
+        {
+          "type": "kw_trigger",
+          "named": true
+        },
+        {
+          "type": "kw_type",
           "named": true
         }
       ]
@@ -531,6 +547,10 @@
           "named": true
         },
         {
+          "type": "kw_datatype_rowtype",
+          "named": true
+        },
+        {
           "type": "kw_datatype_type",
           "named": true
         },
@@ -960,16 +980,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "parameter",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1523,37 +1533,6 @@
     }
   },
   {
-    "type": "unit_kind",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "kw_function",
-          "named": true
-        },
-        {
-          "type": "kw_package",
-          "named": true
-        },
-        {
-          "type": "kw_procedure",
-          "named": true
-        },
-        {
-          "type": "kw_trigger",
-          "named": true
-        },
-        {
-          "type": "kw_type",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "!=",
     "named": false
   },
@@ -1747,6 +1726,10 @@
   },
   {
     "type": "kw_current_user",
+    "named": true
+  },
+  {
+    "type": "kw_datatype_rowtype",
     "named": true
   },
   {

@@ -45,7 +45,6 @@ module.exports = grammar({
     conflicts: $ => [
         [$.expression],
         [$._expression_boolean],
-        [$.expression_boolean_ref],
         [$.expression_boolean_ref,$.prc_fnc_call],
         [$._other_boolean_form_expression_in],
         [$._other_boolean_form_expression_between],
@@ -214,11 +213,12 @@ module.exports = grammar({
             BRACKET_RIGHT,
         ),
         accessor: $ => seq(
-            optional($.unit_kind),
+            optional($._unit_kind),
             optional($._schema),
             $.identifier,
+            optional(COMMA),
         ),
-        unit_kind: $ => choice(
+        _unit_kind: $ => choice(
             $.kw_function,
             $.kw_procedure,
             $.kw_package,
@@ -329,6 +329,7 @@ module.exports = grammar({
           ),
         ),
         _expression_numeric_sub: $ => seq(
+            // TODO
             choice(
                 $.literal_number,
             ),
@@ -361,7 +362,6 @@ module.exports = grammar({
                 ),
             ),
             field("ref_element_name",$.identifier),
-            optional($.parameter),
         ),
         _other_boolean_form: $ => choice(
             $._other_boolean_form_collection,
@@ -601,7 +601,7 @@ module.exports = grammar({
         ),
         _referenced_datatypes_rowtype: $ => seq(
             $.identifier,
-            $.kw_datatype_type,
+            $.kw_datatype_rowtype,
         ),
         _logical_datatypes: $ => choice(
             $.kw_boolean,

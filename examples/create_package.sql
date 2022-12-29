@@ -80,5 +80,27 @@ procedure my_procedure (p_parameter_1  IN      dsv_abc.abc%TYPE DEFAULT false,
 |@|description This is a procedure description
 */-----------------------------------------------------------------------------------------------
 
+procedure my_procedure (p_parameter_1  IN      dsv_abc.abc%TYPE DEFAULT my_function(1,true),
+                        p_parameter_2  IN OUT  dsv_abc%ROWTYPE,
+                        p_parameter_3     OUT  NUMBER);
+/*-----------------------------------------------------------------------------------------------
+|@|description This is a procedure description
+*/-----------------------------------------------------------------------------------------------
+
+procedure my_procedure (p_parameter_1  IN      dsv_abc.abc%TYPE DEFAULT my_package.my_function(1,true),
+                        p_parameter_2  IN OUT  dsv_abc%ROWTYPE,
+                        p_parameter_3     OUT  NUMBER);
+/*-----------------------------------------------------------------------------------------------
+|@|description This is a procedure description
+*/-----------------------------------------------------------------------------------------------
+
+procedure my_procedure (p_parameter_1  IN      dsv_abc.abc%TYPE,
+                        p_parameter_3     OUT  NUMBER)
+ACCESSIBLE BY (PACKAGE my_schema.my_package_1, FUNCTION my_function, my_procedure)
+AUTHID CURRENT_USER;
+/*-----------------------------------------------------------------------------------------------
+|@|description This is a procedure description
+*/-----------------------------------------------------------------------------------------------
+
 END my_package;
 /
