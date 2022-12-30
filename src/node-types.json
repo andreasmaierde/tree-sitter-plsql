@@ -26,6 +26,36 @@
     "type": "accessor",
     "named": true,
     "fields": {
+      "ref_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
       "schema_name": {
         "multiple": false,
         "required": false,
@@ -38,13 +68,9 @@
       }
     },
     "children": {
-      "multiple": true,
-      "required": true,
+      "multiple": false,
+      "required": false,
       "types": [
-        {
-          "type": "identifier",
-          "named": true
-        },
         {
           "type": "kw_function",
           "named": true
@@ -485,7 +511,48 @@
   {
     "type": "datatype",
     "named": true,
-    "fields": {},
+    "fields": {
+      "ref_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
@@ -852,7 +919,48 @@
   {
     "type": "expression",
     "named": true,
-    "fields": {},
+    "fields": {
+      "ref_name": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
@@ -866,11 +974,11 @@
           "named": true
         },
         {
-          "type": "expression_boolean_ref",
+          "type": "expression_operator_boolean",
           "named": true
         },
         {
-          "type": "identifier",
+          "type": "expression_operator_not_boolean",
           "named": true
         },
         {
@@ -890,35 +998,11 @@
           "named": true
         },
         {
-          "type": "kw_exists",
-          "named": true
-        },
-        {
           "type": "kw_false",
           "named": true
         },
         {
-          "type": "kw_found",
-          "named": true
-        },
-        {
-          "type": "kw_in",
-          "named": true
-        },
-        {
-          "type": "kw_isopen",
-          "named": true
-        },
-        {
-          "type": "kw_like",
-          "named": true
-        },
-        {
           "type": "kw_not",
-          "named": true
-        },
-        {
-          "type": "kw_notfound",
           "named": true
         },
         {
@@ -942,45 +1026,35 @@
           "named": true
         },
         {
+          "type": "placeholder",
+          "named": true
+        },
+        {
           "type": "prc_fnc_call",
-          "named": true
-        },
-        {
-          "type": "relational_operator",
-          "named": true
-        },
-        {
-          "type": "relational_operator_compute",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "expression_boolean_ref",
+    "type": "expression_operator_boolean",
     "named": true,
-    "fields": {
-      "ref_element_name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "ref_obj_name": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "kw_like",
+          "named": true
+        }
+      ]
     }
+  },
+  {
+    "type": "expression_operator_not_boolean",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "function_declaration",
@@ -1048,9 +1122,39 @@
     }
   },
   {
+    "type": "host_variable",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "identifier",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "indicator_variable",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "invoker_rights_clause",
@@ -1156,7 +1260,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "parameter_element",
@@ -1171,7 +1275,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "parameter_declaration_element",
@@ -1319,10 +1423,39 @@
     }
   },
   {
+    "type": "placeholder",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "host_variable",
+          "named": true
+        },
+        {
+          "type": "indicator_variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "prc_fnc_call",
     "named": true,
     "fields": {
-      "package_name": {
+      "ref_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
         "multiple": false,
         "required": false,
         "types": [
@@ -1332,9 +1465,19 @@
           }
         ]
       },
-      "prc_fnc_name": {
+      "remote_name": {
         "multiple": false,
-        "required": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
         "types": [
           {
             "type": "identifier",
@@ -1345,7 +1488,7 @@
     },
     "children": {
       "multiple": false,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "parameter",
@@ -1410,16 +1553,6 @@
         }
       ]
     }
-  },
-  {
-    "type": "relational_operator",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "relational_operator_compute",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "return_declaration",
@@ -1561,6 +1694,10 @@
     "named": false
   },
   {
+    "type": "**",
+    "named": false
+  },
+  {
     "type": "+",
     "named": false
   },
@@ -1578,6 +1715,10 @@
   },
   {
     "type": "/",
+    "named": false
+  },
+  {
+    "type": ":",
     "named": false
   },
   {
@@ -1614,6 +1755,10 @@
   },
   {
     "type": ">=",
+    "named": false
+  },
+  {
+    "type": "@",
     "named": false
   },
   {
@@ -1721,6 +1866,10 @@
     "named": true
   },
   {
+    "type": "kw_count",
+    "named": true
+  },
+  {
     "type": "kw_create",
     "named": true
   },
@@ -1793,6 +1942,10 @@
     "named": true
   },
   {
+    "type": "kw_first",
+    "named": true
+  },
+  {
     "type": "kw_float",
     "named": true
   },
@@ -1853,11 +2006,19 @@
     "named": true
   },
   {
+    "type": "kw_last",
+    "named": true
+  },
+  {
     "type": "kw_library",
     "named": true
   },
   {
     "type": "kw_like",
+    "named": true
+  },
+  {
+    "type": "kw_limit",
     "named": true
   },
   {
@@ -1993,6 +2154,10 @@
     "named": true
   },
   {
+    "type": "kw_rowcount",
+    "named": true
+  },
+  {
     "type": "kw_rowid",
     "named": true
   },
@@ -2111,6 +2276,10 @@
   {
     "type": "kw_zone",
     "named": true
+  },
+  {
+    "type": "||",
+    "named": false
   },
   {
     "type": "~=",

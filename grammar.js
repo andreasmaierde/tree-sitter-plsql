@@ -16,42 +16,37 @@ function caseInsensitive(word) {
         .join('')
 }
 
+const ASSIGNMENT = ':='
+const ASSOCIATION = '=>'
+const CONCAT = '||'
+const NOT_EQUAL_1 = '<>'
+const NOT_EQUAL_2 = '!='
+const NOT_EQUAL_3 = '~='
+const NOT_EQUAL_4 = '^='
+const LESS_THEN_EQUAL = '<='
+const GREATER_THEN_EQUAL = '>='
+const EXPONENT= '**'
 const SEMICOLON = ';'
 const POINT = '.'
+const DOUBLE_POINT = ':'
 const COMMA = ','
 const PLUS = '+'
 const MINUS = '-'
 const MULTIPLICATION = '*'
 const DIVISON= '/'
 const EQUAL = '='
-const NOT_EQUAL_1 = '<>'
-const NOT_EQUAL_2 = '!='
-const NOT_EQUAL_3 = '~='
-const NOT_EQUAL_4 = '^='
 const LESS_THEN = '<'
-const LESS_THEN_EQUAL = '<='
 const GREATER_THEN = '>'
-const GREATER_THEN_EQUAL = '>='
-const ASSIGNMENT = ':='
-const ASSOCIATION = '=>'
 const PERCENT = '%'
 const BRACKET_LEFT = '('
 const BRACKET_RIGHT = ')'
 const QUOTE_SINGLE = "'"
 const QUOTE_DOUBLE = '"'
+const REMOTE = '@'
 
 module.exports = grammar({
     name: 'plsql',
     conflicts: $ => [
-        [$.expression],
-        [$._expression_boolean],
-        [$.expression_boolean_ref,$.prc_fnc_call],
-        [$._other_boolean_form_expression_in],
-        [$._other_boolean_form_expression_between],
-        [$._other_boolean_form_expression,$._other_boolean_form_expression_in],
-        [$._other_boolean_form_expression,$._other_boolean_form_expression_relational_operation],
-        [$._other_boolean_form_expression,$._other_boolean_form_expression_between],
-        [$.conditional_predicate],
     ],
     extras: $ => [
         $.comment_sl,
@@ -214,8 +209,7 @@ module.exports = grammar({
         ),
         accessor: $ => seq(
             optional($._unit_kind),
-            optional($._schema),
-            $.identifier,
+            $._referenced_element,
             optional(COMMA),
         ),
         _unit_kind: $ => choice(
@@ -232,6 +226,27 @@ module.exports = grammar({
         _schema: $ => seq(
             field("schema_name",$.identifier),
             POINT,
+        ),
+        _remote: $ => seq(
+            REMOTE,
+            field("remote_name",$.identifier),
+        ),
+        _referenced_element: $ => seq(
+            optional($._schema),
+            choice(
+                $._referenced_element_parent,
+                $._referenced_element_name,
+            ),
+            optional($._remote),
+        ),
+        _referenced_element_parent: $ => prec(3,
+            seq( field("ref_name_parent",$.identifier),
+                POINT,
+                field("ref_name",$.identifier),
+            ),
+        ),
+        _referenced_element_name: $ => seq(
+            field("ref_name",$.identifier),
         ),
         byte_char: $ => choice(
             $.kw_byte,
@@ -307,130 +322,93 @@ module.exports = grammar({
             $.kw_not,
             $.kw_null,
         ),
-        expression: $ => seq(
-            optional(BRACKET_LEFT),
-            $._expression_elements,
-            optional(BRACKET_RIGHT),
-        ),
-        _expression_elements: $ => choice(
-            $._expression_boolean,
-            $._expression_numeric,
-        ),
-        _expression_character: $ => seq(
-           //TODO
-        ),
-        _expression_numeric: $ => seq(
-          $._expression_numeric_sub,
-          repeat(
-              seq(
-                  $.relational_operator_compute,
-                  $._expression_numeric_sub,
-              ),
-          ),
-        ),
-        _expression_numeric_sub: $ => seq(
-            // TODO
-            choice(
-                $.literal_number,
+        expression: $ => choice(
+            $._expression_element,
+            seq(
+                BRACKET_LEFT,
+                $.expression,
+                BRACKET_RIGHT,
             ),
         ),
-        _expression_boolean: $ => seq(
-            optional($.kw_not),
-            $._expression_boolean_elements,
-            repeat(
-                seq(
-                    choice(
-                        $.kw_and,
-                        $.kw_or,
-                    ),
-                    $._expression_boolean_elements,
-                ),
-            ),
+        _expression_element: $ => choice(
+            $._expression_base_elements,
+            $._expression_base_operator_not_boolean,
+            $._expression_base_boolean,
         ),
-        _expression_boolean_elements: $ => choice(
-            $._literal_boolean,
-            $.expression_boolean_ref,
-            $.conditional_predicate,
+        _expression_base_elements: $ => choice(
+            $._literal,
+            $._referenced_element,
             $.prc_fnc_call,
-            $._other_boolean_form,
+            $.placeholder,
+            seq($._sign_pos_neg, $.literal_number),
         ),
-        expression_boolean_ref: $ => seq(
-            optional(
+        _expression_base_operator_not_boolean: $ => seq(
+            $._expression_base_elements,
+            repeat1(
                 seq(
-                    field("ref_obj_name",$.identifier),
-                    POINT,
+                    $.expression_operator_not_boolean,
+                    $._expression_base_elements,
                 ),
             ),
-            field("ref_element_name",$.identifier),
         ),
-        _other_boolean_form: $ => choice(
-            $._other_boolean_form_collection,
-            $._other_boolean_form_expression,
-            $._other_boolean_form_named_cursor,
-        ),
-        _other_boolean_form_collection: $ => seq(
-            $.identifier,
-            POINT,
-            $.kw_exists,
-            BRACKET_LEFT,
-            $._number,
-            BRACKET_RIGHT,
-        ),
-        _other_boolean_form_expression: $ => seq(
-            $.expression,
-            choice(
-                $._other_boolean_form_expression_is,
-                $._other_boolean_form_expression_between,
-                $._other_boolean_form_expression_in,
-                $._other_boolean_form_expression_like,
-                $._other_boolean_form_expression_relational_operation,
+        _expression_base_boolean: $ => prec.left(
+            seq(
+                optional($.kw_not),
+                $._expression_base_boolean_elements,
+                repeat($._expression_base_boolean_repeat),
             ),
         ),
-        _other_boolean_form_named_cursor: $ => seq(
-            $.identifier,
+        _expression_base_boolean_elements: $ => choice(
+            seq(
+                $._expression_base_elements,
+                choice(
+                    $._expression_base_boolean_operator,
+                    $._expression_base_boolean_between,
+                    // TODO
+                    // $._expression_base_boolean_in,
+                    $._is_null_or_is_not_null,
+                ),
+            ),
+            $.conditional_predicate,
+        ),
+        _expression_base_boolean_repeat: $ => seq(
+            choice(
+                $.kw_and,
+                $.kw_or,
+            ),
+            $._expression_base_boolean,
+        ),
+        _expression_base_boolean_operator: $ => seq(
+            $.expression_operator_boolean,
+            $._expression_base_elements
+        ),
+        _expression_base_boolean_between: $ => seq(
+            $.kw_between,
+            $._expression_base_elements,
+            $.kw_and,
+            $._expression_base_elements,
+        ),
+        _expression_referenced_percent: $ => seq(
+            $._referenced_element,
             PERCENT,
             choice(
+                $.kw_rowcount,
                 $.kw_found,
                 $.kw_isopen,
                 $.kw_notfound,
             ),
         ),
-        _other_boolean_form_expression_is: $ => choice(
-            $._is_null_or_is_not_null,
-        ),
-        _other_boolean_form_expression_between: $ => seq(
-            optional(
-                $.kw_not,
+        _expression_referenced_point: $ => seq(
+            $._referenced_element,
+            POINT,
+            choice(
+                $.kw_count,
+                $.kw_first,
+                $.kw_last,
+                $.kw_limit,
+                $.kw_exists,
             ),
-            $.kw_between,
-            $.expression,
-            $.kw_and,
-            $.expression,
-        ),
-        _other_boolean_form_expression_in: $ => seq(
-            optional(
-                $.kw_not,
-            ),
-            $.kw_in,
-            repeat1(
-                seq(
-                    $.expression,
-                    optional(
-                        COMMA,
-                    ),
-                ),
-            ),
-        ),
-        _other_boolean_form_expression_like: $ => seq(
-            optional(
-                $.kw_not,
-            ),
-            $.kw_like,
-            $.literal_string,
-        ),
-        _other_boolean_form_expression_relational_operation: $ => seq(
-            $.relational_operator,
-            $.expression,
+            optional($._index),
         ),
         conditional_predicate: $ => choice(
             $.kw_inserting,
@@ -592,15 +570,13 @@ module.exports = grammar({
             $._referenced_datatypes_rowtype,
         ),
         _referenced_datatypes_type: $ => seq(
-            $.identifier,
-            POINT,
-            $.identifier,
+            $._referenced_element,
             $.kw_datatype_type,
             // PERCENT,
             // $.kw_type,
         ),
         _referenced_datatypes_rowtype: $ => seq(
-            $.identifier,
+            $._referenced_element,
             $.kw_datatype_rowtype,
         ),
         _logical_datatypes: $ => choice(
@@ -681,19 +657,19 @@ module.exports = grammar({
             $.kw_json_key_list,
         ),
         prc_fnc_call: $ => seq(
-            optional(
-                seq(
-                    field("package_name",$.identifier),
-                    POINT,
-                ),
-            ),
-            field("prc_fnc_name",$.identifier),
-            optional($.parameter),
+            $._referenced_element,
+            $.parameter,
             optional(SEMICOLON),
         ),
         parameter_declaration: $ => seq(
             BRACKET_LEFT,
-            repeat($.parameter_declaration_element),
+            repeat(
+                seq(
+                    $.parameter_declaration_element,
+                    COMMA,
+                ),
+            ),
+            $.parameter_declaration_element,
             BRACKET_RIGHT,
         ),
         parameter_declaration_element: $ => seq(
@@ -702,7 +678,6 @@ module.exports = grammar({
                 $._parameter_declaration_element_in,
                 $._parameter_declaration_element_in_out_or_out,
             ),
-            optional(COMMA),
         ),
         _parameter_declaration_element_in: $ => seq(
             optional($.kw_in),
@@ -724,7 +699,13 @@ module.exports = grammar({
         ),
         parameter: $ => seq(
             BRACKET_LEFT,
-            repeat($.parameter_element),
+            repeat(
+                seq(
+                    $.parameter_element,
+                    COMMA,
+                ),
+            ),
+            $.parameter_element,
             BRACKET_RIGHT,
         ),
         parameter_element: $ => seq(
@@ -732,7 +713,6 @@ module.exports = grammar({
                 $.parameter_element_positional,
                 $.parameter_element_named,
             ),
-            optional(COMMA),
         ),
         parameter_element_positional: $ => seq(
             $.parameter_value,
@@ -748,6 +728,11 @@ module.exports = grammar({
         parameter_value: $ => choice(
             $.identifier,
             $._literal,
+        ),
+        _index: $ => seq(
+            BRACKET_LEFT,
+            $._number,
+            BRACKET_RIGHT,
         ),
         _size: $ => seq(
             BRACKET_LEFT,
@@ -778,29 +763,43 @@ module.exports = grammar({
         _scale: $ => choice(
             $._number,
         ),
-        relational_operator: $ => choice(
-            EQUAL,
-            LESS_THEN,
-            LESS_THEN_EQUAL,
-            GREATER_THEN,
-            GREATER_THEN_EQUAL,
-            $._relational_operator_not_equal,
-        ),
-        _relational_operator_not_equal: $ => choice(
-            NOT_EQUAL_1,
-            NOT_EQUAL_2,
-            NOT_EQUAL_3,
-            NOT_EQUAL_4,
-        ),
         _sign_pos_neg: $ => choice(
             PLUS,
             MINUS,
         ),
-        relational_operator_compute: $ => choice(
+        expression_operator_boolean: $ => choice(
+            NOT_EQUAL_1,
+            NOT_EQUAL_2,
+            NOT_EQUAL_3,
+            NOT_EQUAL_4,
+            LESS_THEN_EQUAL,
+            GREATER_THEN_EQUAL,
+            LESS_THEN,
+            GREATER_THEN,
+            EQUAL,
+            $.kw_like,
+        ),
+        expression_operator_not_boolean: $ => choice(
+            CONCAT,
+            EXPONENT,
             PLUS,
             MINUS,
             MULTIPLICATION,
             DIVISON,
+        ),
+        placeholder: $ => prec.right(
+            seq(
+                $.host_variable,
+                optional($.indicator_variable),
+            ),
+        ),
+        indicator_variable: $ => seq(
+            DOUBLE_POINT,
+            $.identifier,
+        ),
+        host_variable: $ => seq(
+            DOUBLE_POINT,
+            $.identifier,
         ),
         identifier: $ => choice(
             $._unquoted_identifier,
@@ -851,6 +850,12 @@ module.exports = grammar({
         kw_null: _ => reservedWord("null"),
         kw_not: _ => reservedWord("not"),
         kw_row: _ => reservedWord("row"),
+        kw_count: _ => reservedWord("count"),
+        kw_first: _ => reservedWord("first"),
+        kw_last: _ => reservedWord("last"),
+        kw_limit: _ => reservedWord("limit"),
+        kw_rowcount: _ => reservedWord("rowcount"),
+        kw_bulk_rowcount: _ => reservedWord("bulk_rowcount"),
         kw_compile: _ => reservedWord("compile"),
         kw_debug: _ => reservedWord("debug"),
         kw_specification: _ => reservedWord("specification"),

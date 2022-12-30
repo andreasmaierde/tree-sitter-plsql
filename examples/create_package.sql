@@ -15,7 +15,7 @@ RETURN BOOLEAN;
 */-----------------------------------------------------------------------------------------------
 
 FUNCTION my_function (p_parameter_1  IN   VARCHAR2,
-                      p_parameter_2  IN   BOOLEAN DEFAULT TRUE)
+                      p_parameter_2  IN   BOOLEAN DEFAULT 3)
 RETURN BOOLEAN;
 /*-----------------------------------------------------------------------------------------------
 |@|description This is a function description
@@ -35,7 +35,7 @@ RETURN BOOLEAN;
 |@|description This is a function description
 */-----------------------------------------------------------------------------------------------
 
-FUNCTION my_function (p_parameter_1  IN   BOOLEAN DEFAULT  2 >= 1.5)
+FUNCTION my_function (p_parameter_1  IN   BOOLEAN DEFAULT (2 >= 1.5 AND 3 > 4))
 RETURN BOOLEAN;
 /*-----------------------------------------------------------------------------------------------
 |@|description This is a function description
@@ -47,14 +47,14 @@ RETURN BOOLEAN;
 |@|description This is a function description
 */-----------------------------------------------------------------------------------------------
 
-FUNCTION my_function (p_parameter_1  IN   NUMBER dsv_abc.abc_id%TYPE)
+FUNCTION my_function (p_parameter_1  IN   dsv_abc.abc_id%TYPE DEFAULT x between 1 and 3)
 RETURN BOOLEAN;
 /*-----------------------------------------------------------------------------------------------
 |@|description This is a function description
 */-----------------------------------------------------------------------------------------------
 
 FUNCTION my_function (p_parameter_1 IN     NUMBER,
-                      p_parameter_2 IN OUT DATE,
+                      p_parameter_2 IN     DATE DEFAULT to_date('01.01.2022','dd.mm.yyyy'),
                       p_parameter_3    OUT VARCHAR2)
 RETURN BOOLEAN result_cache pipelined;
 /*-----------------------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ procedure my_procedure (p_parameter_1  IN   NUMBER);
 */-----------------------------------------------------------------------------------------------
 
 procedure my_procedure (p_parameter_1  IN      BOOLEAN DEFAULT false,
-                        p_parameter_2  IN OUT  DATE,
+                        p_parameter_2  IN      DATE,
                         p_parameter_3     OUT  NUMBER);
 /*-----------------------------------------------------------------------------------------------
 |@|description This is a procedure description
@@ -87,17 +87,26 @@ procedure my_procedure (p_parameter_1  IN      dsv_abc.abc%TYPE DEFAULT my_funct
 |@|description This is a procedure description
 */-----------------------------------------------------------------------------------------------
 
-procedure my_procedure (p_parameter_1  IN      dsv_abc.abc%TYPE DEFAULT my_package.my_function(1,true),
+procedure my_procedure (p_parameter_1  IN      dsv_abc.abc%TYPE DEFAULT my_package.my_function('X'),
                         p_parameter_2  IN OUT  dsv_abc%ROWTYPE,
                         p_parameter_3     OUT  NUMBER);
 /*-----------------------------------------------------------------------------------------------
 |@|description This is a procedure description
 */-----------------------------------------------------------------------------------------------
 
+
 procedure my_procedure (p_parameter_1  IN      dsv_abc.abc%TYPE,
                         p_parameter_3     OUT  NUMBER)
-ACCESSIBLE BY (PACKAGE my_schema.my_package_1, FUNCTION my_function, my_procedure)
+ACCESSIBLE BY (PACKAGE my_schema, FUNCTION my_function, my_procedure)
 AUTHID CURRENT_USER;
+/*-----------------------------------------------------------------------------------------------
+|@|description This is a procedure description
+*/-----------------------------------------------------------------------------------------------
+
+procedure my_procedure (p_parameter_1  IN      dsv_abc.abc_date%TYPE := sysdate + 1,
+                        p_parameter_2  IN      DATE DEFAULT '2',
+                        p_parameter_3  IN      BOOLEAN DEFAULT 2 IS NOT NULL,
+                        p_parameter_4     OUT  NUMBER);
 /*-----------------------------------------------------------------------------------------------
 |@|description This is a procedure description
 */-----------------------------------------------------------------------------------------------
