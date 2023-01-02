@@ -974,11 +974,23 @@
           "named": true
         },
         {
+          "type": "expression_base_case_search",
+          "named": true
+        },
+        {
+          "type": "expression_base_case_simple",
+          "named": true
+        },
+        {
           "type": "expression_operator_boolean",
           "named": true
         },
         {
           "type": "expression_operator_not_boolean",
+          "named": true
+        },
+        {
+          "type": "identifier",
           "named": true
         },
         {
@@ -1002,6 +1014,14 @@
           "named": true
         },
         {
+          "type": "kw_in",
+          "named": true
+        },
+        {
+          "type": "kw_like",
+          "named": true
+        },
+        {
           "type": "kw_not",
           "named": true
         },
@@ -1018,6 +1038,10 @@
           "named": true
         },
         {
+          "type": "literal_list",
+          "named": true
+        },
+        {
           "type": "literal_number",
           "named": true
         },
@@ -1030,7 +1054,118 @@
           "named": true
         },
         {
-          "type": "prc_fnc_call",
+          "type": "ref_call",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "expression_base_case_search",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "kw_case",
+          "named": true
+        },
+        {
+          "type": "kw_else",
+          "named": true
+        },
+        {
+          "type": "kw_end",
+          "named": true
+        },
+        {
+          "type": "kw_then",
+          "named": true
+        },
+        {
+          "type": "kw_when",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "expression_base_case_simple",
+    "named": true,
+    "fields": {
+      "ref_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "kw_case",
+          "named": true
+        },
+        {
+          "type": "kw_else",
+          "named": true
+        },
+        {
+          "type": "kw_end",
+          "named": true
+        },
+        {
+          "type": "kw_then",
+          "named": true
+        },
+        {
+          "type": "kw_when",
           "named": true
         }
       ]
@@ -1039,17 +1174,7 @@
   {
     "type": "expression_operator_boolean",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "kw_like",
-          "named": true
-        }
-      ]
-    }
+    "fields": {}
   },
   {
     "type": "expression_operator_not_boolean",
@@ -1216,6 +1341,37 @@
         },
         {
           "type": "kw_null",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "literal_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_false",
+          "named": true
+        },
+        {
+          "type": "kw_null",
+          "named": true
+        },
+        {
+          "type": "kw_true",
+          "named": true
+        },
+        {
+          "type": "literal_number",
+          "named": true
+        },
+        {
+          "type": "literal_string",
           "named": true
         }
       ]
@@ -1442,62 +1598,6 @@
     }
   },
   {
-    "type": "prc_fnc_call",
-    "named": true,
-    "fields": {
-      "ref_name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "ref_name_parent": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "remote_name": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "schema_name": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "parameter",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "procedure_declaration",
     "named": true,
     "fields": {
@@ -1549,6 +1649,62 @@
         },
         {
           "type": "invoker_rights_clause",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "ref_call",
+    "named": true,
+    "fields": {
+      "ref_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "parameter",
           "named": true
         }
       ]
@@ -1846,6 +2002,10 @@
     "named": true
   },
   {
+    "type": "kw_case",
+    "named": true
+  },
+  {
     "type": "kw_char",
     "named": true
   },
@@ -1927,6 +2087,10 @@
   },
   {
     "type": "kw_editionable",
+    "named": true
+  },
+  {
+    "type": "kw_else",
     "named": true
   },
   {
@@ -2054,6 +2218,10 @@
     "named": true
   },
   {
+    "type": "kw_next",
+    "named": true
+  },
+  {
     "type": "kw_nocopy",
     "named": true
   },
@@ -2123,6 +2291,10 @@
   },
   {
     "type": "kw_precision",
+    "named": true
+  },
+  {
+    "type": "kw_prior",
     "named": true
   },
   {
@@ -2210,6 +2382,10 @@
     "named": true
   },
   {
+    "type": "kw_then",
+    "named": true
+  },
+  {
     "type": "kw_time",
     "named": true
   },
@@ -2259,6 +2435,10 @@
   },
   {
     "type": "kw_varying",
+    "named": true
+  },
+  {
+    "type": "kw_when",
     "named": true
   },
   {

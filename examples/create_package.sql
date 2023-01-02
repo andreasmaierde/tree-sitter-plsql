@@ -111,5 +111,23 @@ procedure my_procedure (p_parameter_1  IN      dsv_abc.abc_date%TYPE := sysdate 
 |@|description This is a procedure description
 */-----------------------------------------------------------------------------------------------
 
+procedure my_procedure (p_parameter_1  IN      dsv_abc.abc_date%TYPE := sysdate + 1,
+                        p_parameter_2  IN      DATE DEFAULT 2 between 1 and 3,
+                        p_parameter_3  IN      BOOLEAN DEFAULT 2 IN (1,2,3,true),
+                        p_parameter_4  IN      BOOLEAN DEFAULT test(1234, 'Test',true, null, 234),
+                        p_parameter_5     OUT  NUMBER);
+/*-----------------------------------------------------------------------------------------------
+|@|description This is a procedure description
+*/-----------------------------------------------------------------------------------------------
+
+procedure my_procedure (p_parameter_1  IN      dsv_abc.abc_date%TYPE := sysdate + 1,
+                        p_parameter_2  IN      DATE DEFAULT 2 between 1 and 3,
+                        p_parameter_3  IN      BOOLEAN DEFAULT 2 IN (1,2,3,true),
+                        p_parameter_4  IN      BOOLEAN DEFAULT test(1234, 'Test',true, null, 234),
+                        p_parameter_5  IN      VARCHAR2 DEFAULT CASE x WHEN 'A' THEN 'a' WHEN 'B' THEN 'b' ELSE NULL END);
+/*-----------------------------------------------------------------------------------------------
+|@|description This is a procedure description
+*/-----------------------------------------------------------------------------------------------
+
 END my_package;
 /

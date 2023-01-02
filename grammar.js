@@ -47,6 +47,7 @@ const REMOTE = '@'
 module.exports = grammar({
     name: 'plsql',
     conflicts: $ => [
+        [$._expression_base_boolean_in],
     ],
     extras: $ => [
         $.comment_sl,
@@ -202,15 +203,15 @@ module.exports = grammar({
             $.kw_accessible,
             $.kw_by,
             BRACKET_LEFT,
-            repeat1(
-                $.accessor,
+            $.accessor,
+            repeat(
+                seq(COMMA, $.accessor),
             ),
             BRACKET_RIGHT,
         ),
         accessor: $ => seq(
             optional($._unit_kind),
             $._referenced_element,
-            optional(COMMA),
         ),
         _unit_kind: $ => choice(
             $.kw_function,
@@ -239,7 +240,7 @@ module.exports = grammar({
             ),
             optional($._remote),
         ),
-        _referenced_element_parent: $ => prec(3,
+        _referenced_element_parent: $ => prec(2,
             seq( field("ref_name_parent",$.identifier),
                 POINT,
                 field("ref_name",$.identifier),
@@ -334,11 +335,13 @@ module.exports = grammar({
             $._expression_base_elements,
             $._expression_base_operator_not_boolean,
             $._expression_base_boolean,
+            $._expression_base_case,
         ),
         _expression_base_elements: $ => choice(
             $._literal,
+            $.literal_list,
             $._referenced_element,
-            $.prc_fnc_call,
+            $.ref_call,
             $.placeholder,
             seq($._sign_pos_neg, $.literal_number),
         ),
@@ -350,6 +353,31 @@ module.exports = grammar({
                     $._expression_base_elements,
                 ),
             ),
+        ),
+        _expression_base_case: $ => choice(
+           $.expression_base_case_search,
+           $.expression_base_case_simple,
+        ),
+        expression_base_case_search: $ => seq(
+            $.kw_case,
+            repeat1(
+                seq($.kw_when, $.expression, $.kw_then, $.expression),
+            ),
+            optional(
+                seq($.kw_else, $.expression),
+            ),
+            $.kw_end,
+        ),
+        expression_base_case_simple: $ => seq(
+            $.kw_case,
+            $._referenced_element,
+            repeat1(
+                seq($.kw_when, $.expression, $.kw_then, $.expression),
+            ),
+            optional(
+                seq($.kw_else, $.expression),
+            ),
+            $.kw_end,
         ),
         _expression_base_boolean: $ => prec.left(
             seq(
@@ -364,8 +392,8 @@ module.exports = grammar({
                 choice(
                     $._expression_base_boolean_operator,
                     $._expression_base_boolean_between,
-                    // TODO
-                    // $._expression_base_boolean_in,
+                    $._expression_base_boolean_in,
+                    $._expression_base_boolean_like,
                     $._is_null_or_is_not_null,
                 ),
             ),
@@ -382,11 +410,29 @@ module.exports = grammar({
             $.expression_operator_boolean,
             $._expression_base_elements
         ),
+        _expression_base_boolean_in: $ => seq(
+            optional($.kw_not),
+            $.kw_in,
+            $.expression,
+            repeat(
+                 seq(COMMA, $.expression),
+            ),
+            optional(BRACKET_RIGHT),
+        ),
+        _expression_base_boolean_like: $ => seq(
+            optional($.kw_not),
+            $.kw_like,
+            choice(
+                $.identifier,
+                $.literal_string,
+            ),
+        ),
         _expression_base_boolean_between: $ => seq(
+            optional($.kw_not),
             $.kw_between,
-            $._expression_base_elements,
+            $.expression,
             $.kw_and,
-            $._expression_base_elements,
+            $.expression,
         ),
         _expression_referenced_percent: $ => seq(
             $._referenced_element,
@@ -406,6 +452,8 @@ module.exports = grammar({
                 $.kw_first,
                 $.kw_last,
                 $.kw_limit,
+                $.kw_next,
+                $.kw_prior,
                 $.kw_exists,
             ),
             optional($._index),
@@ -656,20 +704,20 @@ module.exports = grammar({
             $.kw_json_scalar_t,
             $.kw_json_key_list,
         ),
-        prc_fnc_call: $ => seq(
+        ref_call: $ => seq(
             $._referenced_element,
             $.parameter,
             optional(SEMICOLON),
         ),
         parameter_declaration: $ => seq(
             BRACKET_LEFT,
+            $.parameter_declaration_element,
             repeat(
                 seq(
-                    $.parameter_declaration_element,
                     COMMA,
+                    $.parameter_declaration_element,
                 ),
             ),
-            $.parameter_declaration_element,
             BRACKET_RIGHT,
         ),
         parameter_declaration_element: $ => seq(
@@ -699,13 +747,13 @@ module.exports = grammar({
         ),
         parameter: $ => seq(
             BRACKET_LEFT,
+            $.parameter_element,
             repeat(
                 seq(
-                    $.parameter_element,
                     COMMA,
+                    $.parameter_element,
                 ),
             ),
-            $.parameter_element,
             BRACKET_RIGHT,
         ),
         parameter_element: $ => seq(
@@ -777,7 +825,6 @@ module.exports = grammar({
             LESS_THEN,
             GREATER_THEN,
             EQUAL,
-            $.kw_like,
         ),
         expression_operator_not_boolean: $ => choice(
             CONCAT,
@@ -808,6 +855,14 @@ module.exports = grammar({
         _unquoted_identifier: $ => /[a-zA-Z][a-zA-Z0-9_$#]*/,
         _quoted_identifier: $ => choice(
             seq('"', field("name", /(""|[^"])*/), '"'), // ANSI QUOTES
+        ),
+        literal_list: $ => seq(
+            BRACKET_LEFT,
+            $._literal,
+            repeat1(
+                seq(COMMA, $._literal),
+            ),
+            BRACKET_RIGHT,
         ),
         _literal: $ => choice(
             $.literal_number,
@@ -849,11 +904,18 @@ module.exports = grammar({
         kw_false: _ => reservedWord("false"),
         kw_null: _ => reservedWord("null"),
         kw_not: _ => reservedWord("not"),
+        kw_case: _ => reservedWord("case"),
+        kw_when: _ => reservedWord("when"),
+        kw_then: _ => reservedWord("then"),
+        kw_if: _ => reservedWord("if"),
+        kw_else: _ => reservedWord("else"),
         kw_row: _ => reservedWord("row"),
         kw_count: _ => reservedWord("count"),
         kw_first: _ => reservedWord("first"),
         kw_last: _ => reservedWord("last"),
         kw_limit: _ => reservedWord("limit"),
+        kw_next: _ => reservedWord("next"),
+        kw_prior: _ => reservedWord("prior"),
         kw_rowcount: _ => reservedWord("rowcount"),
         kw_bulk_rowcount: _ => reservedWord("bulk_rowcount"),
         kw_compile: _ => reservedWord("compile"),
