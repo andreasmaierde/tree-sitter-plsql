@@ -8,6 +8,30 @@ CREATE OR REPLACE PACKAGE my_package
 */-----------------------------------------------------------------------------------------------
 IS
 
+SUBTYPE Balance_1   IS NUMBER;
+SUBTYPE Balance_2   IS NUMBER(8,2);
+SUBTYPE Under_100   IS PLS_INTEGER RANGE 0..99;
+SUBTYPE Text        IS VARCHAR2(15);
+
+TYPE t_rec_abc IS RECORD(
+  mya    NUMBER NOT NULL,
+  myb    VARCHAR2(100),
+  myc    DATE DEFAULT sysdate
+);
+
+TYPE t_tab_abc IS TABLE OF my_table;
+
+TYPE t_tab_abc IS TABLE OF my_table INDEX BY PLS_INTEGER;
+
+TYPE t_var_abc IS VARRAY(50) OF NUMBER NOT NULL;
+
+gc_abc  CONSTANT   NUMBER := 4;
+gv_abc             NUMBER;
+gv_init_date       DATE := sysdate;
+gv_init_abc        varchar2(200) := my_func('A',true);
+
+exc_abc           exception;
+
 FUNCTION my_function (p_parameter_1  IN   NUMBER)
 RETURN BOOLEAN;
 /*-----------------------------------------------------------------------------------------------

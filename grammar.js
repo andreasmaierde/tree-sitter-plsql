@@ -26,6 +26,7 @@ const NOT_EQUAL_4 = '^='
 const LESS_THEN_EQUAL = '<='
 const GREATER_THEN_EQUAL = '>='
 const EXPONENT= '**'
+const RANGE= '..'
 const SEMICOLON = ';'
 const POINT = '.'
 const DOUBLE_POINT = ':'
@@ -265,9 +266,9 @@ module.exports = grammar({
         _package_item_list: $ => choice(
             $.function_declaration,
             $.procedure_declaration,
-            //$.cursor_declaration,
-            //$.type_definition,
-            //$.item_declaration,
+            $._type_definition,
+            $.cursor_declaration,
+            $.item_declaration,
         ),
         create_obj: $ => seq(
             $.kw_create,
@@ -310,6 +311,154 @@ module.exports = grammar({
             $.kw_parallel_enable,
             $.kw_result_cache,
         ),
+        item_declaration: $ => seq(
+            $.identifier,
+            optional($.kw_constant),
+            $.datatype,
+            optional($.not_null),
+            optional($.default_expression),
+            SEMICOLON,
+        ),
+        cursor_declaration: $ => seq(
+            $.kw_cursor,
+            $.identifier,
+            optional($.cursor_declaration_parameters),
+            $.kw_return,
+            $._cursor_declaration_return_datatype,
+            SEMICOLON
+        ),
+        _cursor_declaration_return_datatype: $ => choice(
+            $._referenced_datatypes,
+            $.identifier,
+        ),
+        cursor_declaration_parameters: $ => seq(
+            BRACKET_LEFT,
+            $.cursor_declaration_parameter,
+            repeat(seq(COMMA, $.cursor_declaration_parameter)),
+            BRACKET_RIGHT,
+        ),
+        cursor_declaration_parameter: $ => seq(
+            $.identifier,
+            optional($.kw_in),
+            $.datatype,
+            optional($.default_expression),
+        ),
+        _type_definition: $ => choice(
+            $.type_definition_sub,
+            $.type_definition_ref_cursor_return,
+            $.type_definition_record,
+            $.type_definition_collection,
+        ),
+        type_definition_collection: $ => seq(
+            $.kw_type,
+            field("type_collection_name", $.identifier),
+            $.kw_is,
+            choice(
+                $.type_definition_assoc_array,
+                $.type_definition_nested_table,
+                $.type_definition_varray,
+            ),
+            SEMICOLON,
+        ),
+        type_definition_varray: $ => seq(
+            choice(
+                $.kw_varray,
+                seq(
+                    optional($.kw_varying),
+                    $.kw_array,
+                ),
+            ),
+            $._size,
+            $.kw_of,
+            $.datatype,
+            optional($.not_null),
+        ),
+        type_definition_nested_table: $ => seq(
+            $.kw_table,
+            $.kw_of,
+            $.datatype,
+            optional($.not_null),
+        ),
+        type_definition_assoc_array: $ => seq(
+            $.kw_table,
+            $.kw_of,
+            $.datatype,
+            optional($.not_null),
+            $.kw_index,
+            $.kw_by,
+            choice(
+                $.kw_pls_integer,
+                $.kw_binary_integer,
+                $.kw_long,
+                $._referenced_datatypes,
+                seq(
+                    choice(
+                        $.kw_varchar2,
+                        $.kw_varchar,
+                        $.kw_string,
+                    ),
+                    $._size_byte_char,
+                ),
+            ),
+        ),
+        type_definition_record: $ => seq(
+            $.kw_type,
+            field("type_rec_name", $.identifier),
+            $.kw_is,
+            $.kw_record,
+            BRACKET_LEFT,
+            $.field_definition,
+            repeat(seq(COMMA,$.field_definition)),
+            BRACKET_RIGHT,
+            SEMICOLON,
+        ),
+        field_definition: $ => seq(
+            $.identifier,
+            $.datatype,
+            optional($.not_null),
+            optional($.default_expression),
+        ),
+        type_definition_ref_cursor: $ => seq(
+            $.kw_type,
+            field("ref_cursor_name", $.identifier),
+            $.kw_is,
+            $.kw_ref,
+            $.kw_cursor,
+            optional($.type_definition_ref_cursor_return),
+            SEMICOLON,
+        ),
+        type_definition_ref_cursor_return: $ => seq(
+            $.kw_return,
+            choice(
+                $._referenced_datatypes,
+                $._referenced_element,
+            ),
+        ),
+        type_definition_sub: $ => seq(
+            $.kw_subtype,
+            field("subtype_name", $.identifier),
+            $.kw_is,
+            $.datatype,
+            repeat(
+                choice(
+                    $.type_range,
+                    $.character_set,
+                ),
+            ),
+            optional($.not_null),
+            SEMICOLON,
+        ),
+        character_set: $ => seq(
+            $.kw_character,
+            $.kw_set,
+            $.literal_string,
+        ),
+        type_range: $ => seq(
+            $.kw_range,
+            $.literal_number,
+            RANGE,
+            $.literal_number,
+        ),
         _is_null_or_is_not_null: $ => choice(
             $.is_null,
             $.is_not_null,
@@ -320,6 +469,10 @@ module.exports = grammar({
         ),
         is_not_null: $ => seq(
             $.kw_is,
+            $.kw_not,
+            $.kw_null,
+        ),
+        not_null: $ => seq(
             $.kw_not,
             $.kw_null,
         ),
@@ -491,6 +644,7 @@ module.exports = grammar({
             $._supplied_datatypes_xml_types,
             $._supplied_datatypes_spatial_types,
             $._object_datatypes,
+            $._other_datatypes,
             $._subtype_datatypes,
             // TODO user_defined_types
         ),
@@ -620,8 +774,6 @@ module.exports = grammar({
         _referenced_datatypes_type: $ => seq(
             $._referenced_element,
             $.kw_datatype_type,
-            // PERCENT,
-            // $.kw_type,
         ),
         _referenced_datatypes_rowtype: $ => seq(
             $._referenced_element,
@@ -704,10 +856,12 @@ module.exports = grammar({
             $.kw_json_scalar_t,
             $.kw_json_key_list,
         ),
+        _other_datatypes: $ => choice(
+            $.kw_exception,
+        ),
         ref_call: $ => seq(
             $._referenced_element,
             $.parameter,
-            optional(SEMICOLON),
         ),
         parameter_declaration: $ => seq(
             BRACKET_LEFT,
@@ -897,6 +1051,7 @@ module.exports = grammar({
         kw_procedure: _ => reservedWord("procedure"),
         kw_trigger: _ => reservedWord("trigger"),
         kw_type: _ => reservedWord("type"),
+        kw_subtype: _ => reservedWord("subtype"),
         kw_datatype_type: _ => reservedWord("%type"),
         kw_datatype_rowtype: _ => reservedWord("%rowtype"),
         kw_library: _ => reservedWord("library"),
@@ -924,6 +1079,7 @@ module.exports = grammar({
         kw_body: _ => reservedWord("body"),
         kw_declare: _ => reservedWord("declare"),
         kw_begin: _ => reservedWord("begin"),
+        kw_exception: _ => reservedWord("exception"),
         kw_end: _ => reservedWord("end"),
         kw_or: _ => reservedWord("or"),
         kw_and: _ => reservedWord("and"),
@@ -946,6 +1102,15 @@ module.exports = grammar({
         kw_char: _ => reservedWord("char"),
         kw_is: _ => reservedWord("is"),
         kw_as: _ => reservedWord("as"),
+        kw_ref: _ => reservedWord("ref"),
+        kw_table: _ => reservedWord("table"),
+        kw_of: _ => reservedWord("of"),
+        kw_index: _ => reservedWord("index"),
+        kw_by: _ => reservedWord("by"),
+        kw_varray: _ => reservedWord("varray"),
+        kw_array: _ => reservedWord("array"),
+        kw_cursor: _ => reservedWord("cursor"),
+        kw_record: _ => reservedWord("record"),
         kw_deterministic: _ => reservedWord("deterministic"),
         kw_pipelined: _ => reservedWord("pipelined"),
         kw_parallel_enable: _ => reservedWord("parallel_enable"),
@@ -959,10 +1124,12 @@ module.exports = grammar({
         kw_out: _ => reservedWord("out"),
         kw_nocopy: _ => reservedWord("nocopy"),
         kw_like: _ => reservedWord("like"),
+        kw_range: _ => reservedWord("range"),
         kw_inserting: _ => reservedWord("inserting"),
         kw_deleting: _ => reservedWord("deleting"),
         kw_updating: _ => reservedWord("updating"),
         kw_return: _ => reservedWord("return"),
+        kw_string: _ => reservedWord("string"),
         kw_varchar: _ => reservedWord("varchar"),
         kw_varchar2: _ => reservedWord("varchar2"),
         kw_nvarchar2: _ => reservedWord("nvarchar2"),
@@ -1008,6 +1175,7 @@ module.exports = grammar({
         kw_urowid: _ => reservedWord("urowid"),
         kw_boolean: _ => reservedWord("boolean"),
         kw_character: _ => reservedWord("character"),
+        kw_set: _ => reservedWord("set"),
         kw_varying: _ => reservedWord("varying"),
         kw_numeric: _ => reservedWord("numeric"),
         kw_decimal: _ => reservedWord("decimal"),
@@ -1023,6 +1191,7 @@ module.exports = grammar({
         kw_sdo_geometry: _ => reservedWord("sdo_geometry"),
         kw_sdo_topo_geometry: _ => reservedWord("sdo_topo_geometry"),
         kw_sdo_georaster: _ => reservedWord("sdo_georaster"),
+        kw_constant: _ => reservedWord("constant"),
         kw_json_element_t: _ => reservedWord("json_element_t"),
         kw_json_array_t: _ => reservedWord("json_array_t"),
         kw_json_object_t: _ => reservedWord("json_object_t"),

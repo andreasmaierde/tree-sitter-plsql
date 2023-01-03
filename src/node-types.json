@@ -306,6 +306,29 @@
     }
   },
   {
+    "type": "character_set",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_character",
+          "named": true
+        },
+        {
+          "type": "kw_set",
+          "named": true
+        },
+        {
+          "type": "literal_string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "compile_clause",
     "named": true,
     "fields": {},
@@ -470,6 +493,10 @@
           "named": true
         },
         {
+          "type": "cursor_declaration",
+          "named": true
+        },
+        {
           "type": "editionable_noneditionable",
           "named": true
         },
@@ -479,6 +506,10 @@
         },
         {
           "type": "function_declaration",
+          "named": true
+        },
+        {
+          "type": "item_declaration",
           "named": true
         },
         {
@@ -503,6 +534,140 @@
         },
         {
           "type": "sharing_clause",
+          "named": true
+        },
+        {
+          "type": "type_definition_collection",
+          "named": true
+        },
+        {
+          "type": "type_definition_record",
+          "named": true
+        },
+        {
+          "type": "type_definition_ref_cursor_return",
+          "named": true
+        },
+        {
+          "type": "type_definition_sub",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "cursor_declaration",
+    "named": true,
+    "fields": {
+      "ref_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "cursor_declaration_parameters",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_cursor",
+          "named": true
+        },
+        {
+          "type": "kw_datatype_rowtype",
+          "named": true
+        },
+        {
+          "type": "kw_datatype_type",
+          "named": true
+        },
+        {
+          "type": "kw_return",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "cursor_declaration_parameter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "datatype",
+          "named": true
+        },
+        {
+          "type": "default_expression",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_in",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "cursor_declaration_parameters",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "cursor_declaration_parameter",
           "named": true
         }
       ]
@@ -639,6 +804,10 @@
         },
         {
           "type": "kw_double",
+          "named": true
+        },
+        {
+          "type": "kw_exception",
           "named": true
         },
         {
@@ -1182,6 +1351,33 @@
     "fields": {}
   },
   {
+    "type": "field_definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "datatype",
+          "named": true
+        },
+        {
+          "type": "default_expression",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "not_null",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "function_declaration",
     "named": true,
     "fields": {
@@ -1347,6 +1543,37 @@
     }
   },
   {
+    "type": "item_declaration",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "datatype",
+          "named": true
+        },
+        {
+          "type": "default_expression",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_constant",
+          "named": true
+        },
+        {
+          "type": "not_null",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "literal_list",
     "named": true,
     "fields": {},
@@ -1386,6 +1613,25 @@
     "type": "literal_string",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "not_null",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_not",
+          "named": true
+        },
+        {
+          "type": "kw_null",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "package_properties",
@@ -1822,6 +2068,389 @@
     }
   },
   {
+    "type": "type_definition_assoc_array",
+    "named": true,
+    "fields": {
+      "ref_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "byte_char",
+          "named": true
+        },
+        {
+          "type": "datatype",
+          "named": true
+        },
+        {
+          "type": "kw_binary_integer",
+          "named": true
+        },
+        {
+          "type": "kw_by",
+          "named": true
+        },
+        {
+          "type": "kw_datatype_rowtype",
+          "named": true
+        },
+        {
+          "type": "kw_datatype_type",
+          "named": true
+        },
+        {
+          "type": "kw_index",
+          "named": true
+        },
+        {
+          "type": "kw_long",
+          "named": true
+        },
+        {
+          "type": "kw_of",
+          "named": true
+        },
+        {
+          "type": "kw_pls_integer",
+          "named": true
+        },
+        {
+          "type": "kw_string",
+          "named": true
+        },
+        {
+          "type": "kw_table",
+          "named": true
+        },
+        {
+          "type": "kw_varchar",
+          "named": true
+        },
+        {
+          "type": "kw_varchar2",
+          "named": true
+        },
+        {
+          "type": "not_null",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_definition_collection",
+    "named": true,
+    "fields": {
+      "type_collection_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_is",
+          "named": true
+        },
+        {
+          "type": "kw_type",
+          "named": true
+        },
+        {
+          "type": "type_definition_assoc_array",
+          "named": true
+        },
+        {
+          "type": "type_definition_nested_table",
+          "named": true
+        },
+        {
+          "type": "type_definition_varray",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_definition_nested_table",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "datatype",
+          "named": true
+        },
+        {
+          "type": "kw_of",
+          "named": true
+        },
+        {
+          "type": "kw_table",
+          "named": true
+        },
+        {
+          "type": "not_null",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_definition_record",
+    "named": true,
+    "fields": {
+      "type_rec_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "field_definition",
+          "named": true
+        },
+        {
+          "type": "kw_is",
+          "named": true
+        },
+        {
+          "type": "kw_record",
+          "named": true
+        },
+        {
+          "type": "kw_type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_definition_ref_cursor_return",
+    "named": true,
+    "fields": {
+      "ref_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_datatype_rowtype",
+          "named": true
+        },
+        {
+          "type": "kw_datatype_type",
+          "named": true
+        },
+        {
+          "type": "kw_return",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_definition_sub",
+    "named": true,
+    "fields": {
+      "subtype_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "character_set",
+          "named": true
+        },
+        {
+          "type": "datatype",
+          "named": true
+        },
+        {
+          "type": "kw_is",
+          "named": true
+        },
+        {
+          "type": "kw_subtype",
+          "named": true
+        },
+        {
+          "type": "not_null",
+          "named": true
+        },
+        {
+          "type": "type_range",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_definition_varray",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "datatype",
+          "named": true
+        },
+        {
+          "type": "kw_array",
+          "named": true
+        },
+        {
+          "type": "kw_of",
+          "named": true
+        },
+        {
+          "type": "kw_varray",
+          "named": true
+        },
+        {
+          "type": "kw_varying",
+          "named": true
+        },
+        {
+          "type": "not_null",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_range",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_range",
+          "named": true
+        },
+        {
+          "type": "literal_number",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "!=",
     "named": false
   },
@@ -1867,6 +2496,10 @@
   },
   {
     "type": ".",
+    "named": false
+  },
+  {
+    "type": "..",
     "named": false
   },
   {
@@ -1954,6 +2587,10 @@
     "named": true
   },
   {
+    "type": "kw_array",
+    "named": true
+  },
+  {
     "type": "kw_as",
     "named": true
   },
@@ -2026,6 +2663,10 @@
     "named": true
   },
   {
+    "type": "kw_constant",
+    "named": true
+  },
+  {
     "type": "kw_count",
     "named": true
   },
@@ -2035,6 +2676,10 @@
   },
   {
     "type": "kw_current_user",
+    "named": true
+  },
+  {
+    "type": "kw_cursor",
     "named": true
   },
   {
@@ -2098,6 +2743,10 @@
     "named": true
   },
   {
+    "type": "kw_exception",
+    "named": true
+  },
+  {
     "type": "kw_exists",
     "named": true
   },
@@ -2123,6 +2772,10 @@
   },
   {
     "type": "kw_in",
+    "named": true
+  },
+  {
+    "type": "kw_index",
     "named": true
   },
   {
@@ -2258,6 +2911,10 @@
     "named": true
   },
   {
+    "type": "kw_of",
+    "named": true
+  },
+  {
     "type": "kw_or",
     "named": true
   },
@@ -2302,11 +2959,23 @@
     "named": true
   },
   {
+    "type": "kw_range",
+    "named": true
+  },
+  {
     "type": "kw_raw",
     "named": true
   },
   {
     "type": "kw_real",
+    "named": true
+  },
+  {
+    "type": "kw_record",
+    "named": true
+  },
+  {
+    "type": "kw_ref",
     "named": true
   },
   {
@@ -2350,6 +3019,10 @@
     "named": true
   },
   {
+    "type": "kw_set",
+    "named": true
+  },
+  {
     "type": "kw_settings",
     "named": true
   },
@@ -2378,7 +3051,19 @@
     "named": true
   },
   {
+    "type": "kw_string",
+    "named": true
+  },
+  {
+    "type": "kw_subtype",
+    "named": true
+  },
+  {
     "type": "kw_sys",
+    "named": true
+  },
+  {
+    "type": "kw_table",
     "named": true
   },
   {
@@ -2431,6 +3116,10 @@
   },
   {
     "type": "kw_varchar2",
+    "named": true
+  },
+  {
+    "type": "kw_varray",
     "named": true
   },
   {
