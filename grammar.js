@@ -67,7 +67,6 @@ module.exports = grammar({
                 $._ddl_statement,
                 // $._dml_statement,
             ),
-            optional(SEMICOLON),
         ),
         _ddl_statement: $ => choice(
              $._alter_statement,
@@ -82,7 +81,7 @@ module.exports = grammar({
         ),
         create_package: $ => seq(
             $.create_obj,
-            optional($.editionable_noneditionable),
+            optional($._editionable_noneditionable),
             $.kw_package,
             optional($._schema),
             field("obj_name", $.identifier),
@@ -103,12 +102,12 @@ module.exports = grammar({
         ),
         _alter_statement: $ => seq(
             choice(
-                // $.alter_table,
-                // $.alter_view,
+                $.alter_trigger,
                 $.alter_package,
                 $.alter_function,
                 $.alter_procedure,
                 $.alter_library,
+                $.alter_type,
             ),
         ),
         alter_package: $ => seq(
@@ -116,49 +115,283 @@ module.exports = grammar({
             $.kw_package,
             optional($._schema),
             field("obj_name", $.identifier),
-            repeat(
-                choice(
-                    $.compile_clause,
-                    $.editionable_noneditionable,
-                ),
+            choice(
+                $.compile_clause,
+                $._editionable_noneditionable,
             ),
+            SEMICOLON,
         ),
         alter_procedure: $ => seq(
             $.kw_alter,
             $.kw_procedure,
             optional($._schema),
             field("obj_name", $.identifier),
-            repeat(
-                choice(
-                    $.compile_clause,
-                    $.editionable_noneditionable,
-                ),
+            choice(
+                $.compile_clause,
+                $._editionable_noneditionable,
             ),
+            SEMICOLON,
         ),
         alter_function: $ => seq(
             $.kw_alter,
             $.kw_function,
             optional($._schema),
             field("obj_name", $.identifier),
-            repeat(
-                choice(
-                    $.compile_clause,
-                    $.editionable_noneditionable,
-                ),
+            choice(
+                $.compile_clause,
+                $._editionable_noneditionable,
             ),
+            SEMICOLON,
+        ),
+        alter_trigger: $ => seq(
+            $.kw_alter,
+            $.kw_trigger,
+            optional($._schema),
+            field("trigger_name", $.identifier),
+            choice(
+                $.compile_clause,
+                $._editionable_noneditionable,
+                $._enable_disable,
+                $.rename_to,
+            ),
+            SEMICOLON,
         ),
         alter_library: $ => seq(
             $.kw_alter,
             $.kw_library,
             optional($._schema),
             field("obj_name", $.identifier),
+            choice(
+                $.compile_clause,
+                $._editionable_noneditionable,
+            ),
+            SEMICOLON,
+        ),
+        alter_type: $ => seq(
+            $.kw_alter,
+            $.kw_type,
+            optional($._schema),
+            field("type_name", $.identifier),
+            choice(
+                $.compile_clause,
+                $._editionable_noneditionable,
+                $.kw_reset,
+                $._final_instantiable,
+                $.alter_type_replace,
+                // TODO
+                // $.alter_type_alter_x,
+            ),
+            SEMICOLON,
+        ),
+        // TODO
+        // alter_type_alter_x: $ => seq(
+        //     choice(
+        //     ),
+        //     optional($.dependent_handling_clause),
+        // ),
+        alter_type_replace: $ => seq(
+            $.kw_replace,
             repeat(
                 choice(
-                    $.compile_clause,
-                    $.editionable_noneditionable,
+                    $.invoker_rights_clause,
+                    $.accessible_by_clause,
                 ),
             ),
-
+            $.kw_as,
+            $.kw_object,
+            BRACKET_LEFT,
+            $.identifier,
+            $.datatype,
+            repeat(
+                seq(COMMA, $.identifier, $.datatype),
+            ),
+            repeat(
+                seq(COMMA, $.element_spec),
+            ),
+            BRACKET_RIGHT,
+        ),
+        element_spec: $ => seq(
+            optional($.inheritance_clause),
+            repeat1(
+                choice(
+                    $.element_spec_subprogram_spec,
+                    $.element_spec_map_order_function_spec,
+                    $.element_spec_constructor_spec,
+                ),
+            ),
+        ),
+        element_spec_constructor_spec: $ => seq(
+            optional($.kw_final),
+            optional($.kw_instantiable),
+            $.kw_constructor,
+            $.kw_function,
+            field("name",$.identifier),
+            optional(
+                seq(
+                    BRACKET_LEFT,
+                    optional(
+                        seq(
+                            $.kw_self,
+                            $.kw_in,
+                            $.kw_out,
+                            $.identifier,
+                            COMMA,
+                        ),
+                    ),
+                    $.parameter_declaration_element,
+                    repeat(
+                        seq(
+                            COMMA,
+                            $.parameter_declaration_element,
+                        ),
+                    ),
+                    BRACKET_RIGHT,
+                ),
+            ),
+            $.kw_return,
+            $.kw_self,
+            $.kw_as,
+            $.kw_result,
+            optional(
+                $.element_spec_is_as_call_spec,
+            )
+        ),
+        element_spec_map_order_function_spec: $ => seq(
+            choice(
+                $.kw_map,
+                $.kw_order,
+            ),
+            $.kw_member,
+            $.element_spec_function_spec,
+        ),
+        element_spec_subprogram_spec: $ => seq(
+            choice(
+                $.kw_member,
+                $.kw_static,
+            ),
+            choice(
+                $.element_spec_procedure_spec,
+                $.element_spec_function_spec,
+            ),
+        ),
+        element_spec_procedure_spec: $ => seq(
+            $.kw_procedure,
+            field("prc_name", $.identifier),
+            $.parameter_declaration,
+            optional($.element_spec_is_as_call_spec),
+        ),
+        element_spec_function_spec: $ => seq(
+            $.kw_function,
+            field("fnc_name", $.identifier),
+            $.parameter_declaration,
+            $.return_declaration,
+            optional($.element_spec_is_as_call_spec),
+        ),
+        element_spec_is_as_call_spec: $ => seq(
+            $._is_as,
+            $.call_spec_ext,
+        ),
+        inheritance_clause: $ => seq(
+            optional($.kw_not),
+            prec(2,choice(
+                $.kw_instantiable,
+                $.kw_final,
+                $.kw_overriding,
+            )),
+        ),
+        _final_instantiable: $ => seq(
+            optional($.kw_not),
+            choice(
+                $.kw_instantiable,
+                $.kw_final,
+            ),
+        ),
+        call_spec_ext:$ => choice(
+            $.java_declaration,
+            $.c_declaration,
+        ),
+        java_declaration:$ => seq(
+            $.kw_language,
+            $.kw_java,
+            $.kw_name,
+            field("name",$.literal_string),
+        ),
+        c_declaration:$ => seq(
+            choice(
+                seq($.kw_language, $.kw_c),
+                $.kw_external,
+            ),
+            choice(
+                seq($.library_name, optional($.name_name)),
+                seq($.name_name, optional($.library_name)),
+            ),
+            optional($.agent_in),
+            optional($.with_context),
+            optional($.external_parameters),
+        ),
+        library_name: $ => seq(
+            $.kw_library,
+            field("library",$.identifier),
+        ),
+        name_name: $ => seq(
+            $.kw_name,
+            $._quoted_identifier,
+        ),
+        with_context: $ => seq(
+            $.kw_with,
+            $.kw_context,
+        ),
+        agent_in: $ => seq(
+            $.kw_agent,
+            $.kw_in,
+            BRACKET_LEFT,
+            field("argument",$.identifier),
+            repeat(
+                seq(COMMA, field("argument",$.identifier))
+            ),
+            BRACKET_RIGHT,
+        ),
+        external_parameters: $ => seq(
+            $.kw_parameters,
+            BRACKET_LEFT,
+            $.external_parameter,
+            repeat(
+                seq(COMMA, $.external_parameter)
+            ),
+            BRACKET_RIGHT,
+        ),
+        external_parameter: $ => choice(
+            $.kw_context,
+            $.external_parameter_self,
+            $.external_parameter_param,
+        ),
+        external_parameter_self: $ => seq(
+            $.kw_self,
+            choice(
+                $.kw_tdo,
+                $.external_parameter_property,
+            ),
+        ),
+        external_parameter_param: $ => seq(
+            choice(
+                $.kw_return,
+                $.identifier,
+            ),
+            optional($.external_parameter_property),
+            optional($.by_reference),
+            optional($.identifier),
+        ),
+        external_parameter_property: $ => choice(
+            $.kw_length,
+            $.kw_duration,
+            $.kw_maxlen,
+            $.kw_charsetid,
+            $.kw_charsetfrom,
+            seq($.kw_indicator,optional(choice($.kw_struct,$.kw_tdo))),
+        ),
+        by_reference: $ => seq(
+            $.kw_by,
+            $.kw_reference,
         ),
         compile_clause: $ => seq(
             $.kw_compile,
@@ -178,7 +411,7 @@ module.exports = grammar({
             EQUAL,
             field("compile_parameter_value", $._literal),
         ),
-        editionable_noneditionable: $ => choice(
+        _editionable_noneditionable: $ => choice(
             $.kw_editionable,
             $.kw_noneditionable,
         ),
@@ -969,6 +1202,15 @@ module.exports = grammar({
             PLUS,
             MINUS,
         ),
+        _enable_disable: $ => choice(
+            $.kw_enable,
+            $.kw_disable,
+        ),
+        rename_to: $ => seq(
+            $.kw_rename,
+            $.kw_to,
+            $.identifier,
+        ),
         expression_operator_boolean: $ => choice(
             NOT_EQUAL_1,
             NOT_EQUAL_2,
@@ -1097,6 +1339,12 @@ module.exports = grammar({
         kw_accessible: _ => reservedWord("accessible"),
         kw_by: _ => reservedWord("by"),
         kw_reuse: _ => reservedWord("reuse"),
+        kw_reset: _ => reservedWord("reset"),
+        kw_final: _ => reservedWord("final"),
+        kw_overriding: _ => reservedWord("overriding"),
+        kw_instantiable: _ => reservedWord("instantiable"),
+        kw_member: _ => reservedWord("member"),
+        kw_static: _ => reservedWord("static"),
         kw_settings: _ => reservedWord("settings"),
         kw_byte: _ => reservedWord("byte"),
         kw_char: _ => reservedWord("char"),
@@ -1114,6 +1362,9 @@ module.exports = grammar({
         kw_deterministic: _ => reservedWord("deterministic"),
         kw_pipelined: _ => reservedWord("pipelined"),
         kw_parallel_enable: _ => reservedWord("parallel_enable"),
+        kw_enable: _ => reservedWord("enable"),
+        kw_disable: _ => reservedWord("disable"),
+        kw_rename: _ => reservedWord("rename"),
         kw_result_cache: _ => reservedWord("result_cache"),
         kw_exists: _ => reservedWord("exists"),
         kw_between: _ => reservedWord("between"),
@@ -1157,6 +1408,8 @@ module.exports = grammar({
         kw_date: _ => reservedWord("date"),
         kw_timestamp: _ => reservedWord("timestamp"),
         kw_with: _ => reservedWord("with"),
+        kw_context: _ => reservedWord("context"),
+        kw_self: _ => reservedWord("self"),
         kw_local: _ => reservedWord("local"),
         kw_time: _ => reservedWord("time"),
         kw_zone: _ => reservedWord("zone"),
@@ -1197,6 +1450,27 @@ module.exports = grammar({
         kw_json_object_t: _ => reservedWord("json_object_t"),
         kw_json_scalar_t: _ => reservedWord("json_scalar_t"),
         kw_json_key_list: _ => reservedWord("json_key_list"),
+        kw_language: _ => reservedWord("language"),
+        kw_java: _ => reservedWord("java"),
+        kw_name: _ => reservedWord("name"),
+        kw_c: _ => reservedWord("c"),
+        kw_external: _ => reservedWord("external"),
+        kw_agent: _ => reservedWord("agent"),
+        kw_parameters: _ => reservedWord("parameters"),
+        kw_tdo: _ => reservedWord("tdo"),
+        kw_indicator: _ => reservedWord("indicator"),
+        kw_length: _ => reservedWord("length"),
+        kw_duration: _ => reservedWord("duration"),
+        kw_maxlen: _ => reservedWord("maxlen"),
+        kw_charsetid: _ => reservedWord("charsetid"),
+        kw_charsetfrom: _ => reservedWord("charsetfrom"),
+        kw_struct: _ => reservedWord("struct"),
+        kw_reference: _ => reservedWord("reference"),
+        kw_object: _ => reservedWord("object"),
+        kw_map: _ => reservedWord("map"),
+        kw_order: _ => reservedWord("order"),
+        kw_constructor: _ => reservedWord("constructor"),
+        kw_result: _ => reservedWord("result"),
     },
 });
 

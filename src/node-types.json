@@ -95,6 +95,36 @@
     }
   },
   {
+    "type": "agent_in",
+    "named": true,
+    "fields": {
+      "argument": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_agent",
+          "named": true
+        },
+        {
+          "type": "kw_in",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "alter_function",
     "named": true,
     "fields": {
@@ -128,15 +158,19 @@
           "named": true
         },
         {
-          "type": "editionable_noneditionable",
-          "named": true
-        },
-        {
           "type": "kw_alter",
           "named": true
         },
         {
+          "type": "kw_editionable",
+          "named": true
+        },
+        {
           "type": "kw_function",
+          "named": true
+        },
+        {
+          "type": "kw_noneditionable",
           "named": true
         }
       ]
@@ -176,15 +210,19 @@
           "named": true
         },
         {
-          "type": "editionable_noneditionable",
-          "named": true
-        },
-        {
           "type": "kw_alter",
           "named": true
         },
         {
+          "type": "kw_editionable",
+          "named": true
+        },
+        {
           "type": "kw_library",
+          "named": true
+        },
+        {
+          "type": "kw_noneditionable",
           "named": true
         }
       ]
@@ -224,11 +262,15 @@
           "named": true
         },
         {
-          "type": "editionable_noneditionable",
+          "type": "kw_alter",
           "named": true
         },
         {
-          "type": "kw_alter",
+          "type": "kw_editionable",
+          "named": true
+        },
+        {
+          "type": "kw_noneditionable",
           "named": true
         },
         {
@@ -272,7 +314,55 @@
           "named": true
         },
         {
-          "type": "editionable_noneditionable",
+          "type": "kw_alter",
+          "named": true
+        },
+        {
+          "type": "kw_editionable",
+          "named": true
+        },
+        {
+          "type": "kw_noneditionable",
+          "named": true
+        },
+        {
+          "type": "kw_procedure",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_trigger",
+    "named": true,
+    "fields": {
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "trigger_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "compile_clause",
           "named": true
         },
         {
@@ -280,7 +370,161 @@
           "named": true
         },
         {
-          "type": "kw_procedure",
+          "type": "kw_disable",
+          "named": true
+        },
+        {
+          "type": "kw_editionable",
+          "named": true
+        },
+        {
+          "type": "kw_enable",
+          "named": true
+        },
+        {
+          "type": "kw_noneditionable",
+          "named": true
+        },
+        {
+          "type": "kw_trigger",
+          "named": true
+        },
+        {
+          "type": "rename_to",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_type",
+    "named": true,
+    "fields": {
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "type_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "alter_type_replace",
+          "named": true
+        },
+        {
+          "type": "compile_clause",
+          "named": true
+        },
+        {
+          "type": "kw_alter",
+          "named": true
+        },
+        {
+          "type": "kw_editionable",
+          "named": true
+        },
+        {
+          "type": "kw_final",
+          "named": true
+        },
+        {
+          "type": "kw_instantiable",
+          "named": true
+        },
+        {
+          "type": "kw_noneditionable",
+          "named": true
+        },
+        {
+          "type": "kw_not",
+          "named": true
+        },
+        {
+          "type": "kw_reset",
+          "named": true
+        },
+        {
+          "type": "kw_type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_type_replace",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "accessible_by_clause",
+          "named": true
+        },
+        {
+          "type": "datatype",
+          "named": true
+        },
+        {
+          "type": "element_spec",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "invoker_rights_clause",
+          "named": true
+        },
+        {
+          "type": "kw_as",
+          "named": true
+        },
+        {
+          "type": "kw_object",
+          "named": true
+        },
+        {
+          "type": "kw_replace",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "by_reference",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_by",
+          "named": true
+        },
+        {
+          "type": "kw_reference",
           "named": true
         }
       ]
@@ -300,6 +544,68 @@
         },
         {
           "type": "kw_char",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "c_declaration",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "agent_in",
+          "named": true
+        },
+        {
+          "type": "external_parameters",
+          "named": true
+        },
+        {
+          "type": "kw_c",
+          "named": true
+        },
+        {
+          "type": "kw_external",
+          "named": true
+        },
+        {
+          "type": "kw_language",
+          "named": true
+        },
+        {
+          "type": "library_name",
+          "named": true
+        },
+        {
+          "type": "name_name",
+          "named": true
+        },
+        {
+          "type": "with_context",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "call_spec_ext",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "c_declaration",
+          "named": true
+        },
+        {
+          "type": "java_declaration",
           "named": true
         }
       ]
@@ -497,10 +803,6 @@
           "named": true
         },
         {
-          "type": "editionable_noneditionable",
-          "named": true
-        },
-        {
           "type": "end_obj",
           "named": true
         },
@@ -517,7 +819,15 @@
           "named": true
         },
         {
+          "type": "kw_editionable",
+          "named": true
+        },
+        {
           "type": "kw_is",
+          "named": true
+        },
+        {
+          "type": "kw_noneditionable",
           "named": true
         },
         {
@@ -1048,19 +1358,250 @@
     }
   },
   {
-    "type": "editionable_noneditionable",
+    "type": "element_spec",
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
-          "type": "kw_editionable",
+          "type": "element_spec_constructor_spec",
           "named": true
         },
         {
-          "type": "kw_noneditionable",
+          "type": "element_spec_map_order_function_spec",
+          "named": true
+        },
+        {
+          "type": "element_spec_subprogram_spec",
+          "named": true
+        },
+        {
+          "type": "inheritance_clause",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "element_spec_constructor_spec",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "element_spec_is_as_call_spec",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_as",
+          "named": true
+        },
+        {
+          "type": "kw_constructor",
+          "named": true
+        },
+        {
+          "type": "kw_final",
+          "named": true
+        },
+        {
+          "type": "kw_function",
+          "named": true
+        },
+        {
+          "type": "kw_in",
+          "named": true
+        },
+        {
+          "type": "kw_instantiable",
+          "named": true
+        },
+        {
+          "type": "kw_out",
+          "named": true
+        },
+        {
+          "type": "kw_result",
+          "named": true
+        },
+        {
+          "type": "kw_return",
+          "named": true
+        },
+        {
+          "type": "kw_self",
+          "named": true
+        },
+        {
+          "type": "parameter_declaration_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "element_spec_function_spec",
+    "named": true,
+    "fields": {
+      "fnc_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "element_spec_is_as_call_spec",
+          "named": true
+        },
+        {
+          "type": "kw_function",
+          "named": true
+        },
+        {
+          "type": "parameter_declaration",
+          "named": true
+        },
+        {
+          "type": "return_declaration",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "element_spec_is_as_call_spec",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "call_spec_ext",
+          "named": true
+        },
+        {
+          "type": "kw_as",
+          "named": true
+        },
+        {
+          "type": "kw_is",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "element_spec_map_order_function_spec",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "element_spec_function_spec",
+          "named": true
+        },
+        {
+          "type": "kw_map",
+          "named": true
+        },
+        {
+          "type": "kw_member",
+          "named": true
+        },
+        {
+          "type": "kw_order",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "element_spec_procedure_spec",
+    "named": true,
+    "fields": {
+      "prc_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "element_spec_is_as_call_spec",
+          "named": true
+        },
+        {
+          "type": "kw_procedure",
+          "named": true
+        },
+        {
+          "type": "parameter_declaration",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "element_spec_subprogram_spec",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "element_spec_function_spec",
+          "named": true
+        },
+        {
+          "type": "element_spec_procedure_spec",
+          "named": true
+        },
+        {
+          "type": "kw_member",
+          "named": true
+        },
+        {
+          "type": "kw_static",
           "named": true
         }
       ]
@@ -1351,6 +1892,141 @@
     "fields": {}
   },
   {
+    "type": "external_parameter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "external_parameter_param",
+          "named": true
+        },
+        {
+          "type": "external_parameter_self",
+          "named": true
+        },
+        {
+          "type": "kw_context",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "external_parameter_param",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "by_reference",
+          "named": true
+        },
+        {
+          "type": "external_parameter_property",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_return",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "external_parameter_property",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_charsetfrom",
+          "named": true
+        },
+        {
+          "type": "kw_charsetid",
+          "named": true
+        },
+        {
+          "type": "kw_duration",
+          "named": true
+        },
+        {
+          "type": "kw_indicator",
+          "named": true
+        },
+        {
+          "type": "kw_length",
+          "named": true
+        },
+        {
+          "type": "kw_maxlen",
+          "named": true
+        },
+        {
+          "type": "kw_struct",
+          "named": true
+        },
+        {
+          "type": "kw_tdo",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "external_parameter_self",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "external_parameter_property",
+          "named": true
+        },
+        {
+          "type": "kw_self",
+          "named": true
+        },
+        {
+          "type": "kw_tdo",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "external_parameters",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "external_parameter",
+          "named": true
+        },
+        {
+          "type": "kw_parameters",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "field_definition",
     "named": true,
     "fields": {},
@@ -1478,6 +2154,33 @@
     }
   },
   {
+    "type": "inheritance_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_final",
+          "named": true
+        },
+        {
+          "type": "kw_instantiable",
+          "named": true
+        },
+        {
+          "type": "kw_not",
+          "named": true
+        },
+        {
+          "type": "kw_overriding",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "invoker_rights_clause",
     "named": true,
     "fields": {},
@@ -1574,6 +2277,66 @@
     }
   },
   {
+    "type": "java_declaration",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "literal_string",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_java",
+          "named": true
+        },
+        {
+          "type": "kw_language",
+          "named": true
+        },
+        {
+          "type": "kw_name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "library_name",
+    "named": true,
+    "fields": {
+      "library": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_library",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "literal_list",
     "named": true,
     "fields": {},
@@ -1613,6 +2376,21 @@
     "type": "literal_string",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "name_name",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_name",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "not_null",
@@ -1957,6 +2735,29 @@
     }
   },
   {
+    "type": "rename_to",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_rename",
+          "named": true
+        },
+        {
+          "type": "kw_to",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "return_declaration",
     "named": true,
     "fields": {},
@@ -2058,6 +2859,14 @@
         },
         {
           "type": "alter_procedure",
+          "named": true
+        },
+        {
+          "type": "alter_trigger",
+          "named": true
+        },
+        {
+          "type": "alter_type",
           "named": true
         },
         {
@@ -2451,6 +3260,25 @@
     }
   },
   {
+    "type": "with_context",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_context",
+          "named": true
+        },
+        {
+          "type": "kw_with",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "!=",
     "named": false
   },
@@ -2567,6 +3395,10 @@
     "named": true
   },
   {
+    "type": "kw_agent",
+    "named": true
+  },
+  {
     "type": "kw_alter",
     "named": true
   },
@@ -2639,6 +3471,10 @@
     "named": true
   },
   {
+    "type": "kw_c",
+    "named": true
+  },
+  {
     "type": "kw_case",
     "named": true
   },
@@ -2648,6 +3484,14 @@
   },
   {
     "type": "kw_character",
+    "named": true
+  },
+  {
+    "type": "kw_charsetfrom",
+    "named": true
+  },
+  {
+    "type": "kw_charsetid",
     "named": true
   },
   {
@@ -2664,6 +3508,14 @@
   },
   {
     "type": "kw_constant",
+    "named": true
+  },
+  {
+    "type": "kw_constructor",
+    "named": true
+  },
+  {
+    "type": "kw_context",
     "named": true
   },
   {
@@ -2727,7 +3579,15 @@
     "named": true
   },
   {
+    "type": "kw_disable",
+    "named": true
+  },
+  {
     "type": "kw_double",
+    "named": true
+  },
+  {
+    "type": "kw_duration",
     "named": true
   },
   {
@@ -2736,6 +3596,10 @@
   },
   {
     "type": "kw_else",
+    "named": true
+  },
+  {
+    "type": "kw_enable",
     "named": true
   },
   {
@@ -2751,7 +3615,15 @@
     "named": true
   },
   {
+    "type": "kw_external",
+    "named": true
+  },
+  {
     "type": "kw_false",
+    "named": true
+  },
+  {
+    "type": "kw_final",
     "named": true
   },
   {
@@ -2779,7 +3651,15 @@
     "named": true
   },
   {
+    "type": "kw_indicator",
+    "named": true
+  },
+  {
     "type": "kw_inserting",
+    "named": true
+  },
+  {
+    "type": "kw_instantiable",
     "named": true
   },
   {
@@ -2803,6 +3683,10 @@
     "named": true
   },
   {
+    "type": "kw_java",
+    "named": true
+  },
+  {
     "type": "kw_json_array_t",
     "named": true
   },
@@ -2823,7 +3707,15 @@
     "named": true
   },
   {
+    "type": "kw_language",
+    "named": true
+  },
+  {
     "type": "kw_last",
+    "named": true
+  },
+  {
+    "type": "kw_length",
     "named": true
   },
   {
@@ -2847,11 +3739,27 @@
     "named": true
   },
   {
+    "type": "kw_map",
+    "named": true
+  },
+  {
+    "type": "kw_maxlen",
+    "named": true
+  },
+  {
+    "type": "kw_member",
+    "named": true
+  },
+  {
     "type": "kw_metadata",
     "named": true
   },
   {
     "type": "kw_month",
+    "named": true
+  },
+  {
+    "type": "kw_name",
     "named": true
   },
   {
@@ -2911,6 +3819,10 @@
     "named": true
   },
   {
+    "type": "kw_object",
+    "named": true
+  },
+  {
     "type": "kw_of",
     "named": true
   },
@@ -2919,7 +3831,15 @@
     "named": true
   },
   {
+    "type": "kw_order",
+    "named": true
+  },
+  {
     "type": "kw_out",
+    "named": true
+  },
+  {
+    "type": "kw_overriding",
     "named": true
   },
   {
@@ -2928,6 +3848,10 @@
   },
   {
     "type": "kw_parallel_enable",
+    "named": true
+  },
+  {
+    "type": "kw_parameters",
     "named": true
   },
   {
@@ -2979,7 +3903,23 @@
     "named": true
   },
   {
+    "type": "kw_reference",
+    "named": true
+  },
+  {
+    "type": "kw_rename",
+    "named": true
+  },
+  {
     "type": "kw_replace",
+    "named": true
+  },
+  {
+    "type": "kw_reset",
+    "named": true
+  },
+  {
+    "type": "kw_result",
     "named": true
   },
   {
@@ -3019,6 +3959,10 @@
     "named": true
   },
   {
+    "type": "kw_self",
+    "named": true
+  },
+  {
     "type": "kw_set",
     "named": true
   },
@@ -3051,7 +3995,15 @@
     "named": true
   },
   {
+    "type": "kw_static",
+    "named": true
+  },
+  {
     "type": "kw_string",
+    "named": true
+  },
+  {
+    "type": "kw_struct",
     "named": true
   },
   {
@@ -3064,6 +4016,10 @@
   },
   {
     "type": "kw_table",
+    "named": true
+  },
+  {
+    "type": "kw_tdo",
     "named": true
   },
   {
