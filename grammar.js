@@ -230,17 +230,17 @@ module.exports = grammar({
                 $.kw_reset,
                 $._final_instantiable,
                 $.alter_type_replace,
-                $.alter_type_alter_x,
+                $._alter_type_alter_x,
             ),
+            optional($.dependent_handling_clause),
             SEMICOLON,
         ),
-        alter_type_alter_x: $ => seq(
+        _alter_type_alter_x: $ => seq(
             choice(
                 $.alter_method_spec,
                 $.alter_attribute_definition,
                 $.alter_collection_clause,
             ),
-            optional($.dependent_handling_clause),
         ),
         alter_method_spec: $ => seq(
             $.alter_method_spec_element,
@@ -257,26 +257,20 @@ module.exports = grammar({
             ),
         ),
         alter_collection_clause: $ => seq(
-            $.kw_modify,
-            choice(
-                seq($.kw_limit, $.literal_number),
-                seq($.kw_element, $.kw_type, $.datatype),
-            ),
+          $.kw_modify,
+          choice(
+            seq($.kw_limit, $.literal_number),
+            seq($.kw_element, $.kw_type, $.datatype),
+          ),
         ),
-        alter_attribute_definition: $ => seq(
-            choice(
-                $.kw_add,
-                $.kw_month,
-            ),
-            choice(
-                $.alter_attribute_definition_add_modify,
-                $.alter_attribute_definition_drop,
-            ),
+        alter_attribute_definition: $ => choice(
+          $.alter_attribute_definition_add_modify,
+          $.alter_attribute_definition_drop,
         ),
         alter_attribute_definition_drop: $ => seq(
-            $.kw_drop,
-            $.kw_attribute,
-            $.alter_attribute_definition_attribute,
+          $.kw_drop,
+          $.kw_attribute,
+          $.alter_attribute_definition_attribute,
         ),
         alter_attribute_definition_add_modify: $ => seq(
             choice(
@@ -412,15 +406,15 @@ module.exports = grammar({
         ),
         dependent_handling_clause: $ => choice(
             $.kw_invalidate,
-            $.dependent_handling_clause_cascade,
+            $._dependent_handling_clause_cascade,
 
         ),
-        dependent_handling_clause_cascade: $ => seq(
+        _dependent_handling_clause_cascade: $ => seq(
             $.kw_cascade,
             optional(
                 choice(
-                    $.dependent_handling_clause_convert,
-                    $.dependent_handling_clause_including,
+                    $._dependent_handling_clause_convert,
+                    $._dependent_handling_clause_including,
                 ),
             ),
             optional(
@@ -430,13 +424,13 @@ module.exports = grammar({
                 ),
             )
         ),
-        dependent_handling_clause_including: $ => seq(
+        _dependent_handling_clause_including: $ => seq(
             optional($.kw_not),
             $.kw_including,
             $.kw_table,
             $.kw_data,
         ),
-        dependent_handling_clause_convert: $ => seq(
+        _dependent_handling_clause_convert: $ => seq(
             $.kw_convert,
             $.kw_to,
             $.kw_substitutable,
@@ -1641,6 +1635,7 @@ module.exports = grammar({
         kw_attribute: _ => reservedWord("attribute"),
         kw_element: _ => reservedWord("element"),
         kw_validate: _ => reservedWord("validate"),
+        kw_pragma: _ => reservedWord("pragma"),
     },
 });
 

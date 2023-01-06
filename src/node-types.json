@@ -129,7 +129,7 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
         {
@@ -138,14 +138,6 @@
         },
         {
           "type": "alter_attribute_definition_drop",
-          "named": true
-        },
-        {
-          "type": "kw_add",
-          "named": true
-        },
-        {
-          "type": "kw_month",
           "named": true
         }
       ]
@@ -629,7 +621,15 @@
       "required": true,
       "types": [
         {
-          "type": "alter_type_alter_x",
+          "type": "alter_attribute_definition",
+          "named": true
+        },
+        {
+          "type": "alter_collection_clause",
+          "named": true
+        },
+        {
+          "type": "alter_method_spec",
           "named": true
         },
         {
@@ -638,6 +638,10 @@
         },
         {
           "type": "compile_clause",
+          "named": true
+        },
+        {
+          "type": "dependent_handling_clause",
           "named": true
         },
         {
@@ -670,33 +674,6 @@
         },
         {
           "type": "kw_type",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "alter_type_alter_x",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "alter_attribute_definition",
-          "named": true
-        },
-        {
-          "type": "alter_collection_clause",
-          "named": true
-        },
-        {
-          "type": "alter_method_spec",
-          "named": true
-        },
-        {
-          "type": "dependent_handling_clause",
           "named": true
         }
       ]
@@ -1596,36 +1573,9 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "dependent_handling_clause_cascade",
-          "named": true
-        },
-        {
-          "type": "kw_invalidate",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "dependent_handling_clause_cascade",
-    "named": true,
-    "fields": {},
-    "children": {
       "multiple": true,
       "required": true,
       "types": [
-        {
-          "type": "dependent_handling_clause_convert",
-          "named": true
-        },
-        {
-          "type": "dependent_handling_clause_including",
-          "named": true
-        },
         {
           "type": "exceptions_clause",
           "named": true
@@ -1635,45 +1585,15 @@
           "named": true
         },
         {
-          "type": "kw_force",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "dependent_handling_clause_convert",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
           "type": "kw_convert",
           "named": true
         },
         {
-          "type": "kw_substitutable",
+          "type": "kw_data",
           "named": true
         },
         {
-          "type": "kw_to",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "dependent_handling_clause_including",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "kw_data",
+          "type": "kw_force",
           "named": true
         },
         {
@@ -1681,11 +1601,23 @@
           "named": true
         },
         {
+          "type": "kw_invalidate",
+          "named": true
+        },
+        {
           "type": "kw_not",
           "named": true
         },
         {
+          "type": "kw_substitutable",
+          "named": true
+        },
+        {
           "type": "kw_table",
+          "named": true
+        },
+        {
+          "type": "kw_to",
           "named": true
         }
       ]

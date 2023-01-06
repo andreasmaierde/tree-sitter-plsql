@@ -750,7 +750,19 @@
             },
             {
               "type": "SYMBOL",
-              "name": "alter_type_alter_x"
+              "name": "_alter_type_alter_x"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "dependent_handling_clause"
+            },
+            {
+              "type": "BLANK"
             }
           ]
         },
@@ -760,7 +772,7 @@
         }
       ]
     },
-    "alter_type_alter_x": {
+    "_alter_type_alter_x": {
       "type": "SEQ",
       "members": [
         {
@@ -777,18 +789,6 @@
             {
               "type": "SYMBOL",
               "name": "alter_collection_clause"
-            }
-          ]
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "dependent_handling_clause"
-            },
-            {
-              "type": "BLANK"
             }
           ]
         }
@@ -895,33 +895,15 @@
       ]
     },
     "alter_attribute_definition": {
-      "type": "SEQ",
+      "type": "CHOICE",
       "members": [
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "kw_add"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "kw_month"
-            }
-          ]
+          "type": "SYMBOL",
+          "name": "alter_attribute_definition_add_modify"
         },
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "alter_attribute_definition_add_modify"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "alter_attribute_definition_drop"
-            }
-          ]
+          "type": "SYMBOL",
+          "name": "alter_attribute_definition_drop"
         }
       ]
     },
@@ -1483,11 +1465,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "dependent_handling_clause_cascade"
+          "name": "_dependent_handling_clause_cascade"
         }
       ]
     },
-    "dependent_handling_clause_cascade": {
+    "_dependent_handling_clause_cascade": {
       "type": "SEQ",
       "members": [
         {
@@ -1502,11 +1484,11 @@
               "members": [
                 {
                   "type": "SYMBOL",
-                  "name": "dependent_handling_clause_convert"
+                  "name": "_dependent_handling_clause_convert"
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "dependent_handling_clause_including"
+                  "name": "_dependent_handling_clause_including"
                 }
               ]
             },
@@ -1546,7 +1528,7 @@
         }
       ]
     },
-    "dependent_handling_clause_including": {
+    "_dependent_handling_clause_including": {
       "type": "SEQ",
       "members": [
         {
@@ -1575,7 +1557,7 @@
         }
       ]
     },
-    "dependent_handling_clause_convert": {
+    "_dependent_handling_clause_convert": {
       "type": "SEQ",
       "members": [
         {
@@ -7913,6 +7895,17 @@
         "content": {
           "type": "PATTERN",
           "value": "[vV][aA][lL][iI][dD][aA][tT][eE]"
+        }
+      }
+    },
+    "kw_pragma": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[pP][rR][aA][gG][mM][aA]"
         }
       }
     }
