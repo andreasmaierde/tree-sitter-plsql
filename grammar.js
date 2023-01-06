@@ -71,13 +71,65 @@ module.exports = grammar({
         _ddl_statement: $ => choice(
              $._alter_statement,
              $._create_statement,
-            // $._drop_statement,
+             $._drop_statement,
         ),
-        _create_statement: $ => seq(
-            choice(
-                // $.create_table,
-                $.create_package,
-            ),
+        _drop_statement: $ => choice(
+            $.drop_function,
+            $.drop_procedure,
+            $.drop_package,
+            $.drop_type,
+            $.drop_type_body,
+            $.drop_trigger,
+            $.drop_library,
+        ),
+        drop_procedure: $ => seq(
+            $.kw_drop,
+            $.kw_procedure,
+            $._referenced_element,
+            SEMICOLON,
+        ),
+        drop_function: $ => seq(
+            $.kw_drop,
+            $.kw_function,
+            $._referenced_element,
+            SEMICOLON,
+        ),
+        drop_library: $ => seq(
+            $.kw_drop,
+            $.kw_library,
+            $.identifier,
+            SEMICOLON,
+        ),
+        drop_trigger: $ => seq(
+            $.kw_drop,
+            $.kw_trigger,
+            $._referenced_element,
+            SEMICOLON,
+        ),
+        drop_type: $ => seq(
+            $.kw_drop,
+            $.kw_type,
+            $._referenced_element,
+            optional(choice($.kw_force,$.kw_validate)),
+            SEMICOLON,
+        ),
+        drop_type_body: $ => seq(
+            $.kw_drop,
+            $.kw_type,
+            $.kw_body,
+            $._referenced_element,
+            SEMICOLON,
+        ),
+        drop_package: $ => seq(
+            $.kw_drop,
+            $.kw_package,
+            optional($.kw_body),
+            $._referenced_element,
+            SEMICOLON,
+        ),
+        _create_statement: $ => choice(
+            // TODO
+            $.create_package,
         ),
         create_package: $ => seq(
             $.create_obj,
@@ -178,17 +230,84 @@ module.exports = grammar({
                 $.kw_reset,
                 $._final_instantiable,
                 $.alter_type_replace,
-                // TODO
-                // $.alter_type_alter_x,
+                $.alter_type_alter_x,
             ),
             SEMICOLON,
         ),
-        // TODO
-        // alter_type_alter_x: $ => seq(
-        //     choice(
-        //     ),
-        //     optional($.dependent_handling_clause),
-        // ),
+        alter_type_alter_x: $ => seq(
+            choice(
+                $.alter_method_spec,
+                $.alter_attribute_definition,
+                $.alter_collection_clause,
+            ),
+            optional($.dependent_handling_clause),
+        ),
+        alter_method_spec: $ => seq(
+            $.alter_method_spec_element,
+            repeat(seq(COMMA, $.alter_method_spec_element)),
+        ),
+        alter_method_spec_element: $ => seq(
+            choice(
+                $.kw_add,
+                $.kw_drop,
+            ),
+            choice(
+                $.element_spec_map_order_function_spec,
+                $.element_spec_subprogram_spec,
+            ),
+        ),
+        alter_collection_clause: $ => seq(
+            $.kw_modify,
+            choice(
+                seq($.kw_limit, $.literal_number),
+                seq($.kw_element, $.kw_type, $.datatype),
+            ),
+        ),
+        alter_attribute_definition: $ => seq(
+            choice(
+                $.kw_add,
+                $.kw_month,
+            ),
+            choice(
+                $.alter_attribute_definition_add_modify,
+                $.alter_attribute_definition_drop,
+            ),
+        ),
+        alter_attribute_definition_drop: $ => seq(
+            $.kw_drop,
+            $.kw_attribute,
+            $.alter_attribute_definition_attribute,
+        ),
+        alter_attribute_definition_add_modify: $ => seq(
+            choice(
+                $.kw_add,
+                $.kw_modify,
+            ),
+            $.kw_attribute,
+            $.alter_attribute_definition_attribute_datatype,
+        ),
+        alter_attribute_definition_attribute: $ => choice(
+            $.identifier,
+            seq(
+                BRACKET_LEFT,
+                $.identifier,
+                repeat(seq(COMMA, $.identifier)),
+                BRACKET_RIGHT,
+            ),
+        ),
+        alter_attribute_definition_attribute_datatype: $ => choice(
+            $.alter_attribute_definition_attribute_datatype_element,
+            seq(
+                BRACKET_LEFT,
+                $.alter_attribute_definition_attribute_datatype_element,
+                repeat(seq(COMMA, $.alter_attribute_definition_attribute_datatype_element)),
+                BRACKET_RIGHT,
+            ),
+        ),
+        alter_attribute_definition_attribute_datatype_element: $ => seq(
+            $.identifier,
+            $.datatype,
+        ),
         alter_type_replace: $ => seq(
             $.kw_replace,
             repeat(
@@ -290,6 +409,42 @@ module.exports = grammar({
         element_spec_is_as_call_spec: $ => seq(
             $._is_as,
             $.call_spec_ext,
+        ),
+        dependent_handling_clause: $ => choice(
+            $.kw_invalidate,
+            $.dependent_handling_clause_cascade,
+
+        ),
+        dependent_handling_clause_cascade: $ => seq(
+            $.kw_cascade,
+            optional(
+                choice(
+                    $.dependent_handling_clause_convert,
+                    $.dependent_handling_clause_including,
+                ),
+            ),
+            optional(
+                seq(
+                    optional($.kw_force),
+                    $.exceptions_clause,
+                ),
+            )
+        ),
+        dependent_handling_clause_including: $ => seq(
+            optional($.kw_not),
+            $.kw_including,
+            $.kw_table,
+            $.kw_data,
+        ),
+        dependent_handling_clause_convert: $ => seq(
+            $.kw_convert,
+            $.kw_to,
+            $.kw_substitutable,
+        ),
+        exceptions_clause: $ => seq(
+            $.kw_exceptions,
+            $.kw_into,
+            $._referenced_element,
         ),
         inheritance_clause: $ => seq(
             optional($.kw_not),
@@ -1322,6 +1477,7 @@ module.exports = grammar({
         kw_declare: _ => reservedWord("declare"),
         kw_begin: _ => reservedWord("begin"),
         kw_exception: _ => reservedWord("exception"),
+        kw_exceptions: _ => reservedWord("exceptions"),
         kw_end: _ => reservedWord("end"),
         kw_or: _ => reservedWord("or"),
         kw_and: _ => reservedWord("and"),
@@ -1471,6 +1627,20 @@ module.exports = grammar({
         kw_order: _ => reservedWord("order"),
         kw_constructor: _ => reservedWord("constructor"),
         kw_result: _ => reservedWord("result"),
+        kw_invalidate: _ => reservedWord("invalidate"),
+        kw_cascade: _ => reservedWord("cascade"),
+        kw_convert: _ => reservedWord("convert"),
+        kw_substitutable: _ => reservedWord("substitutable"),
+        kw_including: _ => reservedWord("including"),
+        kw_data: _ => reservedWord("data"),
+        kw_force: _ => reservedWord("force"),
+        kw_into: _ => reservedWord("into"),
+        kw_add: _ => reservedWord("add"),
+        kw_drop: _ => reservedWord("drop"),
+        kw_modify: _ => reservedWord("modify"),
+        kw_attribute: _ => reservedWord("attribute"),
+        kw_element: _ => reservedWord("element"),
+        kw_validate: _ => reservedWord("validate"),
     },
 });
 

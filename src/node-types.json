@@ -125,6 +125,167 @@
     }
   },
   {
+    "type": "alter_attribute_definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "alter_attribute_definition_add_modify",
+          "named": true
+        },
+        {
+          "type": "alter_attribute_definition_drop",
+          "named": true
+        },
+        {
+          "type": "kw_add",
+          "named": true
+        },
+        {
+          "type": "kw_month",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_attribute_definition_add_modify",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "alter_attribute_definition_attribute_datatype",
+          "named": true
+        },
+        {
+          "type": "kw_add",
+          "named": true
+        },
+        {
+          "type": "kw_attribute",
+          "named": true
+        },
+        {
+          "type": "kw_modify",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_attribute_definition_attribute",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_attribute_definition_attribute_datatype",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "alter_attribute_definition_attribute_datatype_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_attribute_definition_attribute_datatype_element",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "datatype",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_attribute_definition_drop",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "alter_attribute_definition_attribute",
+          "named": true
+        },
+        {
+          "type": "kw_attribute",
+          "named": true
+        },
+        {
+          "type": "kw_drop",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_collection_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "datatype",
+          "named": true
+        },
+        {
+          "type": "kw_element",
+          "named": true
+        },
+        {
+          "type": "kw_limit",
+          "named": true
+        },
+        {
+          "type": "kw_modify",
+          "named": true
+        },
+        {
+          "type": "kw_type",
+          "named": true
+        },
+        {
+          "type": "literal_number",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "alter_function",
     "named": true,
     "fields": {
@@ -223,6 +384,48 @@
         },
         {
           "type": "kw_noneditionable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_method_spec",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "alter_method_spec_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_method_spec_element",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "element_spec_map_order_function_spec",
+          "named": true
+        },
+        {
+          "type": "element_spec_subprogram_spec",
+          "named": true
+        },
+        {
+          "type": "kw_add",
+          "named": true
+        },
+        {
+          "type": "kw_drop",
           "named": true
         }
       ]
@@ -426,6 +629,10 @@
       "required": true,
       "types": [
         {
+          "type": "alter_type_alter_x",
+          "named": true
+        },
+        {
           "type": "alter_type_replace",
           "named": true
         },
@@ -463,6 +670,33 @@
         },
         {
           "type": "kw_type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "alter_type_alter_x",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "alter_attribute_definition",
+          "named": true
+        },
+        {
+          "type": "alter_collection_clause",
+          "named": true
+        },
+        {
+          "type": "alter_method_spec",
+          "named": true
+        },
+        {
+          "type": "dependent_handling_clause",
           "named": true
         }
       ]
@@ -1358,6 +1592,505 @@
     }
   },
   {
+    "type": "dependent_handling_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "dependent_handling_clause_cascade",
+          "named": true
+        },
+        {
+          "type": "kw_invalidate",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "dependent_handling_clause_cascade",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "dependent_handling_clause_convert",
+          "named": true
+        },
+        {
+          "type": "dependent_handling_clause_including",
+          "named": true
+        },
+        {
+          "type": "exceptions_clause",
+          "named": true
+        },
+        {
+          "type": "kw_cascade",
+          "named": true
+        },
+        {
+          "type": "kw_force",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "dependent_handling_clause_convert",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_convert",
+          "named": true
+        },
+        {
+          "type": "kw_substitutable",
+          "named": true
+        },
+        {
+          "type": "kw_to",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "dependent_handling_clause_including",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_data",
+          "named": true
+        },
+        {
+          "type": "kw_including",
+          "named": true
+        },
+        {
+          "type": "kw_not",
+          "named": true
+        },
+        {
+          "type": "kw_table",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "drop_function",
+    "named": true,
+    "fields": {
+      "ref_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_drop",
+          "named": true
+        },
+        {
+          "type": "kw_function",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "drop_library",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_drop",
+          "named": true
+        },
+        {
+          "type": "kw_library",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "drop_package",
+    "named": true,
+    "fields": {
+      "ref_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_body",
+          "named": true
+        },
+        {
+          "type": "kw_drop",
+          "named": true
+        },
+        {
+          "type": "kw_package",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "drop_procedure",
+    "named": true,
+    "fields": {
+      "ref_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_drop",
+          "named": true
+        },
+        {
+          "type": "kw_procedure",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "drop_trigger",
+    "named": true,
+    "fields": {
+      "ref_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_drop",
+          "named": true
+        },
+        {
+          "type": "kw_trigger",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "drop_type",
+    "named": true,
+    "fields": {
+      "ref_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_drop",
+          "named": true
+        },
+        {
+          "type": "kw_force",
+          "named": true
+        },
+        {
+          "type": "kw_type",
+          "named": true
+        },
+        {
+          "type": "kw_validate",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "drop_type_body",
+    "named": true,
+    "fields": {
+      "ref_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_body",
+          "named": true
+        },
+        {
+          "type": "kw_drop",
+          "named": true
+        },
+        {
+          "type": "kw_type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "element_spec",
     "named": true,
     "fields": {},
@@ -1621,6 +2354,66 @@
         },
         {
           "type": "kw_end",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "exceptions_clause",
+    "named": true,
+    "fields": {
+      "ref_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ref_name_parent": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "remote_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_exceptions",
+          "named": true
+        },
+        {
+          "type": "kw_into",
           "named": true
         }
       ]
@@ -2872,6 +3665,34 @@
         {
           "type": "create_package",
           "named": true
+        },
+        {
+          "type": "drop_function",
+          "named": true
+        },
+        {
+          "type": "drop_library",
+          "named": true
+        },
+        {
+          "type": "drop_package",
+          "named": true
+        },
+        {
+          "type": "drop_procedure",
+          "named": true
+        },
+        {
+          "type": "drop_trigger",
+          "named": true
+        },
+        {
+          "type": "drop_type",
+          "named": true
+        },
+        {
+          "type": "drop_type_body",
+          "named": true
         }
       ]
     }
@@ -3395,6 +4216,10 @@
     "named": true
   },
   {
+    "type": "kw_add",
+    "named": true
+  },
+  {
     "type": "kw_agent",
     "named": true
   },
@@ -3424,6 +4249,10 @@
   },
   {
     "type": "kw_as",
+    "named": true
+  },
+  {
+    "type": "kw_attribute",
     "named": true
   },
   {
@@ -3475,6 +4304,10 @@
     "named": true
   },
   {
+    "type": "kw_cascade",
+    "named": true
+  },
+  {
     "type": "kw_case",
     "named": true
   },
@@ -3519,6 +4352,10 @@
     "named": true
   },
   {
+    "type": "kw_convert",
+    "named": true
+  },
+  {
     "type": "kw_count",
     "named": true
   },
@@ -3532,6 +4369,10 @@
   },
   {
     "type": "kw_cursor",
+    "named": true
+  },
+  {
+    "type": "kw_data",
     "named": true
   },
   {
@@ -3587,11 +4428,19 @@
     "named": true
   },
   {
+    "type": "kw_drop",
+    "named": true
+  },
+  {
     "type": "kw_duration",
     "named": true
   },
   {
     "type": "kw_editionable",
+    "named": true
+  },
+  {
+    "type": "kw_element",
     "named": true
   },
   {
@@ -3608,6 +4457,10 @@
   },
   {
     "type": "kw_exception",
+    "named": true
+  },
+  {
+    "type": "kw_exceptions",
     "named": true
   },
   {
@@ -3635,6 +4488,10 @@
     "named": true
   },
   {
+    "type": "kw_force",
+    "named": true
+  },
+  {
     "type": "kw_found",
     "named": true
   },
@@ -3644,6 +4501,10 @@
   },
   {
     "type": "kw_in",
+    "named": true
+  },
+  {
+    "type": "kw_including",
     "named": true
   },
   {
@@ -3672,6 +4533,14 @@
   },
   {
     "type": "kw_interval",
+    "named": true
+  },
+  {
+    "type": "kw_into",
+    "named": true
+  },
+  {
+    "type": "kw_invalidate",
     "named": true
   },
   {
@@ -3752,6 +4621,10 @@
   },
   {
     "type": "kw_metadata",
+    "named": true
+  },
+  {
+    "type": "kw_modify",
     "named": true
   },
   {
@@ -4007,6 +4880,10 @@
     "named": true
   },
   {
+    "type": "kw_substitutable",
+    "named": true
+  },
+  {
     "type": "kw_subtype",
     "named": true
   },
@@ -4064,6 +4941,10 @@
   },
   {
     "type": "kw_using_nls_comp",
+    "named": true
+  },
+  {
+    "type": "kw_validate",
     "named": true
   },
   {
