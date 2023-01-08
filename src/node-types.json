@@ -255,6 +255,10 @@
           "named": true
         },
         {
+          "type": "float",
+          "named": true
+        },
+        {
           "type": "kw_element",
           "named": true
         },
@@ -271,7 +275,7 @@
           "named": true
         },
         {
-          "type": "literal_number",
+          "type": "number",
           "named": true
         }
       ]
@@ -903,6 +907,10 @@
         "required": true,
         "types": [
           {
+            "type": "float",
+            "named": true
+          },
+          {
             "type": "kw_false",
             "named": true
           },
@@ -915,11 +923,11 @@
             "named": true
           },
           {
-            "type": "literal_number",
+            "type": "literal_string",
             "named": true
           },
           {
-            "type": "literal_string",
+            "type": "number",
             "named": true
           }
         ]
@@ -1248,6 +1256,10 @@
           "named": true
         },
         {
+          "type": "float",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -1521,6 +1533,10 @@
         },
         {
           "type": "kw_zone",
+          "named": true
+        },
+        {
+          "type": "number",
           "named": true
         }
       ]
@@ -2425,15 +2441,11 @@
           "named": true
         },
         {
+          "type": "float",
+          "named": true
+        },
+        {
           "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "is_not_null",
-          "named": true
-        },
-        {
-          "type": "is_null",
           "named": true
         },
         {
@@ -2450,6 +2462,10 @@
         },
         {
           "type": "kw_in",
+          "named": true
+        },
+        {
+          "type": "kw_is",
           "named": true
         },
         {
@@ -2477,11 +2493,11 @@
           "named": true
         },
         {
-          "type": "literal_number",
+          "type": "literal_string",
           "named": true
         },
         {
-          "type": "literal_string",
+          "type": "number",
           "named": true
         },
         {
@@ -2772,7 +2788,11 @@
           "named": true
         },
         {
-          "type": "not_null",
+          "type": "kw_not",
+          "named": true
+        },
+        {
+          "type": "kw_null",
           "named": true
         }
       ]
@@ -2929,48 +2949,6 @@
     }
   },
   {
-    "type": "is_not_null",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "kw_is",
-          "named": true
-        },
-        {
-          "type": "kw_not",
-          "named": true
-        },
-        {
-          "type": "kw_null",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "is_null",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "kw_is",
-          "named": true
-        },
-        {
-          "type": "kw_null",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "item_declaration",
     "named": true,
     "fields": {},
@@ -2995,7 +2973,11 @@
           "named": true
         },
         {
-          "type": "not_null",
+          "type": "kw_not",
+          "named": true
+        },
+        {
+          "type": "kw_null",
           "named": true
         }
       ]
@@ -3070,6 +3052,10 @@
       "required": true,
       "types": [
         {
+          "type": "float",
+          "named": true
+        },
+        {
           "type": "kw_false",
           "named": true
         },
@@ -3082,20 +3068,15 @@
           "named": true
         },
         {
-          "type": "literal_number",
+          "type": "literal_string",
           "named": true
         },
         {
-          "type": "literal_string",
+          "type": "number",
           "named": true
         }
       ]
     }
-  },
-  {
-    "type": "literal_number",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "literal_string",
@@ -3112,25 +3093,6 @@
       "types": [
         {
           "type": "kw_name",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "not_null",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "kw_not",
-          "named": true
-        },
-        {
-          "type": "kw_null",
           "named": true
         }
       ]
@@ -3301,6 +3263,10 @@
       "required": true,
       "types": [
         {
+          "type": "float",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -3317,11 +3283,11 @@
           "named": true
         },
         {
-          "type": "literal_number",
+          "type": "literal_string",
           "named": true
         },
         {
-          "type": "literal_string",
+          "type": "number",
           "named": true
         }
       ]
@@ -3687,6 +3653,10 @@
           "named": true
         },
         {
+          "type": "float",
+          "named": true
+        },
+        {
           "type": "kw_binary_integer",
           "named": true
         },
@@ -3708,6 +3678,14 @@
         },
         {
           "type": "kw_long",
+          "named": true
+        },
+        {
+          "type": "kw_not",
+          "named": true
+        },
+        {
+          "type": "kw_null",
           "named": true
         },
         {
@@ -3735,7 +3713,7 @@
           "named": true
         },
         {
-          "type": "not_null",
+          "type": "number",
           "named": true
         }
       ]
@@ -3796,15 +3774,19 @@
           "named": true
         },
         {
+          "type": "kw_not",
+          "named": true
+        },
+        {
+          "type": "kw_null",
+          "named": true
+        },
+        {
           "type": "kw_of",
           "named": true
         },
         {
           "type": "kw_table",
-          "named": true
-        },
-        {
-          "type": "not_null",
           "named": true
         }
       ]
@@ -3944,11 +3926,15 @@
           "named": true
         },
         {
-          "type": "kw_subtype",
+          "type": "kw_not",
           "named": true
         },
         {
-          "type": "not_null",
+          "type": "kw_null",
+          "named": true
+        },
+        {
+          "type": "kw_subtype",
           "named": true
         },
         {
@@ -3971,7 +3957,19 @@
           "named": true
         },
         {
+          "type": "float",
+          "named": true
+        },
+        {
           "type": "kw_array",
+          "named": true
+        },
+        {
+          "type": "kw_not",
+          "named": true
+        },
+        {
+          "type": "kw_null",
           "named": true
         },
         {
@@ -3987,7 +3985,7 @@
           "named": true
         },
         {
-          "type": "not_null",
+          "type": "number",
           "named": true
         }
       ]
@@ -4002,11 +4000,15 @@
       "required": true,
       "types": [
         {
+          "type": "float",
+          "named": true
+        },
+        {
           "type": "kw_range",
           "named": true
         },
         {
-          "type": "literal_number",
+          "type": "number",
           "named": true
         }
       ]
@@ -4141,6 +4143,10 @@
   },
   {
     "type": "comment_sl",
+    "named": true
+  },
+  {
+    "type": "float",
     "named": true
   },
   {
@@ -4913,6 +4919,10 @@
   },
   {
     "type": "kw_zone",
+    "named": true
+  },
+  {
+    "type": "number",
     "named": true
   },
   {

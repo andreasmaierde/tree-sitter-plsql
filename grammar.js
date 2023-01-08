@@ -259,7 +259,7 @@ module.exports = grammar({
         alter_collection_clause: $ => seq(
           $.kw_modify,
           choice(
-            seq($.kw_limit, $.literal_number),
+            seq($.kw_limit, $._literal_number),
             seq($.kw_element, $.kw_type, $.datatype),
           ),
         ),
@@ -697,7 +697,7 @@ module.exports = grammar({
             $.identifier,
             optional($.kw_constant),
             $.datatype,
-            optional($.not_null),
+            optional($._not_null),
             optional($.default_expression),
             SEMICOLON,
         ),
@@ -753,19 +753,19 @@ module.exports = grammar({
             $._size,
             $.kw_of,
             $.datatype,
-            optional($.not_null),
+            optional($._not_null),
         ),
         type_definition_nested_table: $ => seq(
             $.kw_table,
             $.kw_of,
             $.datatype,
-            optional($.not_null),
+            optional($._not_null),
         ),
         type_definition_assoc_array: $ => seq(
             $.kw_table,
             $.kw_of,
             $.datatype,
-            optional($.not_null),
+            optional($._not_null),
             $.kw_index,
             $.kw_by,
             choice(
@@ -797,7 +797,7 @@ module.exports = grammar({
         field_definition: $ => seq(
             $.identifier,
             $.datatype,
-            optional($.not_null),
+            optional($._not_null),
             optional($.default_expression),
         ),
         type_definition_ref_cursor: $ => seq(
@@ -827,7 +827,7 @@ module.exports = grammar({
                     $.character_set,
                 ),
             ),
-            optional($.not_null),
+            optional($._not_null),
             SEMICOLON,
         ),
         character_set: $ => seq(
@@ -837,24 +837,24 @@ module.exports = grammar({
         ),
         type_range: $ => seq(
             $.kw_range,
-            $.literal_number,
+            $._literal_number,
             RANGE,
-            $.literal_number,
+            $._literal_number,
         ),
         _is_null_or_is_not_null: $ => choice(
-            $.is_null,
-            $.is_not_null,
+            $._is_null,
+            $._is_not_null,
         ),
-        is_null: $ => seq(
+        _is_null: $ => seq(
             $.kw_is,
             $.kw_null,
         ),
-        is_not_null: $ => seq(
+        _is_not_null: $ => seq(
             $.kw_is,
             $.kw_not,
             $.kw_null,
         ),
-        not_null: $ => seq(
+        _not_null: $ => seq(
             $.kw_not,
             $.kw_null,
         ),
@@ -878,7 +878,7 @@ module.exports = grammar({
             $._referenced_element,
             $.ref_call,
             $.placeholder,
-            seq($._sign_pos_neg, $.literal_number),
+            seq($._sign_pos_neg, $._literal_number),
         ),
         _expression_base_operator_not_boolean: $ => seq(
             $._expression_base_elements,
@@ -1315,17 +1315,17 @@ module.exports = grammar({
         ),
         _index: $ => seq(
             BRACKET_LEFT,
-            $._number,
+            $._literal_number,
             BRACKET_RIGHT,
         ),
         _size: $ => seq(
             BRACKET_LEFT,
-            $._number,
+            $._literal_number,
             BRACKET_RIGHT,
         ),
         _size_byte_char: $ => seq(
             BRACKET_LEFT,
-            $._number,
+            $._literal_number,
             optional($.byte_char),
             BRACKET_RIGHT,
         ),
@@ -1342,10 +1342,10 @@ module.exports = grammar({
             BRACKET_RIGHT,
         ),
         _precision: $ => seq(
-            $._number,
+            $._literal_number,
         ),
         _scale: $ => choice(
-            $._number,
+            $._literal_number,
         ),
         _sign_pos_neg: $ => choice(
             PLUS,
@@ -1410,7 +1410,7 @@ module.exports = grammar({
             BRACKET_RIGHT,
         ),
         _literal: $ => choice(
-            $.literal_number,
+            $._literal_number,
             $.literal_string,
             $._literal_boolean,
         ),
@@ -1419,16 +1419,16 @@ module.exports = grammar({
             $.kw_false,
             $.kw_null,
         ),
-        literal_number: $ => choice(
-            $._number,
-            $._float,
+        _literal_number: $ => choice(
+            prec(1,$.float),
+            $.number,
         ),
         literal_string: $ => choice(
             $._single_quote_string,
         ),
         _single_quote_string: $ => /'([^']''|''[^']|[^'])*'/,
-        _number: $ => /\d+/,
-        _float: $ => /\d*[.]\d+/,
+        number: $ => /\d+/,
+        float: $ => /\d*[.]\d+/,
         comment_ml: $ => token(
             seq("/*", /[^*]*\*+([^/*][^*]*\*+)*/, "/")
         ),
@@ -1531,8 +1531,8 @@ module.exports = grammar({
         kw_updating: _ => reservedWord("updating"),
         kw_return: _ => reservedWord("return"),
         kw_string: _ => reservedWord("string"),
-        kw_varchar: _ => reservedWord("varchar"),
         kw_varchar2: _ => reservedWord("varchar2"),
+        kw_varchar: _ => reservedWord("varchar"),
         kw_nvarchar2: _ => reservedWord("nvarchar2"),
         kw_nchar: _ => reservedWord("nchar"),
         kw_int: _ => reservedWord("int"),

@@ -25,7 +25,7 @@ TYPE t_tab_abc IS TABLE OF my_table INDEX BY PLS_INTEGER;
 
 TYPE t_var_abc IS VARRAY(50) OF NUMBER NOT NULL;
 
-gc_abc  CONSTANT   NUMBER := 4;
+gc_abc  CONSTANT   NUMBER := 0.4;
 gv_abc             NUMBER;
 gv_init_date       DATE := sysdate;
 gv_init_abc        varchar2(200) := my_func('A',true);
