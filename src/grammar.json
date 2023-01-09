@@ -3087,49 +3087,53 @@
           "name": "kw_by"
         },
         {
-          "type": "CHOICE",
+          "type": "SYMBOL",
+          "name": "type_definition_assoc_array_datatypes"
+        }
+      ]
+    },
+    "type_definition_assoc_array_datatypes": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_pls_integer"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_binary_integer"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_long"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_referenced_datatypes"
+        },
+        {
+          "type": "SEQ",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "kw_pls_integer"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "kw_binary_integer"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "kw_long"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "_referenced_datatypes"
-            },
-            {
-              "type": "SEQ",
+              "type": "CHOICE",
               "members": [
                 {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "kw_varchar2"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "kw_varchar"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "kw_string"
-                    }
-                  ]
+                  "type": "SYMBOL",
+                  "name": "kw_varchar2"
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "_size_byte_char"
+                  "name": "kw_varchar"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_string"
                 }
               ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_size_byte_char"
             }
           ]
         }

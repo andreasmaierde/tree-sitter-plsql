@@ -3598,6 +3598,49 @@
   {
     "type": "type_definition_assoc_array",
     "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "datatype",
+          "named": true
+        },
+        {
+          "type": "kw_by",
+          "named": true
+        },
+        {
+          "type": "kw_index",
+          "named": true
+        },
+        {
+          "type": "kw_not",
+          "named": true
+        },
+        {
+          "type": "kw_null",
+          "named": true
+        },
+        {
+          "type": "kw_of",
+          "named": true
+        },
+        {
+          "type": "kw_table",
+          "named": true
+        },
+        {
+          "type": "type_definition_assoc_array_datatypes",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_definition_assoc_array_datatypes",
+    "named": true,
     "fields": {
       "ref_name": {
         "multiple": false,
@@ -3642,14 +3685,10 @@
     },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "byte_char",
-          "named": true
-        },
-        {
-          "type": "datatype",
           "named": true
         },
         {
@@ -3661,10 +3700,6 @@
           "named": true
         },
         {
-          "type": "kw_by",
-          "named": true
-        },
-        {
           "type": "kw_datatype_rowtype",
           "named": true
         },
@@ -3673,23 +3708,7 @@
           "named": true
         },
         {
-          "type": "kw_index",
-          "named": true
-        },
-        {
           "type": "kw_long",
-          "named": true
-        },
-        {
-          "type": "kw_not",
-          "named": true
-        },
-        {
-          "type": "kw_null",
-          "named": true
-        },
-        {
-          "type": "kw_of",
           "named": true
         },
         {
@@ -3698,10 +3717,6 @@
         },
         {
           "type": "kw_string",
-          "named": true
-        },
-        {
-          "type": "kw_table",
           "named": true
         },
         {
