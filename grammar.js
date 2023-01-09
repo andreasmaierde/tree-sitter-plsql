@@ -140,7 +140,7 @@ module.exports = grammar({
             optional($.sharing_clause),
             optional($.package_properties),
             $._is_as,
-            repeat1($._package_item_list),
+            repeat1($._item_list),
             $.end_obj,
             optional(DIVISON),
         ),
@@ -645,12 +645,18 @@ module.exports = grammar({
             optional($.identifier),
             SEMICOLON,
         ),
-        _package_item_list: $ => choice(
+        _item_list: $ => choice(
             $.function_declaration,
             $.procedure_declaration,
             $._type_definition,
             $.cursor_declaration,
             $.item_declaration,
+        ),
+        _item_list_definitions: $ => choice(
+            // TODO
+            // $.function_definition,
+            // $.procedure_definition,
+            // $.cursor_definition,
         ),
         create_obj: $ => seq(
             $.kw_create,
@@ -1436,6 +1442,107 @@ module.exports = grammar({
         comment_sl: $ => token(
             seq("--", /.*/)
         ),
+        select: $ => seq(
+          $.subquery,
+          optional($.for_update_clause),
+        ),
+        subquery: $ => seq(
+          $.subquery_element,
+          optional($.order_by_clause),
+          repeat($.row_limiting_clause),
+        ),
+        subquery_element: $ => choice(
+          // TODO
+          // seq($.query_block),
+          repeat1($.subquery_element_union_intersect_minus),
+          seq(BRACKET_LEFT, $.subquery, BRACKET_RIGHT),
+        ),
+        subquery_element_union_intersect_minus: $ => seq(
+          choice(
+            seq($.kw_union,optional($.kw_all)),
+            $.kw_intersect,
+            $.kw_minus,
+          ),
+          $.subquery,
+        ),
+        order_by_clause: $ => seq(
+          $.kw_order,
+          optional($.kw_siblings),
+          $.kw_by,
+          $.order_by_clause_element,
+          repeat(seq(COMMA,$.order_by_clause_element)),
+        ),
+        order_by_clause_element: $ => seq(
+          $.expression,
+          optional(
+            choice($.kw_asc, $.kw_desc),
+          ),
+          optional(
+            seq(
+              $.kw_nulls,
+              choice($.kw_first, $.kw_last),
+            ),
+          ),
+        ),
+        row_limiting_clause: $ => choice(
+          $.row_limiting_clause_offset,
+          $.row_limiting_clause_fetch
+        ),
+        row_limiting_clause_offset: $ => seq(
+          $.kw_fetch,
+          choice($.kw_first, $.kw_next),
+          optional(
+            seq(
+              $.expression,
+              optional($.kw_percent),
+            ),
+          ),
+          choice($.kw_row, $.kw_rows),
+          choice($.kw_only, seq($.kw_with, $.kw_ties)),
+        ),
+        row_limiting_clause_fetch: $ => seq(
+          $.kw_offset,
+          $.expression,
+          choice($.kw_row, $.kw_rows),
+        ),
+        for_update_clause: $ => seq(
+          $.kw_for,
+          $.kw_update,
+          optional(
+            $.for_update_clause_of,
+          ),
+        ),
+        for_update_clause_of: $ => seq(
+          $.kw_of,
+          $._referenced_element,
+          repeat(seq(COMMA, $._referenced_element)),
+        ),
+        for_update_clause_extension: $ => choice(
+          $.kw_nowait,
+          seq($.kw_wait,$.number),
+          seq($.kw_skip,$.kw_locked),
+        ),
+        // KW
+        kw_minus: _ => reservedWord("minus"),
+        kw_union: _ => reservedWord("union"),
+        kw_intersect: _ => reservedWord("intersect"),
+        kw_all: _ => reservedWord("all"),
+        kw_offset: _ => reservedWord("offset"),
+        kw_rows: _ => reservedWord("rows"),
+        kw_fetch: _ => reservedWord("fetch"),
+        kw_percent: _ => reservedWord("percent"),
+        kw_only: _ => reservedWord("only"),
+        kw_ties: _ => reservedWord("ties"),
+        kw_asc: _ => reservedWord("asc"),
+        kw_nulls: _ => reservedWord("nulls"),
+        kw_desc: _ => reservedWord("desc"),
+        kw_siblings: _ => reservedWord("siblings"),
+        kw_nowait: _ => reservedWord("nowait"),
+        kw_wait: _ => reservedWord("wait"),
+        kw_skip: _ => reservedWord("skip"),
+        kw_locked: _ => reservedWord("locked"),
+        kw_for: _ => reservedWord("for"),
+        kw_update: _ => reservedWord("update"),
         kw_create: _ => reservedWord("create"),
         kw_alter: _ => reservedWord("alter"),
         kw_package: _ => reservedWord("package"),
