@@ -49,6 +49,8 @@ module.exports = grammar({
     name: 'plsql',
     conflicts: $ => [
         [$._expression_base_boolean_in],
+        [$._subquery_element],
+        [$.conditional_predicate],
     ],
     extras: $ => [
         $.comment_sl,
@@ -66,6 +68,7 @@ module.exports = grammar({
             choice(
                 $._ddl_statement,
                 // $._dml_statement,
+                $.select,
             ),
         ),
         _ddl_statement: $ => choice(
@@ -882,7 +885,7 @@ module.exports = grammar({
         _expression_base_elements: $ => choice(
             $._literal,
             $._literal_list_multi,
-            $.referenced_element,
+            prec(2,$.referenced_element),
             $.ref_call,
             $.placeholder,
             seq($._sign_pos_neg, $._literal_number),
@@ -1008,9 +1011,7 @@ module.exports = grammar({
                 optional(
                     seq(
                         BRACKET_LEFT,
-                        QUOTE_SINGLE,
-                        $.identifier,
-                        QUOTE_SINGLE,
+                        $.literal_string,
                         BRACKET_RIGHT,
                     ),
                 ),
@@ -1479,24 +1480,37 @@ module.exports = grammar({
             seq("--", /.*/)
         ),
         select: $ => seq(
-            $.subquery,
+            $._subquery,
             optional($.for_update_clause),
         ),
-        subquery: $ => seq(
-            $.subquery_element,
+        _subquery: $ => seq(
+            choice(
+                $._subquery_element,
+            ),
             optional($.order_by_clause),
             repeat($.row_limiting_clause),
         ),
-        subquery_element: $ => choice(
+        _subquery_element: $ => choice(
             seq($.query_block),
             repeat1($.subquery_element_union_intersect_minus),
-            seq(BRACKET_LEFT, $.subquery, BRACKET_RIGHT),
+            seq(BRACKET_LEFT, $._subquery, BRACKET_RIGHT),
         ),
         query_block: $ => seq(
             optional($.with_clause),
             $.kw_select,
             optional(choice($.kw_distinct,$.kw_unique,$.kw_all)),
-            // TODO
+            $.select_list,
+            $.kw_from,
+        ),
+        select_list: $ => seq(
+            $.select_list_element,
+            repeat(seq(COMMA, $.select_list_element)),
+        ),
+        select_list_element: $ => choice(
+            $.kw_asterisk,
+            prec(3,$.referenced_element),
+            seq($.referenced_element,POINT,$.kw_asterisk),
+            seq($.expression, optional($.kw_as),optional($.identifier)),
         ),
         with_clause: $ => seq(
             $.kw_with,
@@ -1518,7 +1532,7 @@ module.exports = grammar({
             optional($._referenced_element_list),
             $.kw_as,
             BRACKET_LEFT,
-            $.subquery,
+            $._subquery,
             BRACKET_RIGHT,
             optional($.search_clause),
             optional($.cycle_clause),
@@ -1645,7 +1659,7 @@ module.exports = grammar({
             $.kw_intersect,
             $.kw_minus,
           ),
-          $.subquery,
+          $._subquery_element,
         ),
         order_by_clause: $ => seq(
           $.kw_order,
@@ -1706,6 +1720,7 @@ module.exports = grammar({
         ),
         // KW
         kw_select: _ => reservedWord("select"),
+        kw_from: _ => reservedWord("from"),
         kw_distinct: _ => reservedWord("distinct"),
         kw_unique: _ => reservedWord("unique"),
         kw_view: _ => reservedWord("view"),
@@ -1942,6 +1957,7 @@ module.exports = grammar({
         kw_element: _ => reservedWord("element"),
         kw_validate: _ => reservedWord("validate"),
         kw_pragma: _ => reservedWord("pragma"),
+        kw_asterisk: _ => reservedWord("*"),
     },
 });
 

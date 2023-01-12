@@ -34,6 +34,10 @@
             {
               "type": "SYMBOL",
               "name": "_ddl_statement"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "select"
             }
           ]
         }
@@ -3514,8 +3518,12 @@
           "name": "_literal_list_multi"
         },
         {
-          "type": "SYMBOL",
-          "name": "referenced_element"
+          "type": "PREC",
+          "value": 2,
+          "content": {
+            "type": "SYMBOL",
+            "name": "referenced_element"
+          }
         },
         {
           "type": "SYMBOL",
@@ -4049,16 +4057,8 @@
                       "value": "("
                     },
                     {
-                      "type": "STRING",
-                      "value": "'"
-                    },
-                    {
                       "type": "SYMBOL",
-                      "name": "identifier"
-                    },
-                    {
-                      "type": "STRING",
-                      "value": "'"
+                      "name": "literal_string"
                     },
                     {
                       "type": "STRING",
@@ -5861,7 +5861,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "subquery"
+          "name": "_subquery"
         },
         {
           "type": "CHOICE",
@@ -5877,12 +5877,17 @@
         }
       ]
     },
-    "subquery": {
+    "_subquery": {
       "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "subquery_element"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_subquery_element"
+            }
+          ]
         },
         {
           "type": "CHOICE",
@@ -5905,7 +5910,7 @@
         }
       ]
     },
-    "subquery_element": {
+    "_subquery_element": {
       "type": "CHOICE",
       "members": [
         {
@@ -5933,7 +5938,7 @@
             },
             {
               "type": "SYMBOL",
-              "name": "subquery"
+              "name": "_subquery"
             },
             {
               "type": "STRING",
@@ -5984,6 +5989,106 @@
             },
             {
               "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "select_list"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_from"
+        }
+      ]
+    },
+    "select_list": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "select_list_element"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": ","
+              },
+              {
+                "type": "SYMBOL",
+                "name": "select_list_element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "select_list_element": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_asterisk"
+        },
+        {
+          "type": "PREC",
+          "value": 3,
+          "content": {
+            "type": "SYMBOL",
+            "name": "referenced_element"
+          }
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "referenced_element"
+            },
+            {
+              "type": "STRING",
+              "value": "."
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_asterisk"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "expression"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_as"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "identifier"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
             }
           ]
         }
@@ -6063,7 +6168,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "subquery"
+          "name": "_subquery"
         },
         {
           "type": "STRING",
@@ -6651,7 +6756,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "subquery"
+          "name": "_subquery_element"
         }
       ]
     },
@@ -6982,6 +7087,17 @@
         "content": {
           "type": "PATTERN",
           "value": "[sS][eE][lL][eE][cC][tT]"
+        }
+      }
+    },
+    "kw_from": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[fF][rR][oO][mM]"
         }
       }
     },
@@ -9569,6 +9685,17 @@
           "value": "[pP][rR][aA][gG][mM][aA]"
         }
       }
+    },
+    "kw_asterisk": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[**]"
+        }
+      }
     }
   },
   "extras": [
@@ -9588,6 +9715,12 @@
   "conflicts": [
     [
       "_expression_base_boolean_in"
+    ],
+    [
+      "_subquery_element"
+    ],
+    [
+      "conditional_predicate"
     ]
   ],
   "precedences": [],

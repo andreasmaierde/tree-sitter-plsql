@@ -983,10 +983,6 @@
       "required": true,
       "types": [
         {
-          "type": "identifier",
-          "named": true
-        },
-        {
           "type": "kw_deleting",
           "named": true
         },
@@ -996,6 +992,10 @@
         },
         {
           "type": "kw_updating",
+          "named": true
+        },
+        {
+          "type": "literal_string",
           "named": true
         }
       ]
@@ -3376,11 +3376,19 @@
           "named": true
         },
         {
+          "type": "kw_from",
+          "named": true
+        },
+        {
           "type": "kw_select",
           "named": true
         },
         {
           "type": "kw_unique",
+          "named": true
+        },
+        {
+          "type": "select_list",
           "named": true
         },
         {
@@ -3707,6 +3715,83 @@
     }
   },
   {
+    "type": "select",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "for_update_clause",
+          "named": true
+        },
+        {
+          "type": "order_by_clause",
+          "named": true
+        },
+        {
+          "type": "query_block",
+          "named": true
+        },
+        {
+          "type": "row_limiting_clause",
+          "named": true
+        },
+        {
+          "type": "subquery_element_union_intersect_minus",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "select_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "select_list_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "select_list_element",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_as",
+          "named": true
+        },
+        {
+          "type": "kw_asterisk",
+          "named": true
+        },
+        {
+          "type": "referenced_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "sharing_clause",
     "named": true,
     "fields": {},
@@ -3811,6 +3896,10 @@
         {
           "type": "drop_type_body",
           "named": true
+        },
+        {
+          "type": "select",
+          "named": true
         }
       ]
     }
@@ -3893,52 +3982,6 @@
     }
   },
   {
-    "type": "subquery",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "order_by_clause",
-          "named": true
-        },
-        {
-          "type": "row_limiting_clause",
-          "named": true
-        },
-        {
-          "type": "subquery_element",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "subquery_element",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "query_block",
-          "named": true
-        },
-        {
-          "type": "subquery",
-          "named": true
-        },
-        {
-          "type": "subquery_element_union_intersect_minus",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "subquery_element_union_intersect_minus",
     "named": true,
     "fields": {},
@@ -3963,7 +4006,19 @@
           "named": true
         },
         {
-          "type": "subquery",
+          "type": "order_by_clause",
+          "named": true
+        },
+        {
+          "type": "query_block",
+          "named": true
+        },
+        {
+          "type": "row_limiting_clause",
+          "named": true
+        },
+        {
+          "type": "subquery_element_union_intersect_minus",
           "named": true
         }
       ]
@@ -3997,7 +4052,19 @@
           "named": true
         },
         {
+          "type": "order_by_clause",
+          "named": true
+        },
+        {
+          "type": "query_block",
+          "named": true
+        },
+        {
           "type": "referenced_element_repeat",
+          "named": true
+        },
+        {
+          "type": "row_limiting_clause",
           "named": true
         },
         {
@@ -4005,7 +4072,7 @@
           "named": true
         },
         {
-          "type": "subquery",
+          "type": "subquery_element_union_intersect_minus",
           "named": true
         }
       ]
@@ -4434,10 +4501,6 @@
     "named": false
   },
   {
-    "type": "'",
-    "named": false
-  },
-  {
     "type": "(",
     "named": false
   },
@@ -4591,6 +4654,10 @@
   },
   {
     "type": "kw_asc",
+    "named": true
+  },
+  {
+    "type": "kw_asterisk",
     "named": true
   },
   {
@@ -4871,6 +4938,10 @@
   },
   {
     "type": "kw_found",
+    "named": true
+  },
+  {
+    "type": "kw_from",
     "named": true
   },
   {
