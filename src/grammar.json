@@ -5999,6 +5999,10 @@
         {
           "type": "SYMBOL",
           "name": "kw_from"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "table_list"
         }
       ]
     },
@@ -6091,6 +6095,441 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    "table_list": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "table_list_element"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": ","
+              },
+              {
+                "type": "SYMBOL",
+                "name": "table_list_element"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "table_list_element": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "table_reference"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "inline_analytic_view"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "join_clause"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "("
+            },
+            {
+              "type": "SYMBOL",
+              "name": "join_clause"
+            },
+            {
+              "type": "STRING",
+              "value": ")"
+            }
+          ]
+        }
+      ]
+    },
+    "join_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "table_reference"
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "inner_cross_join_clause"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "outer_join_clause"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "cross_outer_apply_clause"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "cross_outer_apply_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_cross"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_outer"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_apply"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_join"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "table_reference"
+            }
+          ]
+        }
+      ]
+    },
+    "outer_join_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "query_partiion_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_natural"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "outer_join_type"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_join"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "table_reference"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "query_partiion_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "join_on_using"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "outer_join_type": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_full"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_left"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_right"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_outer"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "query_partiion_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_partition"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_by"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "expression"
+            },
+            {
+              "type": "REPEAT",
+              "content": {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": ","
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "expression"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "table_reference": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "referenced_element"
+        }
+      ]
+    },
+    "inner_cross_join_clause": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "inner_cross_join_clause_cross_natural"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "inner_cross_join_clause_inner"
+        }
+      ]
+    },
+    "inner_cross_join_clause_inner": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_inner"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_join"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "table_reference"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "join_on_using"
+        }
+      ]
+    },
+    "inner_cross_join_clause_cross_natural": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_cross"
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_natural"
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "kw_inner"
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_join"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "table_reference"
+        }
+      ]
+    },
+    "join_on_using": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_on"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "condition"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_using"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_identifier_list"
+            }
+          ]
+        }
+      ]
+    },
+    "inline_analytic_view": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_analytic"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_view"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sub_av_clause"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_as"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "identifier"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "condition": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "expression"
         }
       ]
     },
@@ -7078,6 +7517,83 @@
           ]
         }
       ]
+    },
+    "kw_apply": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[aA][pP][pP][lL][yY]"
+        }
+      }
+    },
+    "kw_full": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[fF][uU][lL][lL]"
+        }
+      }
+    },
+    "kw_left": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[lL][eE][fF][tT]"
+        }
+      }
+    },
+    "kw_right": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[rR][iI][gG][hH][tT]"
+        }
+      }
+    },
+    "kw_outer": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[oO][uU][tT][eE][rR]"
+        }
+      }
+    },
+    "kw_partition": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[pP][aA][rR][tT][iI][tT][iI][oO][nN]"
+        }
+      }
+    },
+    "kw_on": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[oO][nN]"
+        }
+      }
     },
     "kw_select": {
       "type": "TOKEN",
@@ -8817,6 +9333,39 @@
         }
       }
     },
+    "kw_join": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[jJ][oO][iI][nN]"
+        }
+      }
+    },
+    "kw_cross": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[cC][rR][oO][sS][sS]"
+        }
+      }
+    },
+    "kw_inner": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[iI][nN][nN][eE][rR]"
+        }
+      }
+    },
     "kw_with": {
       "type": "TOKEN",
       "content": {
@@ -9721,6 +10270,12 @@
     ],
     [
       "conditional_predicate"
+    ],
+    [
+      "query_partiion_clause"
+    ],
+    [
+      "outer_join_clause"
     ]
   ],
   "precedences": [],

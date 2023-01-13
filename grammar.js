@@ -51,6 +51,8 @@ module.exports = grammar({
         [$._expression_base_boolean_in],
         [$._subquery_element],
         [$.conditional_predicate],
+        [$.query_partiion_clause],
+        [$.outer_join_clause],
     ],
     extras: $ => [
         $.comment_sl,
@@ -1501,6 +1503,7 @@ module.exports = grammar({
             optional(choice($.kw_distinct,$.kw_unique,$.kw_all)),
             $.select_list,
             $.kw_from,
+            $.table_list,
         ),
         select_list: $ => seq(
             $.select_list_element,
@@ -1511,6 +1514,95 @@ module.exports = grammar({
             prec(3,$.referenced_element),
             seq($.referenced_element,POINT,$.kw_asterisk),
             seq($.expression, optional($.kw_as),optional($.identifier)),
+        ),
+        table_list: $ => seq(
+            $.table_list_element,
+            repeat(seq(COMMA, $.table_list_element)),
+        ),
+        table_list_element: $ => choice(
+            $.table_reference,
+            $.inline_analytic_view,
+            $.join_clause,
+            seq(BRACKET_LEFT,$.join_clause,BRACKET_RIGHT),
+        ),
+        join_clause: $ => seq(
+            $.table_reference,
+            repeat1(
+                choice(
+                    $.inner_cross_join_clause,
+                    $.outer_join_clause,
+                    $.cross_outer_apply_clause,
+                ),
+            ),
+        ),
+        cross_outer_apply_clause: $ => seq(
+            choice($.kw_cross, $.kw_outer),
+            $.kw_apply,
+            $.kw_join,
+            choice(
+                $.table_reference,
+                // TODO
+                // $.collection_expression,
+            ),
+        ),
+        outer_join_clause: $ => seq(
+            optional($.query_partiion_clause),
+            optional($.kw_natural),
+            $.outer_join_type,
+            $.kw_join,
+            $.table_reference,
+            optional($.query_partiion_clause),
+            optional($.join_on_using),
+        ),
+        outer_join_type: $ => seq(
+            choice(
+                $.kw_full,
+                $.kw_left,
+                $.kw_right,
+            ),
+            optional($.kw_outer),
+        ),
+        query_partiion_clause: $ => seq(
+            $.kw_partition,
+            $.kw_by,
+            seq($.expression, repeat(seq(COMMA, $.expression))),
+        ),
+        table_reference: $ => choice(
+            // TODO
+            $.referenced_element,
+        ),
+        inner_cross_join_clause: $ => choice(
+            $.inner_cross_join_clause_cross_natural,
+            $.inner_cross_join_clause_inner,
+        ),
+        inner_cross_join_clause_inner: $ => seq(
+            optional($.kw_inner),
+            $.kw_join,
+            $.table_reference,
+            $.join_on_using,
+        ),
+        inner_cross_join_clause_cross_natural: $ => seq(
+            choice(
+                $.kw_cross,
+                seq($.kw_natural,optional($.kw_inner)),
+            ),
+            $.kw_join,
+            $.table_reference,
+        ),
+        join_on_using: $ => choice(
+            seq($.kw_on,$.condition),
+            seq($.kw_using,$._identifier_list),
+        ),
+        inline_analytic_view: $ => seq(
+            $.kw_analytic,
+            $.kw_view,
+            $.sub_av_clause,
+            optional($.kw_as),
+            optional($.identifier),
+        ),
+        condition: $ => seq(
+            // TODO
+            $.expression,
         ),
         with_clause: $ => seq(
             $.kw_with,
@@ -1719,6 +1811,13 @@ module.exports = grammar({
           seq($.kw_skip,$.kw_locked),
         ),
         // KW
+        kw_apply: _ => reservedWord("apply"),
+        kw_full: _ => reservedWord("full"),
+        kw_left: _ => reservedWord("left"),
+        kw_right: _ => reservedWord("right"),
+        kw_outer: _ => reservedWord("outer"),
+        kw_partition: _ => reservedWord("partition"),
+        kw_on: _ => reservedWord("on"),
         kw_select: _ => reservedWord("select"),
         kw_from: _ => reservedWord("from"),
         kw_distinct: _ => reservedWord("distinct"),
@@ -1878,6 +1977,9 @@ module.exports = grammar({
         kw_raw: _ => reservedWord("raw"),
         kw_date: _ => reservedWord("date"),
         kw_timestamp: _ => reservedWord("timestamp"),
+        kw_join: _ => reservedWord("join"),
+        kw_cross: _ => reservedWord("cross"),
+        kw_inner: _ => reservedWord("inner"),
         kw_with: _ => reservedWord("with"),
         kw_context: _ => reservedWord("context"),
         kw_self: _ => reservedWord("self"),

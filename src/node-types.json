@@ -975,6 +975,21 @@
     }
   },
   {
+    "type": "condition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "conditional_predicate",
     "named": true,
     "fields": {},
@@ -1119,6 +1134,37 @@
         },
         {
           "type": "type_definition_sub",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "cross_outer_apply_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_apply",
+          "named": true
+        },
+        {
+          "type": "kw_cross",
+          "named": true
+        },
+        {
+          "type": "kw_join",
+          "named": true
+        },
+        {
+          "type": "kw_outer",
+          "named": true
+        },
+        {
+          "type": "table_reference",
           "named": true
         }
       ]
@@ -2796,6 +2842,114 @@
     }
   },
   {
+    "type": "inline_analytic_view",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_analytic",
+          "named": true
+        },
+        {
+          "type": "kw_as",
+          "named": true
+        },
+        {
+          "type": "kw_view",
+          "named": true
+        },
+        {
+          "type": "sub_av_clause",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "inner_cross_join_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "inner_cross_join_clause_cross_natural",
+          "named": true
+        },
+        {
+          "type": "inner_cross_join_clause_inner",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "inner_cross_join_clause_cross_natural",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_cross",
+          "named": true
+        },
+        {
+          "type": "kw_inner",
+          "named": true
+        },
+        {
+          "type": "kw_join",
+          "named": true
+        },
+        {
+          "type": "kw_natural",
+          "named": true
+        },
+        {
+          "type": "table_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "inner_cross_join_clause_inner",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "join_on_using",
+          "named": true
+        },
+        {
+          "type": "kw_inner",
+          "named": true
+        },
+        {
+          "type": "kw_join",
+          "named": true
+        },
+        {
+          "type": "table_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "invoker_rights_clause",
     "named": true,
     "fields": {},
@@ -2882,6 +3036,60 @@
         },
         {
           "type": "kw_name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "join_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "cross_outer_apply_clause",
+          "named": true
+        },
+        {
+          "type": "inner_cross_join_clause",
+          "named": true
+        },
+        {
+          "type": "outer_join_clause",
+          "named": true
+        },
+        {
+          "type": "table_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "join_on_using",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "condition",
+          "named": true
+        },
+        {
+          "type": "identifier_list_repeat",
+          "named": true
+        },
+        {
+          "type": "kw_on",
+          "named": true
+        },
+        {
+          "type": "kw_using",
           "named": true
         }
       ]
@@ -3083,6 +3291,68 @@
         },
         {
           "type": "kw_nulls",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "outer_join_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "join_on_using",
+          "named": true
+        },
+        {
+          "type": "kw_join",
+          "named": true
+        },
+        {
+          "type": "kw_natural",
+          "named": true
+        },
+        {
+          "type": "outer_join_type",
+          "named": true
+        },
+        {
+          "type": "query_partiion_clause",
+          "named": true
+        },
+        {
+          "type": "table_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "outer_join_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_full",
+          "named": true
+        },
+        {
+          "type": "kw_left",
+          "named": true
+        },
+        {
+          "type": "kw_outer",
+          "named": true
+        },
+        {
+          "type": "kw_right",
           "named": true
         }
       ]
@@ -3392,7 +3662,34 @@
           "named": true
         },
         {
+          "type": "table_list",
+          "named": true
+        },
+        {
           "type": "with_clause",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "query_partiion_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "kw_by",
+          "named": true
+        },
+        {
+          "type": "kw_partition",
           "named": true
         }
       ]
@@ -4079,6 +4376,59 @@
     }
   },
   {
+    "type": "table_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "table_list_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "table_list_element",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "inline_analytic_view",
+          "named": true
+        },
+        {
+          "type": "join_clause",
+          "named": true
+        },
+        {
+          "type": "table_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "table_reference",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "referenced_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "type_definition_assoc_array",
     "named": true,
     "fields": {},
@@ -4645,6 +4995,10 @@
     "named": true
   },
   {
+    "type": "kw_apply",
+    "named": true
+  },
+  {
     "type": "kw_array",
     "named": true
   },
@@ -4774,6 +5128,10 @@
   },
   {
     "type": "kw_create",
+    "named": true
+  },
+  {
+    "type": "kw_cross",
     "named": true
   },
   {
@@ -4945,6 +5303,10 @@
     "named": true
   },
   {
+    "type": "kw_full",
+    "named": true
+  },
+  {
     "type": "kw_function",
     "named": true
   },
@@ -4966,6 +5328,10 @@
   },
   {
     "type": "kw_indicator",
+    "named": true
+  },
+  {
+    "type": "kw_inner",
     "named": true
   },
   {
@@ -5013,6 +5379,10 @@
     "named": true
   },
   {
+    "type": "kw_join",
+    "named": true
+  },
+  {
     "type": "kw_json_array_t",
     "named": true
   },
@@ -5038,6 +5408,10 @@
   },
   {
     "type": "kw_last",
+    "named": true
+  },
+  {
+    "type": "kw_left",
     "named": true
   },
   {
@@ -5185,6 +5559,10 @@
     "named": true
   },
   {
+    "type": "kw_on",
+    "named": true
+  },
+  {
     "type": "kw_only",
     "named": true
   },
@@ -5201,6 +5579,10 @@
     "named": true
   },
   {
+    "type": "kw_outer",
+    "named": true
+  },
+  {
     "type": "kw_overriding",
     "named": true
   },
@@ -5214,6 +5596,10 @@
   },
   {
     "type": "kw_parameters",
+    "named": true
+  },
+  {
+    "type": "kw_partition",
     "named": true
   },
   {
@@ -5298,6 +5684,10 @@
   },
   {
     "type": "kw_reuse",
+    "named": true
+  },
+  {
+    "type": "kw_right",
     "named": true
   },
   {
