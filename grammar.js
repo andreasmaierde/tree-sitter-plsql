@@ -48,11 +48,11 @@ const REMOTE = '@'
 module.exports = grammar({
     name: 'plsql',
     conflicts: $ => [
-        [$._expression_base_boolean_in],
         [$._subquery_element],
-        [$.conditional_predicate],
-        [$.query_partiion_clause],
-        [$.outer_join_clause],
+        [$._conditional_predicate],
+        [$._query_partiion_clause],
+        [$._outer_join_clause],
+        [$._query_table_expression_ref_element],
     ],
     extras: $ => [
         $.comment_sl,
@@ -173,7 +173,7 @@ module.exports = grammar({
             optional($._schema),
             field("obj_name", $.identifier),
             choice(
-                $.compile_clause,
+                $._compile_clause,
                 $._editionable_noneditionable,
             ),
             SEMICOLON,
@@ -184,7 +184,7 @@ module.exports = grammar({
             optional($._schema),
             field("obj_name", $.identifier),
             choice(
-                $.compile_clause,
+                $._compile_clause,
                 $._editionable_noneditionable,
             ),
             SEMICOLON,
@@ -195,7 +195,7 @@ module.exports = grammar({
             optional($._schema),
             field("obj_name", $.identifier),
             choice(
-                $.compile_clause,
+                $._compile_clause,
                 $._editionable_noneditionable,
             ),
             SEMICOLON,
@@ -206,10 +206,10 @@ module.exports = grammar({
             optional($._schema),
             field("trigger_name", $.identifier),
             choice(
-                $.compile_clause,
+                $._compile_clause,
                 $._editionable_noneditionable,
                 $._enable_disable,
-                $.rename_to,
+                $._rename_to,
             ),
             SEMICOLON,
         ),
@@ -219,7 +219,7 @@ module.exports = grammar({
             optional($._schema),
             field("obj_name", $.identifier),
             choice(
-                $.compile_clause,
+                $._compile_clause,
                 $._editionable_noneditionable,
             ),
             SEMICOLON,
@@ -230,7 +230,7 @@ module.exports = grammar({
             optional($._schema),
             field("type_name", $.identifier),
             choice(
-                $.compile_clause,
+                $._compile_clause,
                 $._editionable_noneditionable,
                 $.kw_reset,
                 $._final_instantiable,
@@ -547,7 +547,7 @@ module.exports = grammar({
             $.kw_by,
             $.kw_reference,
         ),
-        compile_clause: $ => seq(
+        _compile_clause: $ => seq(
             $.kw_compile,
             optional($.kw_debug),
             optional(
@@ -871,32 +871,28 @@ module.exports = grammar({
             $.kw_null,
         ),
         expression: $ => choice(
-            $._expression_element,
-            seq(
-                BRACKET_LEFT,
-                $.expression,
-                BRACKET_RIGHT,
-            ),
+            prec(4,$._expression_element),
+            prec(1,seq(BRACKET_LEFT, $.expression, BRACKET_RIGHT)),
         ),
         _expression_element: $ => choice(
-            $._expression_base_elements,
-            $._expression_base_operator_not_boolean,
-            $._expression_base_boolean,
-            $._expression_base_case,
+            prec(4,$._expression_base_elements),
+            prec(3,$._expression_base_operator_not_boolean),
+            prec(2,$._expression_base_boolean),
+            prec(1,$._expression_base_case),
         ),
         _expression_base_elements: $ => choice(
-            $._literal,
-            $._literal_list_multi,
-            prec(2,$.referenced_element),
-            $.ref_call,
-            $.placeholder,
-            seq($._sign_pos_neg, $._literal_number),
+            prec(6,$.ref_call),
+            prec(5,$.referenced_element),
+            prec(4,$._literal),
+            prec(3,$._literal_list_multi),
+            prec(2,$.placeholder),
+            prec(1,seq($._sign_pos_neg, $._literal_number)),
         ),
         _expression_base_operator_not_boolean: $ => seq(
             $._expression_base_elements,
             repeat1(
                 seq(
-                    $.expression_operator_not_boolean,
+                    $._expression_operator_not_boolean,
                     $._expression_base_elements,
                 ),
             ),
@@ -944,7 +940,7 @@ module.exports = grammar({
                     $._is_null_or_is_not_null,
                 ),
             ),
-            $.conditional_predicate,
+            $._conditional_predicate,
         ),
         _expression_base_boolean_repeat: $ => seq(
             choice(
@@ -954,17 +950,13 @@ module.exports = grammar({
             $._expression_base_boolean,
         ),
         _expression_base_boolean_operator: $ => seq(
-            $.expression_operator_boolean,
+            $._expression_operator_boolean,
             $._expression_base_elements
         ),
         _expression_base_boolean_in: $ => seq(
             optional($.kw_not),
             $.kw_in,
             $.expression,
-            repeat(
-                 seq(COMMA, $.expression),
-            ),
-            optional(BRACKET_RIGHT),
         ),
         _expression_base_boolean_like: $ => seq(
             optional($.kw_not),
@@ -1005,7 +997,7 @@ module.exports = grammar({
             ),
             optional($._index),
         ),
-        conditional_predicate: $ => choice(
+        _conditional_predicate: $ => choice(
             $.kw_inserting,
             $.kw_deleting,
             seq(
@@ -1252,18 +1244,13 @@ module.exports = grammar({
             $.kw_exception,
         ),
         ref_call: $ => seq(
-            $.referenced_element,
+            prec(5,$.referenced_element),
             $.parameter,
         ),
         parameter_declaration: $ => seq(
             BRACKET_LEFT,
             $.parameter_declaration_element,
-            repeat(
-                seq(
-                    COMMA,
-                    $.parameter_declaration_element,
-                ),
-            ),
+            repeat(seq(COMMA,$.parameter_declaration_element)),
             BRACKET_RIGHT,
         ),
         parameter_declaration_element: $ => seq(
@@ -1294,12 +1281,7 @@ module.exports = grammar({
         parameter: $ => seq(
             BRACKET_LEFT,
             $.parameter_element,
-            repeat(
-                seq(
-                    COMMA,
-                    $.parameter_element,
-                ),
-            ),
+            repeat(seq(COMMA, $.parameter_element)),
             BRACKET_RIGHT,
         ),
         parameter_element: $ => seq(
@@ -1342,13 +1324,7 @@ module.exports = grammar({
         _size_precision_scale: $ => seq(
             BRACKET_LEFT,
             $._precision,
-            optional(
-                seq(
-                    COMMA,
-                    $._scale,
-                ),
-
-            ),
+            optional(seq(COMMA,$._scale)),
             BRACKET_RIGHT,
         ),
         _precision: $ => seq(
@@ -1365,12 +1341,12 @@ module.exports = grammar({
             $.kw_enable,
             $.kw_disable,
         ),
-        rename_to: $ => seq(
+        _rename_to: $ => seq(
             $.kw_rename,
             $.kw_to,
             $.identifier,
         ),
-        expression_operator_boolean: $ => choice(
+        _expression_operator_boolean: $ => choice(
             NOT_EQUAL_1,
             NOT_EQUAL_2,
             NOT_EQUAL_3,
@@ -1381,7 +1357,7 @@ module.exports = grammar({
             GREATER_THEN,
             EQUAL,
         ),
-        expression_operator_not_boolean: $ => choice(
+        _expression_operator_not_boolean: $ => choice(
             CONCAT,
             EXPONENT,
             PLUS,
@@ -1418,9 +1394,7 @@ module.exports = grammar({
         ),
         referenced_element_repeat: $ => seq(
             $.referenced_element,
-            repeat(
-                seq(COMMA, $.referenced_element),
-            ),
+            repeat(seq(COMMA, $.referenced_element)),
         ),
         _identifier_list: $ => seq(
             BRACKET_LEFT,
@@ -1429,9 +1403,7 @@ module.exports = grammar({
         ),
         identifier_list_repeat: $ => seq(
             $.identifier,
-            repeat(
-                seq(COMMA, $.identifier),
-            ),
+            repeat(seq(COMMA, $.identifier)),
         ),
         _literal_list: $ => seq(
             BRACKET_LEFT,
@@ -1440,7 +1412,7 @@ module.exports = grammar({
         ),
         _literal_list_multi: $ => seq(
             BRACKET_LEFT,
-            $.literal_list_repeat1,
+            $.literal_list_repeat_min,
             BRACKET_RIGHT,
         ),
         literal_list_repeat: $ => seq(
@@ -1449,7 +1421,7 @@ module.exports = grammar({
                 seq(COMMA, $._literal),
             ),
         ),
-        literal_list_repeat1: $ => seq(
+        literal_list_repeat_min: $ => seq(
             $._literal,
             repeat1(
                 seq(COMMA, $._literal),
@@ -1494,7 +1466,7 @@ module.exports = grammar({
         ),
         _subquery_element: $ => choice(
             seq($.query_block),
-            repeat1($.subquery_element_union_intersect_minus),
+            repeat1($._subquery_element_union_intersect_minus),
             seq(BRACKET_LEFT, $._subquery, BRACKET_RIGHT),
         ),
         query_block: $ => seq(
@@ -1502,8 +1474,28 @@ module.exports = grammar({
             $.kw_select,
             optional(choice($.kw_distinct,$.kw_unique,$.kw_all)),
             $.select_list,
+            optional($._into),
             $.kw_from,
             $.table_list,
+            optional($.where_clause),
+            optional($.hierachical_query_clause),
+            optional($.group_by_clause),
+            optional($.having_clause),
+            optional(SEMICOLON),
+        ),
+        _into: $ => choice(
+            $.into_clause,
+            $.bulk_collect_into,
+        ),
+        bulk_collect_into: $ => seq(
+            $.kw_bulk,
+            $.kw_collect,
+            $.kw_into,
+            $.identifier_list_repeat,
+        ),
+        into_clause: $ => seq(
+            $.kw_into,
+            $.identifier_list_repeat,
         ),
         select_list: $ => seq(
             $.select_list_element,
@@ -1511,48 +1503,80 @@ module.exports = grammar({
         ),
         select_list_element: $ => choice(
             $.kw_asterisk,
-            prec(3,$.referenced_element),
             seq($.referenced_element,POINT,$.kw_asterisk),
             seq($.expression, optional($.kw_as),optional($.identifier)),
+        ),
+        where_clause: $ => seq(
+            $.kw_where,
+            $.expression,
+        ),
+        group_by_clause: $ => seq(
+            $.kw_group,
+            $.kw_by,
+            $.expression,
+            repeat(seq(COMMA,$.expression)),
+        ),
+        having_clause: $ => seq(
+            $.kw_having,
+            $.expression,
+        ),
+        hierachical_query_clause: $ => choice(
+            $._hierachical_query_clause_connect_by,
+            $._hierachical_query_clause_start_with,
+        ),
+        _hierachical_query_clause_start_with: $ => seq(
+            $.kw_start,
+            $.kw_with,
+            $.expression,
+            $.kw_connect,
+            $.kw_by,
+            optional($.kw_nocycle),
+            $.expression,
+        ),
+        _hierachical_query_clause_connect_by: $ => seq(
+            $.kw_connect,
+            $.kw_by,
+            optional($.kw_nocycle),
+            $.expression,
+            optional(seq($.kw_start,$.kw_with, $.expression)),
         ),
         table_list: $ => seq(
             $.table_list_element,
             repeat(seq(COMMA, $.table_list_element)),
         ),
         table_list_element: $ => choice(
-            $.table_reference,
-            $.inline_analytic_view,
+            $._table_reference,
+            $._inline_analytic_view,
             $.join_clause,
             seq(BRACKET_LEFT,$.join_clause,BRACKET_RIGHT),
         ),
         join_clause: $ => seq(
-            $.table_reference,
+            $._table_reference,
             repeat1(
                 choice(
-                    $.inner_cross_join_clause,
-                    $.outer_join_clause,
-                    $.cross_outer_apply_clause,
+                    $._inner_cross_join_clause,
+                    $._outer_join_clause,
+                    $._cross_outer_apply_clause,
                 ),
             ),
         ),
-        cross_outer_apply_clause: $ => seq(
+        _cross_outer_apply_clause: $ => seq(
             choice($.kw_cross, $.kw_outer),
             $.kw_apply,
             $.kw_join,
             choice(
-                $.table_reference,
-                // TODO
-                // $.collection_expression,
+                $._table_reference,
+                // $._collection_expression,
             ),
         ),
-        outer_join_clause: $ => seq(
-            optional($.query_partiion_clause),
+        _outer_join_clause: $ => seq(
+            optional($._query_partiion_clause),
             optional($.kw_natural),
             $.outer_join_type,
             $.kw_join,
-            $.table_reference,
-            optional($.query_partiion_clause),
-            optional($.join_on_using),
+            $._table_reference,
+            optional($._query_partiion_clause),
+            optional($._join_on_using),
         ),
         outer_join_type: $ => seq(
             choice(
@@ -1562,47 +1586,143 @@ module.exports = grammar({
             ),
             optional($.kw_outer),
         ),
-        query_partiion_clause: $ => seq(
+        _query_partiion_clause: $ => seq(
             $.kw_partition,
             $.kw_by,
             seq($.expression, repeat(seq(COMMA, $.expression))),
         ),
-        table_reference: $ => choice(
-            // TODO
+        _table_reference: $ => seq(
+            choice(
+                $._query_table_expression,
+                $._container_clause,
+                $._shards_clause,
+            ),
+            optional(field("alias",$.identifier)),
+        ),
+        _query_table_expression: $ => choice(
+            $._query_table_expression_ref_element,
+            $._query_table_expression_lateral,
+            // $._table_collection_expression,
+        ),
+        _query_table_expression_ref_element: $ => seq(
             $.referenced_element,
+            optional(
+                choice(
+                    $._partition_extension_clause,
+                    $._modified_external_table,
+                    $._hierachies_clause,
+                ),
+            ),
+            optional($._sample_clause)
         ),
-        inner_cross_join_clause: $ => choice(
-            $.inner_cross_join_clause_cross_natural,
-            $.inner_cross_join_clause_inner,
+        _query_table_expression_lateral: $ => seq(
+            optional($.kw_lateral),
+            BRACKET_LEFT,
+            $._subquery,
+            optional($._subquery_restriction_clause),
+            BRACKET_RIGHT,
         ),
-        inner_cross_join_clause_inner: $ => seq(
+        _partition_extension_clause: $ => seq(
+            choice($.kw_partition,$.kw_subpartition),
+            choice(
+                seq(BRACKET_LEFT, $.identifier, BRACKET_RIGHT),
+                seq($.kw_for, $._identifier_list),
+            ),
+        ),
+        _modified_external_table: $ => seq(
+            $.kw_external,
+            $.kw_modify,
+            optional($._modified_external_table_properties_default_directory),
+            optional($._modified_external_table_properties_location),
+            optional($._modified_external_table_properties_access),
+            optional($._modified_external_table_properties_reject),
+        ),
+        _modified_external_table_properties_reject: $ => seq(
+            $.kw_reject,
+            $.kw_limit,
+            choice(
+                $.kw_unlimited,
+                $._literal_number,
+            ),
+        ),
+        _modified_external_table_properties_default_directory: $ => seq(
+            $.kw_default,
+            $.kw_directory,
+            $.identifier,
+        ),
+        _modified_external_table_properties_location: $ => seq(
+            $.kw_location,
+            BRACKET_LEFT,
+            $._modified_external_table_properties_location_element,
+            repeat(seq(COMMA,$._modified_external_table_properties_location_element)),
+            BRACKET_RIGHT,
+        ),
+        _modified_external_table_properties_access: $ => seq(
+            $.kw_access,
+            $.kw_parameters,
+            repeat1(
+                seq(
+                    choice(
+                        $.kw_badfile,
+                        $.kw_logfile,
+                        $.kw_discardfile,
+                    ),
+                    $.literal_string,
+                ),
+            ),
+        ),
+        _modified_external_table_properties_location_element: $ => seq(
+            optional(seq($.identifier, DOUBLE_POINT)),
+            $.literal_string,
+        ),
+        _sample_clause: $ => seq(
+            $.kw_sample,
+            optional($.kw_block),
+            BRACKET_LEFT,
+            $._literal_number,
+            BRACKET_RIGHT,
+            optional(seq($.kw_seed,BRACKET_LEFT, $._literal_number, BRACKET_RIGHT)),
+        ),
+        _container_clause: $ => seq(
+            $.kw_containers,
+            BRACKET_LEFT,
+            $.referenced_element,
+            BRACKET_RIGHT,
+        ),
+        _shards_clause: $ => seq(
+            $.kw_shards,
+            BRACKET_LEFT,
+            $.referenced_element,
+            BRACKET_RIGHT,
+        ),
+        _inner_cross_join_clause: $ => choice(
+            $._inner_cross_join_clause_cross_natural,
+            $._inner_cross_join_clause_inner,
+        ),
+        _inner_cross_join_clause_inner: $ => seq(
             optional($.kw_inner),
             $.kw_join,
-            $.table_reference,
-            $.join_on_using,
+            $._table_reference,
+            $._join_on_using,
         ),
-        inner_cross_join_clause_cross_natural: $ => seq(
+        _inner_cross_join_clause_cross_natural: $ => seq(
             choice(
                 $.kw_cross,
                 seq($.kw_natural,optional($.kw_inner)),
             ),
             $.kw_join,
-            $.table_reference,
+            $._table_reference,
         ),
-        join_on_using: $ => choice(
-            seq($.kw_on,$.condition),
+        _join_on_using: $ => choice(
+            seq($.kw_on,$.expression),
             seq($.kw_using,$._identifier_list),
         ),
-        inline_analytic_view: $ => seq(
+        _inline_analytic_view: $ => seq(
             $.kw_analytic,
             $.kw_view,
-            $.sub_av_clause,
+            $._sub_av_clause,
             optional($.kw_as),
             optional($.identifier),
-        ),
-        condition: $ => seq(
-            // TODO
-            $.expression,
         ),
         with_clause: $ => seq(
             $.kw_with,
@@ -1614,107 +1734,116 @@ module.exports = grammar({
             ),
             repeat(
                 choice(
-                    $.subquery_factoring_clause,
-                    $.subav_factoring_clause,
+                    $._subquery_factoring_clause,
+                    $._subav_factoring_clause,
                 ),
             ),
         ),
-        subquery_factoring_clause: $ => seq(
+        _subquery_restriction_clause: $ => seq(
+            $.kw_with,
+            choice(
+                seq($.kw_read,$.kw_only),
+                seq($.kw_check,$.kw_option),
+            ),
+            optional(
+                seq($.kw_constraint,$.identifier),
+            ),
+        ),
+        _subquery_factoring_clause: $ => seq(
             field("query_name",$.identifier),
             optional($._referenced_element_list),
             $.kw_as,
             BRACKET_LEFT,
             $._subquery,
             BRACKET_RIGHT,
-            optional($.search_clause),
-            optional($.cycle_clause),
+            optional($._search_clause),
+            optional($._cycle_clause),
         ),
-        subav_factoring_clause: $ => seq(
+        _subav_factoring_clause: $ => seq(
             field("subav_name",$.identifier),
             $.kw_analytic,
             $.kw_view,
             $.kw_as,
             BRACKET_LEFT,
-            $.sub_av_clause,
+            $._sub_av_clause,
             BRACKET_RIGHT,
-            optional($.search_clause),
-            optional($.cycle_clause),
+            optional($._search_clause),
+            optional($._cycle_clause),
         ),
-        sub_av_clause: $ => seq(
+        _sub_av_clause: $ => seq(
             $.kw_using,
             $.referenced_element,
-            optional($.hierachies_clause),
-            optional($.filter_clauses),
-            optional($.add_meas_clause),
+            optional($._hierachies_clause),
+            optional($._filter_clauses),
+            optional($._add_meas_clause),
 
         ),
-        hierachies_clause: $ => seq(
+        _hierachies_clause: $ => seq(
             $.kw_hierarchies,
-            $.referenced_element,
             BRACKET_LEFT,
             optional($.referenced_element_repeat),
             BRACKET_RIGHT,
         ),
-        filter_clauses: $ => seq(
+        _filter_clauses: $ => seq(
             $.kw_filter,
             $.kw_fact,
             BRACKET_LEFT,
-            optional($.filter_clause),
+            optional($._filter_clause),
             BRACKET_RIGHT,
         ),
-        filter_clause: $ => seq(
-            $.hier_ids,
+        _filter_clause: $ => seq(
+            $._hier_ids,
             $.kw_to,
             $.expression,
         ),
-        hier_ids: $ => seq(
-            $.hier_id,
+        _hier_ids: $ => seq(
+            $._hier_id,
             repeat(
-                seq(COMMA, $.hier_id),
+                seq(COMMA, $._hier_id),
             ),
         ),
-        hier_id: $ => choice(
+        _hier_id: $ => choice(
             $.kw_measures,
             $.referenced_element,
         ),
-        add_meas_clause: $ => seq(
+        _add_meas_clause: $ => seq(
             $.kw_add,
             $.kw_measures,
-            $.cube_meas_list,
+            $._cube_meas_list,
         ),
-        cube_meas_list: $ => seq(
+        _cube_meas_list: $ => seq(
             BRACKET_LEFT,
-            $.cube_meas,
-            optional(seq(COMMA, $.cube_meas)),
+            $._cube_meas,
+            optional(seq(COMMA, $._cube_meas)),
             BRACKET_RIGHT,
         ),
-        cube_meas: $ => seq(
+        _cube_meas: $ => seq(
             $.identifier,
             choice(
-                $.base_meas_clause,
-                $.calc_meas_clause,
+                $._base_meas_clause,
+                $._calc_meas_clause,
             ),
         ),
-        calc_meas_clause: $ => seq(
+        _calc_meas_clause: $ => seq(
             $.identifier,
             $.kw_as,
             BRACKET_LEFT,
             $.expression,
             BRACKET_RIGHT,
         ),
-        base_meas_clause: $ => seq(
+        _base_meas_clause: $ => seq(
             $.kw_fact,
             $.kw_for,
             $.kw_measure,
             $.identifier,
-            $.meas_aggrecate_clause,
+            $._meas_aggrecate_clause,
         ),
-        meas_aggrecate_clause: $ => seq(
+        _meas_aggrecate_clause: $ => seq(
             $.kw_aggregate,
             $.kw_by,
             $.identifier,
         ),
-        cycle_clause: $ => seq(
+        _cycle_clause: $ => seq(
             $.kw_cycle,
             $.referenced_element_repeat,
             $.kw_set,
@@ -1724,16 +1853,16 @@ module.exports = grammar({
             $.kw_default,
             $.literal_string,
         ),
-        search_clause: $ => seq(
+        _search_clause: $ => seq(
             $.kw_search,
             choice($.kw_depth, $.kw_breadth),
             $.kw_first,
             $.kw_by,
-            repeat1($.search_clause_alias),
+            repeat1($._search_clause_alias),
             $.kw_set,
             $.identifier,
         ),
-        search_clause_alias: $ => seq(
+        _search_clause_alias: $ => seq(
           $.identifier,
           optional(
             choice($.kw_asc, $.kw_desc),
@@ -1745,7 +1874,7 @@ module.exports = grammar({
             ),
           ),
         ),
-        subquery_element_union_intersect_minus: $ => seq(
+        _subquery_element_union_intersect_minus: $ => seq(
           choice(
             seq($.kw_union,optional($.kw_all)),
             $.kw_intersect,
@@ -1811,12 +1940,40 @@ module.exports = grammar({
           seq($.kw_skip,$.kw_locked),
         ),
         // KW
+        kw_group: _ => reservedWord("group"),
+        kw_having: _ => reservedWord("having"),
+        kw_connect: _ => reservedWord("connect"),
+        kw_nocycle: _ => reservedWord("nocycle"),
+        kw_start: _ => reservedWord("start"),
+        kw_bulk: _ => reservedWord("bulk"),
+        kw_collect: _ => reservedWord("collect"),
+        kw_where: _ => reservedWord("where"),
+        kw_read: _ => reservedWord("read"),
+        kw_check: _ => reservedWord("check"),
+        kw_option: _ => reservedWord("option"),
+        kw_constraint: _ => reservedWord("constraint"),
+        kw_lateral: _ => reservedWord("lateral"),
+        kw_sample: _ => reservedWord("sample"),
+        kw_block: _ => reservedWord("block"),
+        kw_seed: _ => reservedWord("seed"),
+        kw_shards: _ => reservedWord("shards"),
+        kw_badfile: _ => reservedWord("badfile"),
+        kw_logfile: _ => reservedWord("logfile"),
+        kw_discardfile: _ => reservedWord("discardfile"),
+        kw_reject: _ => reservedWord("reject"),
+        kw_unlimited: _ => reservedWord("unlimited"),
+        kw_access: _ => reservedWord("access"),
+        kw_location: _ => reservedWord("location"),
+        kw_directory: _ => reservedWord("directory"),
+        kw_shard: _ => reservedWord("shards"),
+        kw_containers: _ => reservedWord("containers"),
         kw_apply: _ => reservedWord("apply"),
         kw_full: _ => reservedWord("full"),
         kw_left: _ => reservedWord("left"),
         kw_right: _ => reservedWord("right"),
         kw_outer: _ => reservedWord("outer"),
         kw_partition: _ => reservedWord("partition"),
+        kw_subpartition: _ => reservedWord("subpartition"),
         kw_on: _ => reservedWord("on"),
         kw_select: _ => reservedWord("select"),
         kw_from: _ => reservedWord("from"),
@@ -2060,6 +2217,8 @@ module.exports = grammar({
         kw_validate: _ => reservedWord("validate"),
         kw_pragma: _ => reservedWord("pragma"),
         kw_asterisk: _ => reservedWord("*"),
+        kw_pivot: _ => reservedWord("pivot"),
+        kw_xml: _ => reservedWord("xml"),
     },
 });
 
