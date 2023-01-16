@@ -1465,7 +1465,8 @@ module.exports = grammar({
             repeat($.row_limiting_clause),
         ),
         _subquery_element: $ => choice(
-            seq($.query_block),
+            prec(4,seq($.query_block,SEMICOLON)),
+            prec(3,seq($.query_block)),
             repeat1($._subquery_element_union_intersect_minus),
             seq(BRACKET_LEFT, $._subquery, BRACKET_RIGHT),
         ),
@@ -1481,7 +1482,6 @@ module.exports = grammar({
             optional($.hierachical_query_clause),
             optional($.group_by_clause),
             optional($.having_clause),
-            optional(SEMICOLON),
         ),
         _into: $ => choice(
             $.into_clause,
@@ -1894,13 +1894,7 @@ module.exports = grammar({
           optional(
             choice($.kw_asc, $.kw_desc),
           ),
-          optional(
-            seq(
-              $.kw_nulls,
-              choice($.kw_first, $.kw_last),
-            ),
-          ),
-        ),
+          optional(seq( $.kw_nulls, choice($.kw_first, $.kw_last)))),
         row_limiting_clause: $ => choice(
           $.row_limiting_clause_offset,
           $.row_limiting_clause_fetch
@@ -2012,6 +2006,7 @@ module.exports = grammar({
         kw_locked: _ => reservedWord("locked"),
         kw_for: _ => reservedWord("for"),
         kw_update: _ => reservedWord("update"),
+        kw_delete: _ => reservedWord("delete"),
         kw_create: _ => reservedWord("create"),
         kw_alter: _ => reservedWord("alter"),
         kw_package: _ => reservedWord("package"),
@@ -2050,6 +2045,7 @@ module.exports = grammar({
         kw_exception: _ => reservedWord("exception"),
         kw_exceptions: _ => reservedWord("exceptions"),
         kw_end: _ => reservedWord("end"),
+        kw_order: _ => reservedWord("order"),
         kw_or: _ => reservedWord("or"),
         kw_and: _ => reservedWord("and"),
         kw_replace: _ => reservedWord("replace"),
@@ -2081,7 +2077,6 @@ module.exports = grammar({
         kw_table: _ => reservedWord("table"),
         kw_of: _ => reservedWord("of"),
         kw_index: _ => reservedWord("index"),
-        kw_by: _ => reservedWord("by"),
         kw_varray: _ => reservedWord("varray"),
         kw_array: _ => reservedWord("array"),
         kw_cursor: _ => reservedWord("cursor"),
@@ -2198,7 +2193,6 @@ module.exports = grammar({
         kw_reference: _ => reservedWord("reference"),
         kw_object: _ => reservedWord("object"),
         kw_map: _ => reservedWord("map"),
-        kw_order: _ => reservedWord("order"),
         kw_constructor: _ => reservedWord("constructor"),
         kw_result: _ => reservedWord("result"),
         kw_invalidate: _ => reservedWord("invalidate"),
@@ -2219,6 +2213,8 @@ module.exports = grammar({
         kw_asterisk: _ => reservedWord("*"),
         kw_pivot: _ => reservedWord("pivot"),
         kw_xml: _ => reservedWord("xml"),
+        kw_commit: _ => reservedWord("commit"),
+        kw_rollback: _ => reservedWord("rollback"),
     },
 });
 

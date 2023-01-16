@@ -5934,13 +5934,34 @@
       "type": "CHOICE",
       "members": [
         {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "query_block"
-            }
-          ]
+          "type": "PREC",
+          "value": 4,
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "query_block"
+              },
+              {
+                "type": "STRING",
+                "value": ";"
+              }
+            ]
+          }
+        },
+        {
+          "type": "PREC",
+          "value": 3,
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "query_block"
+              }
+            ]
+          }
         },
         {
           "type": "REPEAT1",
@@ -6078,18 +6099,6 @@
             {
               "type": "SYMBOL",
               "name": "having_clause"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "STRING",
-              "value": ";"
             },
             {
               "type": "BLANK"
@@ -9155,6 +9164,17 @@
         }
       }
     },
+    "kw_delete": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[dD][eE][lL][eE][tT][eE]"
+        }
+      }
+    },
     "kw_create": {
       "type": "TOKEN",
       "content": {
@@ -9570,6 +9590,17 @@
         "content": {
           "type": "PATTERN",
           "value": "[eE][nN][dD]"
+        }
+      }
+    },
+    "kw_order": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[oO][rR][dD][eE][rR]"
         }
       }
     },
@@ -11190,17 +11221,6 @@
         }
       }
     },
-    "kw_order": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PREC",
-        "value": 1,
-        "content": {
-          "type": "PATTERN",
-          "value": "[oO][rR][dD][eE][rR]"
-        }
-      }
-    },
     "kw_constructor": {
       "type": "TOKEN",
       "content": {
@@ -11418,6 +11438,28 @@
         "content": {
           "type": "PATTERN",
           "value": "[xX][mM][lL]"
+        }
+      }
+    },
+    "kw_commit": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[cC][oO][mM][mM][iI][tT]"
+        }
+      }
+    },
+    "kw_rollback": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[rR][oO][lL][lL][bB][aA][cC][kK]"
         }
       }
     }
