@@ -1253,7 +1253,7 @@ module.exports = grammar({
             $._supplied_datatypes_spatial_types,
             $._object_datatypes,
             $._other_datatypes,
-            $._subtype_datatypes,
+            $.referenced_element,
             // TODO user_defined_types
         ),
         _character_datatypes: $ => choice(
@@ -1389,9 +1389,6 @@ module.exports = grammar({
         ),
         _logical_datatypes: $ => choice(
             $.kw_boolean,
-        ),
-        _subtype_datatypes: $ => choice(
-            $.identifier,
         ),
         _rowid_datatypes_urowid: $ => seq(
             $.kw_urowid,

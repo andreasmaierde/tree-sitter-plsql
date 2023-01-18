@@ -1681,10 +1681,6 @@
           "named": true
         },
         {
-          "type": "identifier",
-          "named": true
-        },
-        {
           "type": "kw_anydata",
           "named": true
         },
