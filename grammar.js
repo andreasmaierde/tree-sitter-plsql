@@ -26,6 +26,8 @@ const NOT_EQUAL_4 = '^='
 const LESS_THEN_EQUAL = '<='
 const GREATER_THEN_EQUAL = '>='
 const EXPONENT= '**'
+const LABEL_START= '<<'
+const LABEL_END= '>>'
 const RANGE= '..'
 const SEMICOLON = ';'
 const POINT = '.'
@@ -53,6 +55,7 @@ module.exports = grammar({
         [$._query_partiion_clause],
         [$._outer_join_clause],
         [$._query_table_expression_ref_element],
+        [$._referenced_element_point_method_call],
     ],
     extras: $ => [
         $.comment_sl,
@@ -63,14 +66,13 @@ module.exports = grammar({
         source_file: $ => repeat($._element),
         _element: $ => choice(
             $.sql_statement,
-            $.comment_ml,
-            $.comment_sl,
         ),
         sql_statement: $ => seq(
             choice(
                 $._ddl_statement,
                 // $._dml_statement,
                 $.select,
+                $.plsql_block,
             ),
         ),
         _ddl_statement: $ => choice(
@@ -135,6 +137,7 @@ module.exports = grammar({
         _create_statement: $ => choice(
             // TODO
             $.create_package,
+            $.create_package_body,
         ),
         create_package: $ => seq(
             $.create_obj,
@@ -143,14 +146,24 @@ module.exports = grammar({
             optional($._schema),
             field("obj_name", $.identifier),
             optional($.sharing_clause),
-            optional($.package_properties),
+            repeat($._package_property_element),
             $._is_as,
-            repeat1($._item_list),
+            repeat1($._item_list_1),
             $.end_obj,
             optional(DIVISON),
         ),
-        package_properties: $ => repeat1(
-            $._package_property_element,
+        create_package_body: $ => seq(
+            $.create_obj,
+            optional($._editionable_noneditionable),
+            $.kw_package,
+            $.kw_body,
+            optional($._schema),
+            field("obj_name", $.identifier),
+            optional($.sharing_clause),
+            $._is_as,
+            repeat1($._declare_section_element),
+            $.end_obj,
+            optional(DIVISON),
         ),
         _package_property_element: $ => choice(
             $.default_collation_clause,
@@ -445,6 +458,15 @@ module.exports = grammar({
             $.kw_into,
             $.referenced_element,
         ),
+        exception_handler: $ => seq(
+            $.kw_when,
+            choice(
+                $.kw_others,
+                seq($.referenced_element, repeat(seq($.kw_or,$.referenced_element))),
+            ),
+            $.kw_then,
+            repeat1($.statement),
+        ),
         inheritance_clause: $ => seq(
             optional($.kw_not),
             prec(2,choice(
@@ -650,18 +672,22 @@ module.exports = grammar({
             optional($.identifier),
             SEMICOLON,
         ),
-        _item_list: $ => choice(
+        _declare_section_element: $ => choice(
+            $._item_list_1,
+            $._item_list_ext,
+        ),
+        _item_list_1: $ => choice(
             $.function_declaration,
             $.procedure_declaration,
             $._type_definition,
             $.cursor_declaration,
             $.item_declaration,
+            $.exception_declaration,
         ),
-        _item_list_definitions: $ => choice(
-            // TODO
-            // $.function_definition,
-            // $.procedure_definition,
-            // $.cursor_definition,
+        _item_list_ext: $ => choice(
+            $.function_definition,
+            $.procedure_definition,
+            $.cursor_definition,
         ),
         create_obj: $ => seq(
             $.kw_create,
@@ -672,37 +698,61 @@ module.exports = grammar({
                 ),
             ),
         ),
+        procedure_definition: $ => seq(
+            $.kw_procedure,
+            field("prc_name", $.identifier),
+            optional($.parameter_declaration),
+            repeat($._procedure_properties),
+            $._is_as,
+            choice(
+                $.call_spec_ext,
+                seq(repeat($._declare_section_element),$.body),
+            ),
+            $.end_obj,
+        ),
         procedure_declaration: $ => seq(
             $.kw_procedure,
             field("prc_name", $.identifier),
             optional($.parameter_declaration),
-            optional($.procedure_properties),
+            repeat($._procedure_properties),
             SEMICOLON,
         ),
-        procedure_properties: $ => repeat1(
-            $._procedure_property_element,
-        ),
-        _procedure_property_element: $ => choice(
+        _procedure_properties: $ => choice(
             $.default_collation_clause,
             $.invoker_rights_clause,
             $.accessible_by_clause,
+        ),
+        function_definition: $ => seq(
+            $.kw_function,
+            field("fnc_name", $.identifier),
+            optional($.parameter_declaration),
+            $.return_declaration,
+            repeat($._function_properties),
+            $._is_as,
+            choice(
+                $.call_spec_ext,
+                seq(repeat($._declare_section_element),$.body),
+            ),
+            $.end_obj,
         ),
         function_declaration: $ => seq(
             $.kw_function,
             field("fnc_name", $.identifier),
             optional($.parameter_declaration),
             $.return_declaration,
-            optional($.function_properties),
+            optional($._function_properties),
             SEMICOLON,
         ),
-        function_properties: $ => repeat1(
-            $._function_property_element,
-        ),
-        _function_property_element: $ => choice(
+        _function_properties: $ => choice(
             $.kw_deterministic,
             $.kw_pipelined,
             $.kw_parallel_enable,
             $.kw_result_cache,
+        ),
+        exception_declaration: $ => seq(
+            $.identifier,
+            $.kw_exception,
+            SEMICOLON,
         ),
         item_declaration: $ => seq(
             $.identifier,
@@ -711,6 +761,175 @@ module.exports = grammar({
             optional($._not_null),
             optional($.default_expression),
             SEMICOLON,
+        ),
+        plsql_block: $ => seq(
+            optional(seq($.kw_declare,repeat1($._declare_section_element))),
+            $.body,
+        ),
+        body: $ => seq(
+            $.kw_begin,
+            repeat1($.statement),
+            optional($.exception_block),
+            $.end_obj,
+        ),
+        exception_block: $ => seq(
+            $.kw_exception,
+            repeat1($.exception_handler),
+        ),
+        statement: $ => seq(
+            optional($._label),
+            $._statement_element,
+            SEMICOLON,
+        ),
+        _statement_element: $ => choice(
+            $._assignment_statement,
+            $._basic_loop_statement,
+            $._case_statement,
+            $._close_statement,
+            $._referenced_element_point_method_call,
+            $._continue_statement,
+            $._cursor_for_loop_statement,
+            // TODO
+            // $._execute_immediate,
+            $._exit_statement,
+            // $._fetch_statement,
+            // $._for_loop_statement,
+            // $._forall_statement,
+            $._goto_statement,
+            // $._if_statement,
+            $._null_statement,
+            $._open_statement,
+            // $._open_for_statement,
+            $._pipe_row_statement,
+            $.plsql_block,
+            $.ref_call,
+            $._raise_statement,
+            $._return_statement,
+            $.select,
+            // $._sql_statement,
+            // $._while_loop_statement,
+        ),
+        _assignment_statement: $ => seq(
+            $._assignment_statement_target,
+            ASSIGNMENT,
+            $.expression,
+        ),
+        _assignment_statement_target: $ => choice(
+            $.referenced_element,
+            $.host_variable,
+            $.collection_variable,
+        ),
+        collection_variable: $ => seq(
+            $.referenced_element,
+            $._index,
+        ),
+        _label: $ => seq(
+            LABEL_START,
+            $.identifier,
+            LABEL_END
+        ),
+        _basic_loop_statement: $ => seq(
+            $.kw_loop,
+            repeat1($.statement),
+            $.kw_end,
+            $.kw_loop,
+            optional($._label),
+        ),
+        _case_statement: $ => choice(
+           $._simple_case_statement,
+           $._searched_case_statement,
+        ),
+        _searched_case_statement: $ => seq(
+            $.kw_case,
+            repeat1(
+                seq($.kw_when, $.expression, $.kw_then, repeat1($.statement)),
+            ),
+            optional(
+                seq($.kw_else, repeat1($.statement)),
+            ),
+            $.kw_end,
+            $.kw_case,
+            optional($._label),
+        ),
+        _simple_case_statement: $ => seq(
+            $.kw_case,
+            $.referenced_element,
+            repeat1(
+                seq($.kw_when, $.expression, $.kw_then, repeat1($.statement)),
+            ),
+            optional(
+                seq($.kw_else, repeat1($.statement)),
+            ),
+            $.kw_end,
+            $.kw_case,
+            optional($._label),
+        ),
+        _close_statement: $ => seq(
+            $.kw_close,
+            choice(
+                $.referenced_element,
+                $.host_variable,
+            ),
+        ),
+        _continue_statement: $ => seq(
+            $.kw_continue,
+            optional($._label),
+            optional(seq($.kw_when,$.expression)),
+        ),
+        _exit_statement: $ => seq(
+            $.kw_exit,
+            optional($._label),
+            optional(seq($.kw_when,$.expression)),
+        ),
+        _return_statement: $ => seq(
+            $.kw_return,
+            optional($.expression),
+        ),
+        _raise_statement: $ => seq(
+            $.kw_raise,
+            $.referenced_element,
+        ),
+        _pipe_row_statement: $ => seq(
+            $.kw_pipe,
+            $.kw_row,
+            BRACKET_LEFT,
+            $.referenced_element,
+            BRACKET_RIGHT,
+        ),
+        _null_statement: $ => seq(
+            $.kw_null,
+        ),
+        _goto_statement: $ => seq(
+            $.kw_goto,
+            $._label,
+        ),
+        _open_statement: $ => seq(
+            $.kw_open,
+            $.referenced_element,
+            optional($.parameter),
+        ),
+        _cursor_for_loop_statement: $ => seq(
+            $.kw_for,
+            $.identifier,
+            $.kw_in,
+            choice(
+                seq($.referenced_element, $.parameter),
+                seq(BRACKET_LEFT, $.select, BRACKET_RIGHT),
+            ),
+            $.kw_loop,
+            repeat1($.statement),
+            $.kw_end,
+            $.kw_loop,
+            optional($._label),
+        ),
+        cursor_definition: $ => seq(
+            $.kw_cursor,
+            $.identifier,
+            optional($.cursor_declaration_parameters),
+            optional(seq($.kw_return, $._cursor_declaration_return_datatype)),
+            $.kw_is,
+            $.select,
+            SEMICOLON
         ),
         cursor_declaration: $ => seq(
             $.kw_cursor,
@@ -881,8 +1100,10 @@ module.exports = grammar({
             prec(1,$._expression_base_case),
         ),
         _expression_base_elements: $ => choice(
-            prec(6,$.ref_call),
-            prec(5,$.referenced_element),
+            prec(8,$.ref_call),
+            prec(7,$.referenced_element),
+            prec(6,$._referenced_element_point_method_call),
+            prec(5,$._referenced_element_percent_method_call),
             prec(4,$._literal),
             prec(3,$._literal_list_multi),
             prec(2,$.placeholder),
@@ -973,7 +1194,7 @@ module.exports = grammar({
             $.kw_and,
             $.expression,
         ),
-        _expression_referenced_percent: $ => seq(
+        _referenced_element_percent_method_call: $ => seq(
             $.referenced_element,
             PERCENT,
             choice(
@@ -983,17 +1204,20 @@ module.exports = grammar({
                 $.kw_notfound,
             ),
         ),
-        _expression_referenced_point: $ => seq(
+        _referenced_element_point_method_call: $ => seq(
             $.referenced_element,
             POINT,
             choice(
                 $.kw_count,
+                $.kw_delete,
                 $.kw_first,
                 $.kw_last,
                 $.kw_limit,
                 $.kw_next,
                 $.kw_prior,
                 $.kw_exists,
+                $.kw_extend,
+                $.kw_trim,
             ),
             optional($._index),
         ),
@@ -1241,7 +1465,7 @@ module.exports = grammar({
             $.kw_json_key_list,
         ),
         _other_datatypes: $ => choice(
-            $.kw_exception,
+            $.exception_declaration,
         ),
         ref_call: $ => seq(
             prec(5,$.referenced_element),
@@ -1302,14 +1526,15 @@ module.exports = grammar({
             $.identifier,
         ),
         parameter_value: $ => choice(
-            $.identifier,
-            $._literal,
+            prec(4,$.referenced_element),
+            prec(3,$._literal),
+            $.expression,
         ),
-        _index: $ => seq(
+        _index: $ => prec(1,seq(
             BRACKET_LEFT,
             $._literal_number,
             BRACKET_RIGHT,
-        ),
+        )),
         _size: $ => seq(
             BRACKET_LEFT,
             $._literal_number,
@@ -1427,11 +1652,11 @@ module.exports = grammar({
                 seq(COMMA, $._literal),
             ),
         ),
-        _literal: $ => choice(
+        _literal: $ => prec(2,choice(
             $._literal_number,
             $.literal_string,
             $._literal_boolean,
-        ),
+        )),
         _literal_boolean: $ => choice(
             $.kw_true,
             $.kw_false,
@@ -1465,12 +1690,12 @@ module.exports = grammar({
             repeat($.row_limiting_clause),
         ),
         _subquery_element: $ => choice(
-            prec(4,seq($.query_block,SEMICOLON)),
-            prec(3,seq($.query_block)),
+            prec(4,seq($._query_block,SEMICOLON)),
+            prec(3,seq($._query_block)),
             repeat1($._subquery_element_union_intersect_minus),
             seq(BRACKET_LEFT, $._subquery, BRACKET_RIGHT),
         ),
-        query_block: $ => seq(
+        _query_block: $ => seq(
             optional($.with_clause),
             $.kw_select,
             optional(choice($.kw_distinct,$.kw_unique,$.kw_all)),
@@ -1934,6 +2159,16 @@ module.exports = grammar({
           seq($.kw_skip,$.kw_locked),
         ),
         // KW
+        kw_open: _ => reservedWord("open"),
+        kw_goto: _ => reservedWord("goto"),
+        kw_pipe: _ => reservedWord("pipe"),
+        kw_raise: _ => reservedWord("raise"),
+        kw_exit: _ => reservedWord("exit"),
+        kw_others: _ => reservedWord("others"),
+        kw_continue: _ => reservedWord("continue"),
+        kw_trim: _ => reservedWord("trim"),
+        kw_close: _ => reservedWord("close"),
+        kw_loop: _ => reservedWord("loop"),
         kw_group: _ => reservedWord("group"),
         kw_having: _ => reservedWord("having"),
         kw_connect: _ => reservedWord("connect"),
@@ -2089,6 +2324,7 @@ module.exports = grammar({
         kw_rename: _ => reservedWord("rename"),
         kw_result_cache: _ => reservedWord("result_cache"),
         kw_exists: _ => reservedWord("exists"),
+        kw_extend: _ => reservedWord("extend"),
         kw_between: _ => reservedWord("between"),
         kw_found: _ => reservedWord("found"),
         kw_isopen: _ => reservedWord("isopen"),
