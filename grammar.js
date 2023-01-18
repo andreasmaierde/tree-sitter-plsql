@@ -55,7 +55,7 @@ module.exports = grammar({
         [$._query_partiion_clause],
         [$._outer_join_clause],
         [$._query_table_expression_ref_element],
-        [$._referenced_element_point_method_call],
+        [$.referenced_element_point_method_call],
     ],
     extras: $ => [
         $.comment_sl,
@@ -782,34 +782,34 @@ module.exports = grammar({
             SEMICOLON,
         ),
         _statement_element: $ => choice(
-            $._assignment_statement,
-            $._basic_loop_statement,
-            $._case_statement,
-            $._close_statement,
-            $._referenced_element_point_method_call,
-            $._continue_statement,
-            $._cursor_for_loop_statement,
+            $.assignment_statement,
+            $.basic_loop_statement,
+            $.case_statement,
+            $.close_statement,
+            $.referenced_element_point_method_call,
+            $.continue_statement,
+            $.cursor_for_loop_statement,
             // TODO
             // $._execute_immediate,
-            $._exit_statement,
+            $.exit_statement,
             // $._fetch_statement,
             // $._for_loop_statement,
             // $._forall_statement,
-            $._goto_statement,
+            $.goto_statement,
             // $._if_statement,
-            $._null_statement,
-            $._open_statement,
+            $.null_statement,
+            $.open_statement,
             // $._open_for_statement,
-            $._pipe_row_statement,
+            $.pipe_row_statement,
             $.plsql_block,
             $.ref_call,
-            $._raise_statement,
-            $._return_statement,
+            $.raise_statement,
+            $.return_statement,
             $.select,
             // $._sql_statement,
             // $._while_loop_statement,
         ),
-        _assignment_statement: $ => seq(
+        assignment_statement: $ => seq(
             $._assignment_statement_target,
             ASSIGNMENT,
             $.expression,
@@ -828,14 +828,14 @@ module.exports = grammar({
             $.identifier,
             LABEL_END
         ),
-        _basic_loop_statement: $ => seq(
+        basic_loop_statement: $ => seq(
             $.kw_loop,
             repeat1($.statement),
             $.kw_end,
             $.kw_loop,
             optional($._label),
         ),
-        _case_statement: $ => choice(
+        case_statement: $ => choice(
            $._simple_case_statement,
            $._searched_case_statement,
         ),
@@ -864,51 +864,51 @@ module.exports = grammar({
             $.kw_case,
             optional($._label),
         ),
-        _close_statement: $ => seq(
+        close_statement: $ => seq(
             $.kw_close,
             choice(
                 $.referenced_element,
                 $.host_variable,
             ),
         ),
-        _continue_statement: $ => seq(
+        continue_statement: $ => seq(
             $.kw_continue,
             optional($._label),
             optional(seq($.kw_when,$.expression)),
         ),
-        _exit_statement: $ => seq(
+        exit_statement: $ => seq(
             $.kw_exit,
             optional($._label),
             optional(seq($.kw_when,$.expression)),
         ),
-        _return_statement: $ => seq(
+        return_statement: $ => seq(
             $.kw_return,
             optional($.expression),
         ),
-        _raise_statement: $ => seq(
+        raise_statement: $ => seq(
             $.kw_raise,
             $.referenced_element,
         ),
-        _pipe_row_statement: $ => seq(
+        pipe_row_statement: $ => seq(
             $.kw_pipe,
             $.kw_row,
             BRACKET_LEFT,
             $.referenced_element,
             BRACKET_RIGHT,
         ),
-        _null_statement: $ => seq(
+        null_statement: $ => seq(
             $.kw_null,
         ),
-        _goto_statement: $ => seq(
+        goto_statement: $ => seq(
             $.kw_goto,
             $._label,
         ),
-        _open_statement: $ => seq(
+        open_statement: $ => seq(
             $.kw_open,
             $.referenced_element,
             optional($.parameter),
         ),
-        _cursor_for_loop_statement: $ => seq(
+        cursor_for_loop_statement: $ => seq(
             $.kw_for,
             $.identifier,
             $.kw_in,
@@ -1102,7 +1102,7 @@ module.exports = grammar({
         _expression_base_elements: $ => choice(
             prec(8,$.ref_call),
             prec(7,$.referenced_element),
-            prec(6,$._referenced_element_point_method_call),
+            prec(6,$.referenced_element_point_method_call),
             prec(5,$._referenced_element_percent_method_call),
             prec(4,$._literal),
             prec(3,$._literal_list_multi),
@@ -1204,7 +1204,7 @@ module.exports = grammar({
                 $.kw_notfound,
             ),
         ),
-        _referenced_element_point_method_call: $ => seq(
+        referenced_element_point_method_call: $ => seq(
             $.referenced_element,
             POINT,
             choice(

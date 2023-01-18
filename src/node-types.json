@@ -838,6 +838,60 @@
     }
   },
   {
+    "type": "assignment_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "collection_variable",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "host_variable",
+          "named": true
+        },
+        {
+          "type": "referenced_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "basic_loop_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_end",
+          "named": true
+        },
+        {
+          "type": "kw_loop",
+          "named": true
+        },
+        {
+          "type": "statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "body",
     "named": true,
     "fields": {},
@@ -992,6 +1046,53 @@
     }
   },
   {
+    "type": "case_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_case",
+          "named": true
+        },
+        {
+          "type": "kw_else",
+          "named": true
+        },
+        {
+          "type": "kw_end",
+          "named": true
+        },
+        {
+          "type": "kw_then",
+          "named": true
+        },
+        {
+          "type": "kw_when",
+          "named": true
+        },
+        {
+          "type": "referenced_element",
+          "named": true
+        },
+        {
+          "type": "statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "character_set",
     "named": true,
     "fields": {},
@@ -1009,6 +1110,29 @@
         },
         {
           "type": "literal_string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "close_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "host_variable",
+          "named": true
+        },
+        {
+          "type": "kw_close",
+          "named": true
+        },
+        {
+          "type": "referenced_element",
           "named": true
         }
       ]
@@ -1081,6 +1205,33 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "continue_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_continue",
+          "named": true
+        },
+        {
+          "type": "kw_when",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1457,6 +1608,53 @@
         },
         {
           "type": "select",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "cursor_for_loop_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_end",
+          "named": true
+        },
+        {
+          "type": "kw_for",
+          "named": true
+        },
+        {
+          "type": "kw_in",
+          "named": true
+        },
+        {
+          "type": "kw_loop",
+          "named": true
+        },
+        {
+          "type": "parameter",
+          "named": true
+        },
+        {
+          "type": "referenced_element",
+          "named": true
+        },
+        {
+          "type": "select",
+          "named": true
+        },
+        {
+          "type": "statement",
           "named": true
         }
       ]
@@ -2405,6 +2603,33 @@
     }
   },
   {
+    "type": "exit_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_exit",
+          "named": true
+        },
+        {
+          "type": "kw_when",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "expression",
     "named": true,
     "fields": {},
@@ -2441,31 +2666,11 @@
           "named": true
         },
         {
-          "type": "kw_count",
-          "named": true
-        },
-        {
-          "type": "kw_delete",
-          "named": true
-        },
-        {
           "type": "kw_deleting",
           "named": true
         },
         {
-          "type": "kw_exists",
-          "named": true
-        },
-        {
-          "type": "kw_extend",
-          "named": true
-        },
-        {
           "type": "kw_false",
-          "named": true
-        },
-        {
-          "type": "kw_first",
           "named": true
         },
         {
@@ -2489,19 +2694,7 @@
           "named": true
         },
         {
-          "type": "kw_last",
-          "named": true
-        },
-        {
           "type": "kw_like",
-          "named": true
-        },
-        {
-          "type": "kw_limit",
-          "named": true
-        },
-        {
-          "type": "kw_next",
           "named": true
         },
         {
@@ -2521,15 +2714,7 @@
           "named": true
         },
         {
-          "type": "kw_prior",
-          "named": true
-        },
-        {
           "type": "kw_rowcount",
-          "named": true
-        },
-        {
-          "type": "kw_trim",
           "named": true
         },
         {
@@ -2562,6 +2747,10 @@
         },
         {
           "type": "referenced_element",
+          "named": true
+        },
+        {
+          "type": "referenced_element_point_method_call",
           "named": true
         }
       ]
@@ -3012,6 +3201,25 @@
         },
         {
           "type": "type_definition_sub",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "goto_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "kw_goto",
           "named": true
         }
       ]
@@ -3690,6 +3898,44 @@
     }
   },
   {
+    "type": "null_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_null",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "open_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_open",
+          "named": true
+        },
+        {
+          "type": "parameter",
+          "named": true
+        },
+        {
+          "type": "referenced_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "order_by_clause",
     "named": true,
     "fields": {},
@@ -3955,6 +4201,29 @@
     }
   },
   {
+    "type": "pipe_row_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_pipe",
+          "named": true
+        },
+        {
+          "type": "kw_row",
+          "named": true
+        },
+        {
+          "type": "referenced_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "placeholder",
     "named": true,
     "fields": {},
@@ -4193,6 +4462,25 @@
     }
   },
   {
+    "type": "raise_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_raise",
+          "named": true
+        },
+        {
+          "type": "referenced_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "ref_call",
     "named": true,
     "fields": {},
@@ -4258,6 +4546,69 @@
     }
   },
   {
+    "type": "referenced_element_point_method_call",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "float",
+          "named": true
+        },
+        {
+          "type": "kw_count",
+          "named": true
+        },
+        {
+          "type": "kw_delete",
+          "named": true
+        },
+        {
+          "type": "kw_exists",
+          "named": true
+        },
+        {
+          "type": "kw_extend",
+          "named": true
+        },
+        {
+          "type": "kw_first",
+          "named": true
+        },
+        {
+          "type": "kw_last",
+          "named": true
+        },
+        {
+          "type": "kw_limit",
+          "named": true
+        },
+        {
+          "type": "kw_next",
+          "named": true
+        },
+        {
+          "type": "kw_prior",
+          "named": true
+        },
+        {
+          "type": "kw_trim",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "referenced_element",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "referenced_element_repeat",
     "named": true,
     "fields": {},
@@ -4282,6 +4633,25 @@
       "types": [
         {
           "type": "datatype",
+          "named": true
+        },
+        {
+          "type": "kw_return",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "return_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
           "named": true
         },
         {
@@ -4663,22 +5033,38 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
-          "type": "collection_variable",
+          "type": "assignment_statement",
           "named": true
         },
         {
-          "type": "expression",
+          "type": "basic_loop_statement",
           "named": true
         },
         {
-          "type": "float",
+          "type": "case_statement",
           "named": true
         },
         {
-          "type": "host_variable",
+          "type": "close_statement",
+          "named": true
+        },
+        {
+          "type": "continue_statement",
+          "named": true
+        },
+        {
+          "type": "cursor_for_loop_statement",
+          "named": true
+        },
+        {
+          "type": "exit_statement",
+          "named": true
+        },
+        {
+          "type": "goto_statement",
           "named": true
         },
         {
@@ -4686,123 +5072,15 @@
           "named": true
         },
         {
-          "type": "kw_case",
+          "type": "null_statement",
           "named": true
         },
         {
-          "type": "kw_close",
+          "type": "open_statement",
           "named": true
         },
         {
-          "type": "kw_continue",
-          "named": true
-        },
-        {
-          "type": "kw_count",
-          "named": true
-        },
-        {
-          "type": "kw_delete",
-          "named": true
-        },
-        {
-          "type": "kw_else",
-          "named": true
-        },
-        {
-          "type": "kw_end",
-          "named": true
-        },
-        {
-          "type": "kw_exists",
-          "named": true
-        },
-        {
-          "type": "kw_exit",
-          "named": true
-        },
-        {
-          "type": "kw_extend",
-          "named": true
-        },
-        {
-          "type": "kw_first",
-          "named": true
-        },
-        {
-          "type": "kw_for",
-          "named": true
-        },
-        {
-          "type": "kw_goto",
-          "named": true
-        },
-        {
-          "type": "kw_in",
-          "named": true
-        },
-        {
-          "type": "kw_last",
-          "named": true
-        },
-        {
-          "type": "kw_limit",
-          "named": true
-        },
-        {
-          "type": "kw_loop",
-          "named": true
-        },
-        {
-          "type": "kw_next",
-          "named": true
-        },
-        {
-          "type": "kw_null",
-          "named": true
-        },
-        {
-          "type": "kw_open",
-          "named": true
-        },
-        {
-          "type": "kw_pipe",
-          "named": true
-        },
-        {
-          "type": "kw_prior",
-          "named": true
-        },
-        {
-          "type": "kw_raise",
-          "named": true
-        },
-        {
-          "type": "kw_return",
-          "named": true
-        },
-        {
-          "type": "kw_row",
-          "named": true
-        },
-        {
-          "type": "kw_then",
-          "named": true
-        },
-        {
-          "type": "kw_trim",
-          "named": true
-        },
-        {
-          "type": "kw_when",
-          "named": true
-        },
-        {
-          "type": "number",
-          "named": true
-        },
-        {
-          "type": "parameter",
+          "type": "pipe_row_statement",
           "named": true
         },
         {
@@ -4810,19 +5088,23 @@
           "named": true
         },
         {
+          "type": "raise_statement",
+          "named": true
+        },
+        {
           "type": "ref_call",
           "named": true
         },
         {
-          "type": "referenced_element",
+          "type": "referenced_element_point_method_call",
+          "named": true
+        },
+        {
+          "type": "return_statement",
           "named": true
         },
         {
           "type": "select",
-          "named": true
-        },
-        {
-          "type": "statement",
           "named": true
         }
       ]

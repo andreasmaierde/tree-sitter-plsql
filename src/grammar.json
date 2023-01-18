@@ -3199,51 +3199,51 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "_assignment_statement"
+          "name": "assignment_statement"
         },
         {
           "type": "SYMBOL",
-          "name": "_basic_loop_statement"
+          "name": "basic_loop_statement"
         },
         {
           "type": "SYMBOL",
-          "name": "_case_statement"
+          "name": "case_statement"
         },
         {
           "type": "SYMBOL",
-          "name": "_close_statement"
+          "name": "close_statement"
         },
         {
           "type": "SYMBOL",
-          "name": "_referenced_element_point_method_call"
+          "name": "referenced_element_point_method_call"
         },
         {
           "type": "SYMBOL",
-          "name": "_continue_statement"
+          "name": "continue_statement"
         },
         {
           "type": "SYMBOL",
-          "name": "_cursor_for_loop_statement"
+          "name": "cursor_for_loop_statement"
         },
         {
           "type": "SYMBOL",
-          "name": "_exit_statement"
+          "name": "exit_statement"
         },
         {
           "type": "SYMBOL",
-          "name": "_goto_statement"
+          "name": "goto_statement"
         },
         {
           "type": "SYMBOL",
-          "name": "_null_statement"
+          "name": "null_statement"
         },
         {
           "type": "SYMBOL",
-          "name": "_open_statement"
+          "name": "open_statement"
         },
         {
           "type": "SYMBOL",
-          "name": "_pipe_row_statement"
+          "name": "pipe_row_statement"
         },
         {
           "type": "SYMBOL",
@@ -3255,11 +3255,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "_raise_statement"
+          "name": "raise_statement"
         },
         {
           "type": "SYMBOL",
-          "name": "_return_statement"
+          "name": "return_statement"
         },
         {
           "type": "SYMBOL",
@@ -3267,7 +3267,7 @@
         }
       ]
     },
-    "_assignment_statement": {
+    "assignment_statement": {
       "type": "SEQ",
       "members": [
         {
@@ -3331,7 +3331,7 @@
         }
       ]
     },
-    "_basic_loop_statement": {
+    "basic_loop_statement": {
       "type": "SEQ",
       "members": [
         {
@@ -3367,7 +3367,7 @@
         }
       ]
     },
-    "_case_statement": {
+    "case_statement": {
       "type": "CHOICE",
       "members": [
         {
@@ -3544,7 +3544,7 @@
         }
       ]
     },
-    "_close_statement": {
+    "close_statement": {
       "type": "SEQ",
       "members": [
         {
@@ -3566,7 +3566,7 @@
         }
       ]
     },
-    "_continue_statement": {
+    "continue_statement": {
       "type": "SEQ",
       "members": [
         {
@@ -3608,7 +3608,7 @@
         }
       ]
     },
-    "_exit_statement": {
+    "exit_statement": {
       "type": "SEQ",
       "members": [
         {
@@ -3650,7 +3650,7 @@
         }
       ]
     },
-    "_return_statement": {
+    "return_statement": {
       "type": "SEQ",
       "members": [
         {
@@ -3671,7 +3671,7 @@
         }
       ]
     },
-    "_raise_statement": {
+    "raise_statement": {
       "type": "SEQ",
       "members": [
         {
@@ -3684,7 +3684,7 @@
         }
       ]
     },
-    "_pipe_row_statement": {
+    "pipe_row_statement": {
       "type": "SEQ",
       "members": [
         {
@@ -3709,7 +3709,7 @@
         }
       ]
     },
-    "_null_statement": {
+    "null_statement": {
       "type": "SEQ",
       "members": [
         {
@@ -3718,7 +3718,7 @@
         }
       ]
     },
-    "_goto_statement": {
+    "goto_statement": {
       "type": "SEQ",
       "members": [
         {
@@ -3731,7 +3731,7 @@
         }
       ]
     },
-    "_open_statement": {
+    "open_statement": {
       "type": "SEQ",
       "members": [
         {
@@ -3756,7 +3756,7 @@
         }
       ]
     },
-    "_cursor_for_loop_statement": {
+    "cursor_for_loop_statement": {
       "type": "SEQ",
       "members": [
         {
@@ -4663,7 +4663,7 @@
           "value": 6,
           "content": {
             "type": "SYMBOL",
-            "name": "_referenced_element_point_method_call"
+            "name": "referenced_element_point_method_call"
           }
         },
         {
@@ -5111,7 +5111,7 @@
         }
       ]
     },
-    "_referenced_element_point_method_call": {
+    "referenced_element_point_method_call": {
       "type": "SEQ",
       "members": [
         {
@@ -12773,7 +12773,7 @@
       "_query_table_expression_ref_element"
     ],
     [
-      "_referenced_element_point_method_call"
+      "referenced_element_point_method_call"
     ]
   ],
   "precedences": [],
