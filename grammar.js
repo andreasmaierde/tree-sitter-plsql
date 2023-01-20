@@ -30,6 +30,7 @@ const LABEL_START= '<<'
 const LABEL_END= '>>'
 const RANGE= '..'
 const SEMICOLON = ';'
+const POINT_POINT = '..'
 const POINT = '.'
 const DOUBLE_POINT = ':'
 const COMMA = ','
@@ -65,15 +66,8 @@ module.exports = grammar({
     rules: {
         source_file: $ => repeat($._element),
         _element: $ => choice(
-            $.sql_statement,
-        ),
-        sql_statement: $ => seq(
-            choice(
-                $._ddl_statement,
-                // $._dml_statement,
-                $.select,
-                $.plsql_block,
-            ),
+            $._ddl_statement,
+            $.statement,
         ),
         _ddl_statement: $ => choice(
              $._alter_statement,
@@ -777,7 +771,7 @@ module.exports = grammar({
             repeat1($.exception_handler),
         ),
         statement: $ => seq(
-            optional($._label),
+            optional($.label),
             $._statement_element,
             SEMICOLON,
         ),
@@ -788,26 +782,24 @@ module.exports = grammar({
             $.close_statement,
             $.referenced_element_point_method_call,
             $.continue_statement,
-            $.cursor_for_loop_statement,
-            // TODO
-            // $._execute_immediate,
+            $.execute_immediate,
             $.exit_statement,
-            // $._fetch_statement,
-            // $._for_loop_statement,
+            $.fetch_statement,
+            $.for_loop_statement,
+            // TODO
             // $._forall_statement,
             $.goto_statement,
-            // $._if_statement,
+            $.if_statement,
             $.null_statement,
             $.open_statement,
-            // $._open_for_statement,
+            $.open_for_statement,
             $.pipe_row_statement,
             $.plsql_block,
             $.ref_call,
             $.raise_statement,
             $.return_statement,
-            $.select,
-            // $._sql_statement,
-            // $._while_loop_statement,
+            $._sql_statements,
+            $.while_loop_statement,
         ),
         assignment_statement: $ => seq(
             $._assignment_statement_target,
@@ -823,7 +815,7 @@ module.exports = grammar({
             $.referenced_element,
             $._index,
         ),
-        _label: $ => seq(
+        label: $ => seq(
             LABEL_START,
             $.identifier,
             LABEL_END
@@ -833,7 +825,7 @@ module.exports = grammar({
             repeat1($.statement),
             $.kw_end,
             $.kw_loop,
-            optional($._label),
+            optional($.label),
         ),
         case_statement: $ => choice(
            $._simple_case_statement,
@@ -849,7 +841,7 @@ module.exports = grammar({
             ),
             $.kw_end,
             $.kw_case,
-            optional($._label),
+            optional($.label),
         ),
         _simple_case_statement: $ => seq(
             $.kw_case,
@@ -862,7 +854,7 @@ module.exports = grammar({
             ),
             $.kw_end,
             $.kw_case,
-            optional($._label),
+            optional($.label),
         ),
         close_statement: $ => seq(
             $.kw_close,
@@ -873,12 +865,17 @@ module.exports = grammar({
         ),
         continue_statement: $ => seq(
             $.kw_continue,
-            optional($._label),
+            optional($.label),
             optional(seq($.kw_when,$.expression)),
+        ),
+        fetch_statement: $ => seq(
+            $.kw_fetch,
+            $._assignment_statement_target,
+            $._into_and_bulk_clause,
         ),
         exit_statement: $ => seq(
             $.kw_exit,
-            optional($._label),
+            optional($.label),
             optional(seq($.kw_when,$.expression)),
         ),
         return_statement: $ => seq(
@@ -899,29 +896,224 @@ module.exports = grammar({
         null_statement: $ => seq(
             $.kw_null,
         ),
+        _sql_statements: $ => choice(
+            $.sql_statement_commit,
+            $.sql_statement_rollback,
+            $.sql_statement_savepoint,
+            $.sql_statement_set_transaction,
+            $.sql_statement_lock_table,
+            $.select,
+            $.delete,
+            $.update,
+        ),
+        sql_statement_lock_table: $ => seq(
+            $.kw_lock,
+            $.kw_table,
+            $.referenced_element,
+            optional($._partition_extension_clause),
+            $.kw_in,
+            repeat1($.identifier),
+            $.kw_mode,
+            choice(
+                $.kw_nowait,
+                seq($.kw_wait,$.number),
+            ),
+        ),
+        sql_statement_rollback: $ => seq(
+            $.kw_rollback,
+            optional($.kw_work),
+            optional(
+                choice(
+                    seq($.kw_to,optional($.kw_savepoint),$.identifier),
+                    seq($.kw_comment,$.literal_string),
+                ),
+            ),
+        ),
+        sql_statement_commit: $ => seq(
+            $.kw_commit,
+            optional($.kw_work),
+            optional(
+                choice(
+                    seq($.kw_force,$.literal_string,optional(seq(COMMA,$.number))),
+                    seq($.kw_comment,$.literal_string,
+                        optional(seq($.kw_write,optional(choice($.kw_wait,$.kw_nowait)),
+                            optional(choice($.kw_immediate,$.kw_batch))),
+                        ),
+                    ),
+                ),
+            ),
+        ),
+        sql_statement_savepoint: $ => seq(
+            $.kw_savepoint,
+            $.identifier,
+        ),
+        sql_statement_set_transaction: $ => seq(
+            $.kw_set,
+            $.kw_transaction,
+            repeat(
+                choice(
+                    seq($.kw_read,choice($.kw_only,$.kw_write)),
+                    seq($.kw_isolation,$.kw_level,choice($.kw_serializable,seq($.kw_read,$.kw_commtted))),
+                    seq($.kw_use,$.kw_rollback,$.kw_segment,$.identifier),
+                ),
+            ),
+            optional(seq($.kw_name,$.identifier)),
+        ),
+        while_loop_statement: $ => seq(
+            $.kw_while,
+            $.expression,
+            $.kw_loop,
+            repeat1($.statement),
+            $.kw_end,
+            $.kw_loop,
+            optional($.label),
+        ),
+        for_loop_statement: $ => seq(
+            $.kw_for,
+            $.iterator,
+            $.kw_loop,
+            repeat1($.statement),
+            $.kw_end,
+            $.kw_loop,
+            optional($.label),
+        ),
+        iterator: $ => seq(
+            $._iterand_decl,
+            optional(seq(COMMA,$._iterand_decl)),
+            $.kw_in,
+            $._iterator_ctl_seq,
+        ),
+        _iterand_decl: $ => seq(
+            $.identifier,
+            optional(choice($.kw_mutable,$.kw_immutable)),
+        ),
+        _iterator_ctl_seq: $ => seq(
+            $._qual_iteration_ctl,
+            optional(seq(COMMA, $._qual_iteration_ctl)),
+        ),
+        _qual_iteration_ctl: $ => seq(
+            optional($.kw_reverse),
+            $._iteration_control,
+            optional($._pred_clause_seq),
+        ),
+        _iteration_control: $ => choice(
+            // TODO
+            $._iteration_stepped_control,
+            $._single_expression_control,
+            $._xy_of_control,
+        ),
+        _iteration_stepped_control: $ => seq(
+            $.number,
+            POINT_POINT,
+            $.number,
+            optional(seq($.kw_by,$._literal_number)),
+        ),
+        _xy_of_control: $ => seq(
+            choice($.kw_indices,$.kw_values,$.kw_pairs),
+            $.kw_of,
+            $.expression,
+        ),
+        _single_expression_control: $ => seq(
+            optional($.kw_repeat),
+            $.expression,
+        ),
+        _pred_clause_seq: $ => choice(
+            seq($.kw_while,$.expression),
+            seq($.kw_when,$.expression),
+            seq($.kw_while,$.expression,$.kw_when,$.expression),
+        ),
+        if_statement: $ => seq(
+            $.kw_if,
+            $.expression,
+            $.kw_then,
+            repeat1($.statement),
+            optional(seq($.kw_elsif, $.expression, $.kw_then, repeat1($.statement))),
+            optional(seq($.kw_else, repeat1($.statement))),
+            $.kw_end,
+            $.kw_if,
+        ),
         goto_statement: $ => seq(
             $.kw_goto,
-            $._label,
+            $.label,
         ),
         open_statement: $ => seq(
             $.kw_open,
             $.referenced_element,
             optional($.parameter),
         ),
-        cursor_for_loop_statement: $ => seq(
+        open_for_statement: $ => seq(
+            $.kw_open,
+            $._assignment_statement_target,
             $.kw_for,
-            $.identifier,
-            $.kw_in,
-            choice(
-                seq($.referenced_element, $.parameter),
-                seq(BRACKET_LEFT, $.select, BRACKET_RIGHT),
-            ),
-            $.kw_loop,
-            repeat1($.statement),
-            $.kw_end,
-            $.kw_loop,
-            optional($._label),
+            $.select,
+            optional($._using_clause),
         ),
+        execute_immediate: $ => seq(
+            $.kw_execute,
+            $.kw_immediate,
+            $.expression,
+            optional(
+                choice(
+                    seq($._using_clause, optional($._dynamic_returning_clause)),
+                    $._dynamic_returning_clause,
+                    seq($._into_and_bulk_clause, optional($._using_clause)),
+                ),
+            ),
+        ),
+        _error_logging_clause: $ => seq(
+            $.kw_log,
+            $.kw_errors,
+            optional(seq($.kw_into,$.referenced_element)),
+            optional(seq(BRACKET_LEFT,$.expression,BRACKET_RIGHT)),
+            optional($._modified_external_table_properties_reject),
+        ),
+        _returning_clause: $ => seq(
+            choice(
+                $.kw_return,
+                $.kw_returning,
+            ),
+            $.expression,
+            repeat(seq(COMMA,$.expression)),
+            $.kw_into,
+            $.referenced_element,
+            repeat(seq(COMMA,$.referenced_element)),
+        ),
+        _dynamic_returning_clause: $ => seq(
+            choice(
+                $.kw_return,
+                $.kw_returning,
+            ),
+            $._into_and_bulk_clause,
+        ),
+        _using_clause: $ => seq(
+            $.kw_using,
+            $._using_clause_element,
+            repeat(
+                seq(COMMA, $._using_clause_element),
+            ),
+        ),
+        _using_clause_element: $ => seq(
+            choice(
+                $.kw_in,
+                $.kw_out,
+                seq($.kw_in,$.kw_out),
+            ),
+            $.referenced_element,
+        ),
+        // cursor_for_loop_statement: $ => seq(
+        //     $.kw_for,
+        //     $.identifier,
+        //     $.kw_in,
+        //     choice(
+        //         seq($.referenced_element, $.parameter),
+        //         seq(BRACKET_LEFT, $.select, BRACKET_RIGHT),
+        //     ),
+        //     $.kw_loop,
+        //     repeat1($.statement),
+        //     $.kw_end,
+        //     $.kw_loop,
+        //     optional($.label),
+        // ),
         cursor_definition: $ => seq(
             $.kw_cursor,
             $.identifier,
@@ -1107,7 +1299,6 @@ module.exports = grammar({
             prec(4,$._literal),
             prec(3,$._literal_list_multi),
             prec(2,$.placeholder),
-            prec(1,seq($._sign_pos_neg, $._literal_number)),
         ),
         _expression_base_operator_not_boolean: $ => seq(
             $._expression_base_elements,
@@ -1659,9 +1850,12 @@ module.exports = grammar({
             $.kw_false,
             $.kw_null,
         ),
-        _literal_number: $ => choice(
-            prec(1,$.float),
-            $.number,
+        _literal_number: $ => seq(
+            optional($._sign_pos_neg),
+            choice(
+                prec(1,$.float),
+                $.number,
+            ),
         ),
         literal_string: $ => choice(
             $._single_quote_string,
@@ -1675,6 +1869,58 @@ module.exports = grammar({
         comment_sl: $ => token(
             seq("--", /.*/)
         ),
+        update: $ => seq(
+            $.kw_update,
+            choice(
+                $._table_reference,
+                seq(BRACKET_LEFT,$._table_reference,BRACKET_RIGHT),
+            ),
+            optional($.update_set_clause),
+            optional($.where_clause),
+            optional($._returning_clause),
+            optional($._error_logging_clause),
+        ),
+        update_set_clause: $ => seq(
+            $.kw_set,
+            $.update_set_clause_elements,
+            repeat(seq(COMMA,$.update_set_clause_elements)),
+        ),
+        update_set_clause_elements: $ => choice(
+            $._update_set_clause_value,
+            $._update_set_clause_column,
+            $._update_set_clause_select,
+        ),
+        _update_set_clause_column: $ => seq(
+            $.identifier,
+            EQUAL,
+            choice($.expression,$.kw_default),
+        ),
+        _update_set_clause_select: $ => seq(
+            $._identifier_list,
+            EQUAL,
+            BRACKET_LEFT,
+            $.select,
+            BRACKET_RIGHT,
+        ),
+        _update_set_clause_value: $ => seq(
+            $.kw_value,
+            BRACKET_LEFT,
+            $.identifier,
+            BRACKET_RIGHT,
+            EQUAL,
+            $.expression,
+        ),
+        delete: $ => seq(
+            $.kw_delete,
+            optional($.kw_from),
+            choice(
+                $._table_reference,
+                seq(BRACKET_LEFT,$._table_reference,BRACKET_RIGHT),
+            ),
+            optional($.where_clause),
+            optional($._returning_clause),
+            optional($._error_logging_clause),
+        ),
         select: $ => seq(
             $._subquery,
             optional($.for_update_clause),
@@ -1687,7 +1933,7 @@ module.exports = grammar({
             repeat($.row_limiting_clause),
         ),
         _subquery_element: $ => choice(
-            prec(4,seq($._query_block,SEMICOLON)),
+            // prec(4,seq($._query_block,SEMICOLON)),
             prec(3,seq($._query_block)),
             repeat1($._subquery_element_union_intersect_minus),
             seq(BRACKET_LEFT, $._subquery, BRACKET_RIGHT),
@@ -1697,7 +1943,7 @@ module.exports = grammar({
             $.kw_select,
             optional(choice($.kw_distinct,$.kw_unique,$.kw_all)),
             $.select_list,
-            optional($._into),
+            optional($._into_and_bulk_clause),
             $.kw_from,
             $.table_list,
             optional($.where_clause),
@@ -1705,7 +1951,7 @@ module.exports = grammar({
             optional($.group_by_clause),
             optional($.having_clause),
         ),
-        _into: $ => choice(
+        _into_and_bulk_clause: $ => choice(
             $.into_clause,
             $.bulk_collect_into,
         ),
@@ -1713,11 +1959,12 @@ module.exports = grammar({
             $.kw_bulk,
             $.kw_collect,
             $.kw_into,
-            $.identifier_list_repeat,
+            $.referenced_element_repeat,
+            optional(seq($.kw_limit,$.expression)),
         ),
         into_clause: $ => seq(
             $.kw_into,
-            $.identifier_list_repeat,
+            $.referenced_element_repeat,
         ),
         select_list: $ => seq(
             $.select_list_element,
@@ -1838,7 +2085,7 @@ module.exports = grammar({
             optional($._sample_clause)
         ),
         _query_table_expression_lateral: $ => seq(
-            optional($.kw_lateral),
+            $.kw_lateral,
             BRACKET_LEFT,
             $._subquery,
             optional($._subquery_restriction_clause),
@@ -2156,6 +2403,18 @@ module.exports = grammar({
           seq($.kw_skip,$.kw_locked),
         ),
         // KW
+        kw_pairs: _ => reservedWord("pairs"),
+        kw_indices: _ => reservedWord("indices"),
+        kw_values: _ => reservedWord("values"),
+        kw_value: _ => reservedWord("value"),
+        kw_repeat: _ => reservedWord("repeat"),
+        kw_while: _ => reservedWord("while"),
+        kw_reverse: _ => reservedWord("reverse"),
+        kw_mutable: _ => reservedWord("mutable"),
+        kw_immutable: _ => reservedWord("immutable"),
+        kw_returning: _ => reservedWord("returning"),
+        kw_execute: _ => reservedWord("execute"),
+        kw_immediate: _ => reservedWord("immediate"),
         kw_open: _ => reservedWord("open"),
         kw_goto: _ => reservedWord("goto"),
         kw_pipe: _ => reservedWord("pipe"),
@@ -2191,7 +2450,7 @@ module.exports = grammar({
         kw_access: _ => reservedWord("access"),
         kw_location: _ => reservedWord("location"),
         kw_directory: _ => reservedWord("directory"),
-        kw_shard: _ => reservedWord("shards"),
+        kw_shard: _ => reservedWord("shard"),
         kw_containers: _ => reservedWord("containers"),
         kw_apply: _ => reservedWord("apply"),
         kw_full: _ => reservedWord("full"),
@@ -2236,6 +2495,7 @@ module.exports = grammar({
         kw_wait: _ => reservedWord("wait"),
         kw_skip: _ => reservedWord("skip"),
         kw_locked: _ => reservedWord("locked"),
+        kw_lock: _ => reservedWord("lock"),
         kw_for: _ => reservedWord("for"),
         kw_update: _ => reservedWord("update"),
         kw_delete: _ => reservedWord("delete"),
@@ -2258,6 +2518,7 @@ module.exports = grammar({
         kw_when: _ => reservedWord("when"),
         kw_then: _ => reservedWord("then"),
         kw_if: _ => reservedWord("if"),
+        kw_elsif: _ => reservedWord("elsif"),
         kw_else: _ => reservedWord("else"),
         kw_row: _ => reservedWord("row"),
         kw_count: _ => reservedWord("count"),
@@ -2435,6 +2696,9 @@ module.exports = grammar({
         kw_including: _ => reservedWord("including"),
         kw_data: _ => reservedWord("data"),
         kw_force: _ => reservedWord("force"),
+        kw_comment: _ => reservedWord("comment"),
+        kw_write: _ => reservedWord("write"),
+        kw_batch: _ => reservedWord("batch"),
         kw_into: _ => reservedWord("into"),
         kw_add: _ => reservedWord("add"),
         kw_drop: _ => reservedWord("drop"),
@@ -2448,6 +2712,18 @@ module.exports = grammar({
         kw_xml: _ => reservedWord("xml"),
         kw_commit: _ => reservedWord("commit"),
         kw_rollback: _ => reservedWord("rollback"),
+        kw_work: _ => reservedWord("work"),
+        kw_savepoint: _ => reservedWord("savepoint"),
+        kw_transaction: _ => reservedWord("transaction"),
+        kw_isolation: _ => reservedWord("isolation"),
+        kw_level: _ => reservedWord("level"),
+        kw_serializable: _ => reservedWord("serializable"),
+        kw_commtted: _ => reservedWord("committed"),
+        kw_segment: _ => reservedWord("segment"),
+        kw_use: _ => reservedWord("use"),
+        kw_mode: _ => reservedWord("mode"),
+        kw_errors: _ => reservedWord("errors"),
+        kw_log: _ => reservedWord("log"),
     },
 });
 

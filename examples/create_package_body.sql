@@ -47,6 +47,14 @@ BEGIN
   INTO  l_variable
   FROM  dsv_abc
   WHERE x = p_parameter_1;
+  EXECUTE IMMEDIATE 'SELECT * FROM dual' INTO l_rec_abc.x;
+  IF x = B THEN
+    RETURN null;
+  ELSIF x = C THEN
+    RETURN TRUE;
+  ELSE
+    dbms_output.put_line('THIS IS ELSE');
+  END IF;
 END my_function;
 
 
@@ -63,11 +71,19 @@ BEGIN
   l_variable    := p_parameter_1;
   l_rec_abc.xyz := l_variable + l_variable;
   p_parameter_3 := l_rec_abc.xyz;
-  FOR r_cur_abc IN (SELECT * FROM dsv_abc) LOOP
+  FOR r_cur_abc IN  1..10 LOOP
     dbms_output.put_line(r_cur_abc.xyz || r_cur_abc.xzz);
   END LOOP;
+  FOR r_cur_abc IN  (SELECT * from dual) LOOP
+    dbms_output.put_line(r_cur_abc.xyz || r_cur_abc.xzz);
+  END LOOP;
+  update dsv_abcd set x = x where 1 = 1;
+  update dsv_abcd set x = x where x IS NOT NULL and to_number('3') < 2;
+  DELETE from dsv_abd WHERE fd = fd;
 END my_procedure;
-
 
 END my_package;
 /
+
+SELECT * FROM DUAL;
+SELECT * FROM DUAL;
