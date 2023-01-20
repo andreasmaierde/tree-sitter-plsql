@@ -2532,6 +2532,10 @@
             {
               "type": "SYMBOL",
               "name": "_referenced_element_name"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_referenced_element_multi"
             }
           ]
         },
@@ -2548,6 +2552,51 @@
           ]
         }
       ]
+    },
+    "_referenced_element_multi": {
+      "type": "PREC",
+      "value": 3,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "FIELD",
+            "name": "ref_name_parent",
+            "content": {
+              "type": "SYMBOL",
+              "name": "identifier"
+            }
+          },
+          {
+            "type": "STRING",
+            "value": "."
+          },
+          {
+            "type": "FIELD",
+            "name": "ref_name",
+            "content": {
+              "type": "SYMBOL",
+              "name": "identifier"
+            }
+          },
+          {
+            "type": "REPEAT1",
+            "content": {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "."
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "identifier"
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
     "_referenced_element_parent": {
       "type": "PREC",
@@ -2577,6 +2626,19 @@
           }
         ]
       }
+    },
+    "_referenced_element_subname": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "ref_name_sub",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        }
+      ]
     },
     "_referenced_element_name": {
       "type": "SEQ",
@@ -5849,7 +5911,7 @@
           "value": 7,
           "content": {
             "type": "SYMBOL",
-            "name": "referenced_element"
+            "name": "referenced_element_point_method_call"
           }
         },
         {
@@ -5857,7 +5919,7 @@
           "value": 6,
           "content": {
             "type": "SYMBOL",
-            "name": "referenced_element_point_method_call"
+            "name": "_referenced_element_percent_method_call"
           }
         },
         {
@@ -5865,7 +5927,7 @@
           "value": 5,
           "content": {
             "type": "SYMBOL",
-            "name": "_referenced_element_percent_method_call"
+            "name": "referenced_element"
           }
         },
         {
@@ -6124,6 +6186,14 @@
         {
           "type": "SYMBOL",
           "name": "_conditional_predicate"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "ref_call"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "referenced_element"
         }
       ]
     },
@@ -7330,6 +7400,27 @@
         {
           "type": "SYMBOL",
           "name": "parameter"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "."
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "referenced_element"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },

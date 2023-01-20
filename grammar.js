@@ -641,14 +641,25 @@ module.exports = grammar({
             choice(
                 $._referenced_element_parent,
                 $._referenced_element_name,
+                $._referenced_element_multi,
             ),
             optional($._remote),
+        ),
+        _referenced_element_multi: $ => prec(3,
+            seq( field("ref_name_parent",$.identifier),
+                POINT,
+                field("ref_name",$.identifier),
+                repeat1(seq(POINT,$.identifier)),
+            ),
         ),
         _referenced_element_parent: $ => prec(2,
             seq( field("ref_name_parent",$.identifier),
                 POINT,
                 field("ref_name",$.identifier),
             ),
+        ),
+        _referenced_element_subname: $ => seq(
+            field("ref_name_sub",$.identifier),
         ),
         _referenced_element_name: $ => seq(
             field("ref_name",$.identifier),
@@ -1295,9 +1306,9 @@ module.exports = grammar({
         ),
         _expression_base_elements: $ => choice(
             prec(8,$.ref_call),
-            prec(7,$.referenced_element),
-            prec(6,$.referenced_element_point_method_call),
-            prec(5,$._referenced_element_percent_method_call),
+            prec(7,$.referenced_element_point_method_call),
+            prec(6,$._referenced_element_percent_method_call),
+            prec(5,$.referenced_element),
             prec(4,$._literal),
             prec(3,$._literal_list_multi),
             prec(2,$.placeholder),
@@ -1355,6 +1366,8 @@ module.exports = grammar({
                 ),
             ),
             $._conditional_predicate,
+            $.ref_call,
+            $.referenced_element,
         ),
         _expression_base_boolean_repeat: $ => seq(
             choice(
@@ -1660,6 +1673,7 @@ module.exports = grammar({
         ref_call: $ => seq(
             prec(5,$.referenced_element),
             $.parameter,
+            optional(seq(POINT,$.referenced_element)),
         ),
         parameter_declaration: $ => seq(
             BRACKET_LEFT,
