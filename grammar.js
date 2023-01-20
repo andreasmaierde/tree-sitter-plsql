@@ -143,7 +143,7 @@ module.exports = grammar({
             repeat($._package_property_element),
             $._is_as,
             repeat1($._item_list_1),
-            $.end_obj,
+            $.end_obj_named,
             optional(DIVISON),
         ),
         create_package_body: $ => seq(
@@ -156,7 +156,8 @@ module.exports = grammar({
             optional($.sharing_clause),
             $._is_as,
             repeat1($._declare_section_element),
-            $.end_obj,
+            $.end_obj_named,
+            SEMICOLON,
             optional(DIVISON),
         ),
         _package_property_element: $ => choice(
@@ -674,6 +675,9 @@ module.exports = grammar({
         ),
         end_obj: $ => seq(
             $.kw_end,
+        ),
+        end_obj_named: $ => seq(
+            $.kw_end,
             optional($.identifier),
             SEMICOLON,
         ),
@@ -785,8 +789,8 @@ module.exports = grammar({
             SEMICOLON,
         ),
         _statement_element: $ => choice(
-            $.if_statement,
             prec(8,$.assignment_statement),
+            $.if_statement,
             $.basic_loop_statement,
             $.case_statement,
             $.close_statement,
@@ -1042,6 +1046,9 @@ module.exports = grammar({
             repeat1($.statement),
             repeat(seq($.kw_elsif, $.expression, $.kw_then, repeat1($.statement))),
             optional(seq($.kw_else, repeat1($.statement))),
+            prec(4,$.end_if),
+        ),
+        end_if: $ => seq(
             $.kw_end,
             $.kw_if,
         ),

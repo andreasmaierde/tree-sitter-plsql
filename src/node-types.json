@@ -1319,7 +1319,7 @@
           "named": true
         },
         {
-          "type": "end_obj",
+          "type": "end_obj_named",
           "named": true
         },
         {
@@ -1427,7 +1427,7 @@
           "named": true
         },
         {
-          "type": "end_obj",
+          "type": "end_obj_named",
           "named": true
         },
         {
@@ -2723,7 +2723,41 @@
     }
   },
   {
+    "type": "end_if",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_end",
+          "named": true
+        },
+        {
+          "type": "kw_if",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "end_obj",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "kw_end",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "end_obj_named",
     "named": true,
     "fields": {},
     "children": {
@@ -3702,6 +3736,10 @@
       "required": true,
       "types": [
         {
+          "type": "end_if",
+          "named": true
+        },
+        {
           "type": "expression",
           "named": true
         },
@@ -3711,10 +3749,6 @@
         },
         {
           "type": "kw_elsif",
-          "named": true
-        },
-        {
-          "type": "kw_end",
           "named": true
         },
         {
