@@ -434,10 +434,6 @@
           "name": "end_obj_named"
         },
         {
-          "type": "STRING",
-          "value": ";"
-        },
-        {
           "type": "CHOICE",
           "members": [
             {
@@ -3166,7 +3162,30 @@
         },
         {
           "type": "SYMBOL",
-          "name": "body"
+          "name": "kw_begin"
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "SYMBOL",
+            "name": "statement"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "exception_block"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "end_obj"
         }
       ]
     },
@@ -3198,7 +3217,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "end_obj"
+          "name": "end_obj_named"
         }
       ]
     },

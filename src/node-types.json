@@ -900,7 +900,7 @@
       "required": true,
       "types": [
         {
-          "type": "end_obj",
+          "type": "end_obj_named",
           "named": true
         },
         {
@@ -4778,15 +4778,19 @@
       "required": true,
       "types": [
         {
-          "type": "body",
-          "named": true
-        },
-        {
           "type": "cursor_declaration",
           "named": true
         },
         {
           "type": "cursor_definition",
+          "named": true
+        },
+        {
+          "type": "end_obj",
+          "named": true
+        },
+        {
+          "type": "exception_block",
           "named": true
         },
         {
@@ -4806,6 +4810,10 @@
           "named": true
         },
         {
+          "type": "kw_begin",
+          "named": true
+        },
+        {
           "type": "kw_declare",
           "named": true
         },
@@ -4815,6 +4823,10 @@
         },
         {
           "type": "procedure_definition",
+          "named": true
+        },
+        {
+          "type": "statement",
           "named": true
         },
         {

@@ -158,7 +158,6 @@ module.exports = grammar({
             $._is_as,
             repeat1($._declare_section_element),
             $.end_obj_named,
-            SEMICOLON,
             optional(DIVISON),
         ),
         _package_property_element: $ => choice(
@@ -772,13 +771,16 @@ module.exports = grammar({
         ),
         plsql_block: $ => seq(
             optional(seq($.kw_declare,repeat1($._declare_section_element))),
-            $.body,
+            $.kw_begin,
+            repeat1($.statement),
+            optional($.exception_block),
+            $.end_obj,
         ),
         body: $ => seq(
             $.kw_begin,
             repeat1($.statement),
             optional($.exception_block),
-            $.end_obj,
+            $.end_obj_named,
         ),
         exception_block: $ => seq(
             $.kw_exception,
