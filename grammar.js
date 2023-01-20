@@ -702,7 +702,6 @@ module.exports = grammar({
                 $.call_spec_ext,
                 seq(repeat($._declare_section_element),$.body),
             ),
-            $.end_obj,
         ),
         procedure_declaration: $ => seq(
             $.kw_procedure,
@@ -727,7 +726,6 @@ module.exports = grammar({
                 $.call_spec_ext,
                 seq(repeat($._declare_section_element),$.body),
             ),
-            $.end_obj,
         ),
         function_declaration: $ => seq(
             $.kw_function,
@@ -776,7 +774,8 @@ module.exports = grammar({
             SEMICOLON,
         ),
         _statement_element: $ => choice(
-            $.assignment_statement,
+            $.if_statement,
+            prec(8,$.assignment_statement),
             $.basic_loop_statement,
             $.case_statement,
             $.close_statement,
@@ -789,13 +788,13 @@ module.exports = grammar({
             // TODO
             // $._forall_statement,
             $.goto_statement,
-            $.if_statement,
             $.null_statement,
             $.open_statement,
             $.open_for_statement,
             $.pipe_row_statement,
             $.plsql_block,
             $.ref_call,
+            $.referenced_element,
             $.raise_statement,
             $.return_statement,
             $._sql_statements,
@@ -813,7 +812,10 @@ module.exports = grammar({
         ),
         collection_variable: $ => seq(
             $.referenced_element,
-            $._index,
+            choice(
+                $._index,
+                seq(BRACKET_LEFT,$.referenced_element,BRACKET_RIGHT),
+            ),
         ),
         label: $ => seq(
             LABEL_START,
@@ -1027,7 +1029,7 @@ module.exports = grammar({
             $.expression,
             $.kw_then,
             repeat1($.statement),
-            optional(seq($.kw_elsif, $.expression, $.kw_then, repeat1($.statement))),
+            repeat(seq($.kw_elsif, $.expression, $.kw_then, repeat1($.statement))),
             optional(seq($.kw_else, repeat1($.statement))),
             $.kw_end,
             $.kw_if,
@@ -1698,14 +1700,14 @@ module.exports = grammar({
         ),
         parameter_element: $ => seq(
             choice(
-                $.parameter_element_positional,
-                $.parameter_element_named,
+                $._parameter_element_positional,
+                $._parameter_element_named,
             ),
         ),
-        parameter_element_positional: $ => seq(
+        _parameter_element_positional: $ => seq(
             $.parameter_value,
         ),
-        parameter_element_named: $ => seq(
+        _parameter_element_named: $ => seq(
             $.parameter_name,
             ASSOCIATION,
             $.parameter_value,

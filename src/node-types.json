@@ -3484,10 +3484,6 @@
           "named": true
         },
         {
-          "type": "end_obj",
-          "named": true
-        },
-        {
           "type": "exception_declaration",
           "named": true
         },
@@ -4251,11 +4247,6 @@
     }
   },
   {
-    "type": "kw_shards",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "label",
     "named": true,
     "fields": {},
@@ -4630,25 +4621,6 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "parameter_element_named",
-          "named": true
-        },
-        {
-          "type": "parameter_element_positional",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "parameter_element_named",
-    "named": true,
-    "fields": {},
-    "children": {
       "multiple": true,
       "required": true,
       "types": [
@@ -4656,21 +4628,6 @@
           "type": "parameter_name",
           "named": true
         },
-        {
-          "type": "parameter_value",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "parameter_element_positional",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
         {
           "type": "parameter_value",
           "named": true
@@ -4928,10 +4885,6 @@
         },
         {
           "type": "default_collation_clause",
-          "named": true
-        },
-        {
-          "type": "end_obj",
           "named": true
         },
         {
@@ -5873,6 +5826,10 @@
         },
         {
           "type": "ref_call",
+          "named": true
+        },
+        {
+          "type": "referenced_element",
           "named": true
         },
         {
@@ -8382,6 +8339,10 @@
   },
   {
     "type": "kw_settings",
+    "named": true
+  },
+  {
+    "type": "kw_shards",
     "named": true
   },
   {

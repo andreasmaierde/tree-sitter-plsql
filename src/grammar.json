@@ -2793,10 +2793,6 @@
               ]
             }
           ]
-        },
-        {
-          "type": "SYMBOL",
-          "name": "end_obj"
         }
       ]
     },
@@ -2923,10 +2919,6 @@
               ]
             }
           ]
-        },
-        {
-          "type": "SYMBOL",
-          "name": "end_obj"
         }
       ]
     },
@@ -3181,7 +3173,15 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "assignment_statement"
+          "name": "if_statement"
+        },
+        {
+          "type": "PREC",
+          "value": 8,
+          "content": {
+            "type": "SYMBOL",
+            "name": "assignment_statement"
+          }
         },
         {
           "type": "SYMBOL",
@@ -3225,10 +3225,6 @@
         },
         {
           "type": "SYMBOL",
-          "name": "if_statement"
-        },
-        {
-          "type": "SYMBOL",
           "name": "null_statement"
         },
         {
@@ -3250,6 +3246,10 @@
         {
           "type": "SYMBOL",
           "name": "ref_call"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "referenced_element"
         },
         {
           "type": "SYMBOL",
@@ -3311,8 +3311,30 @@
           "name": "referenced_element"
         },
         {
-          "type": "SYMBOL",
-          "name": "_index"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_index"
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "("
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "referenced_element"
+                },
+                {
+                  "type": "STRING",
+                  "value": ")"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -4585,36 +4607,31 @@
           }
         },
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SEQ",
-              "members": [
-                {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "kw_elsif"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "expression"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kw_then"
+              },
+              {
+                "type": "REPEAT1",
+                "content": {
                   "type": "SYMBOL",
-                  "name": "kw_elsif"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "expression"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "kw_then"
-                },
-                {
-                  "type": "REPEAT1",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "statement"
-                  }
+                  "name": "statement"
                 }
-              ]
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
+              }
+            ]
+          }
         },
         {
           "type": "CHOICE",
@@ -7504,17 +7521,17 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "parameter_element_positional"
+              "name": "_parameter_element_positional"
             },
             {
               "type": "SYMBOL",
-              "name": "parameter_element_named"
+              "name": "_parameter_element_named"
             }
           ]
         }
       ]
     },
-    "parameter_element_positional": {
+    "_parameter_element_positional": {
       "type": "SEQ",
       "members": [
         {
@@ -7523,7 +7540,7 @@
         }
       ]
     },
-    "parameter_element_named": {
+    "_parameter_element_named": {
       "type": "SEQ",
       "members": [
         {
@@ -11509,7 +11526,7 @@
         "value": 1,
         "content": {
           "type": "PATTERN",
-          "value": "[sS][hH][aA][rR][dD][sS]"
+          "value": "[sS][hH][aA][rR][dD]"
         }
       }
     },
