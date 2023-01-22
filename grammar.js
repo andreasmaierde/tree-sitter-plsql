@@ -31,7 +31,6 @@ const LABEL_START= '<<'
 const LABEL_END= '>>'
 const RANGE= '..'
 const SEMICOLON = ';'
-const POINT_POINT = '..'
 const POINT = '.'
 const DOUBLE_POINT = ':'
 const COMMA = ','
@@ -747,7 +746,7 @@ module.exports = grammar({
             field("fnc_name", $.identifier),
             optional($.parameter_declaration),
             $.return_declaration,
-            optional($._function_properties),
+            repeat($._function_properties),
             SEMICOLON,
         ),
         _function_properties: $ => choice(
@@ -1023,9 +1022,9 @@ module.exports = grammar({
             $._xy_of_control,
         ),
         _iteration_stepped_control: $ => seq(
-            $.number,
-            POINT_POINT,
-            $.number,
+            choice($.number,$.referenced_element),
+            RANGE,
+            choice($.number,$.referenced_element),
             optional(seq($.kw_by,$._literal_number)),
         ),
         _xy_of_control: $ => seq(
@@ -1956,7 +1955,7 @@ module.exports = grammar({
                 $._subquery_element,
             ),
             optional($.order_by_clause),
-            repeat($.row_limiting_clause),
+            optional($.row_limiting_clause),
         ),
         _subquery_element: $ => choice(
             // prec(4,seq($._query_block,SEMICOLON)),
@@ -2391,22 +2390,23 @@ module.exports = grammar({
           ),
           optional(seq( $.kw_nulls, choice($.kw_first, $.kw_last)))),
         row_limiting_clause: $ => choice(
-          $.row_limiting_clause_offset,
-          $.row_limiting_clause_fetch
-        ),
-        row_limiting_clause_offset: $ => seq(
-          $.kw_fetch,
-          choice($.kw_first, $.kw_next),
-          optional(
-            seq(
-              $.expression,
-              optional($.kw_percent),
-            ),
-          ),
-          choice($.kw_row, $.kw_rows),
-          choice($.kw_only, seq($.kw_with, $.kw_ties)),
+            seq($.row_limiting_clause_offset, $.row_limiting_clause_fetch),
+            seq($.row_limiting_clause_offset),
+            seq($.row_limiting_clause_fetch),
         ),
         row_limiting_clause_fetch: $ => seq(
+            $.kw_fetch,
+            choice($.kw_first, $.kw_next),
+            optional(
+                seq(
+                    $.expression,
+                    optional($.kw_percent),
+                ),
+            ),
+            choice($.kw_row, $.kw_rows),
+            choice($.kw_only, seq($.kw_with, $.kw_ties)),
+        ),
+        row_limiting_clause_offset: $ => seq(
           $.kw_offset,
           $.expression,
           choice($.kw_row, $.kw_rows),

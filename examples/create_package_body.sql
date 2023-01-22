@@ -33,7 +33,13 @@ gv_init_abc        varchar2(200) := my_func('A',true);
 exc_abc           exception;
 
 FUNCTION my_function (p_parameter_1  IN   NUMBER)
-RETURN BOOLEAN
+RETURN BOOLEAN;
+/*-----------------------------------------------------------------------------------------------
+|@|description This is a function description
+*/-----------------------------------------------------------------------------------------------
+
+FUNCTION my_function (p_parameter_1  IN   NUMBER)
+RETURN NUMBER
 /*-----------------------------------------------------------------------------------------------
 |@|description This is a function description
 */-----------------------------------------------------------------------------------------------
@@ -50,7 +56,7 @@ BEGIN
   EXECUTE IMMEDIATE 'SELECT * FROM dual' INTO l_rec_abc.x;
   IF x = B THEN
     RETURN null;
-  ELSIF x = C THEN
+  ELSIF x = c THEN
     RETURN TRUE;
   ELSE
     dbms_output.put_line('THIS IS ELSE');
@@ -71,7 +77,7 @@ BEGIN
   l_variable    := p_parameter_1;
   l_rec_abc.xyz := l_variable + l_variable;
   p_parameter_3 := l_rec_abc.xyz;
-  FOR r_cur_abc IN  1..10 LOOP
+  FOR r_cur_abc IN 1..a.count LOOP
     dbms_output.put_line(r_cur_abc.xyz || r_cur_abc.xzz);
   END LOOP;
   FOR r_cur_abc IN  (SELECT * from dual) LOOP
@@ -80,10 +86,9 @@ BEGIN
   update dsv_abcd set x = x where 1 = 1;
   update dsv_abcd set x = x where x IS NOT NULL and to_number('3') < 2;
   DELETE from dsv_abd WHERE fd = fd;
+  DELETE from dsv_abd WHERE fd IN (SELECT a FROM dual);
 END my_procedure;
 
 END my_package;
 /
 
-SELECT * FROM DUAL;
-SELECT * FROM DUAL;

@@ -3956,6 +3956,10 @@
         {
           "type": "number",
           "named": true
+        },
+        {
+          "type": "referenced_element",
+          "named": true
         }
       ]
     }
@@ -5230,7 +5234,7 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
@@ -5246,33 +5250,6 @@
   },
   {
     "type": "row_limiting_clause_fetch",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "expression",
-          "named": true
-        },
-        {
-          "type": "kw_offset",
-          "named": true
-        },
-        {
-          "type": "kw_row",
-          "named": true
-        },
-        {
-          "type": "kw_rows",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "row_limiting_clause_offset",
     "named": true,
     "fields": {},
     "children": {
@@ -5317,6 +5294,33 @@
         },
         {
           "type": "kw_with",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "row_limiting_clause_offset",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "kw_offset",
+          "named": true
+        },
+        {
+          "type": "kw_row",
+          "named": true
+        },
+        {
+          "type": "kw_rows",
           "named": true
         }
       ]
