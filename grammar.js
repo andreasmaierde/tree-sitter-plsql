@@ -1909,8 +1909,7 @@ module.exports = grammar({
             BRACKET_LEFT,
             $.expression,
             BRACKET_RIGHT,
-            optional($.merge_update_clause),
-            optional($.merge_insert_clause),
+            repeat1(choice($.merge_update_clause,$.merge_insert_clause)),
             optional($._error_logging_clause),
         ),
         sql_statement_insert: $ => seq(
