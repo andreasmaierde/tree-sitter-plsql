@@ -921,9 +921,11 @@ module.exports = grammar({
             $.sql_statement_savepoint,
             $.sql_statement_set_transaction,
             $.sql_statement_lock_table,
-            $.select,
-            $.delete,
-            $.update,
+            $.sql_statement_select,
+            $.sql_statement_delete,
+            $.sql_statement_update,
+            $.sql_statement_insert,
+            $.sql_statement_merge,
         ),
         sql_statement_lock_table: $ => seq(
             $.kw_lock,
@@ -1067,7 +1069,7 @@ module.exports = grammar({
             $.kw_open,
             $._assignment_statement_target,
             $.kw_for,
-            $.select,
+            $.sql_statement_select,
             optional($._using_clause),
         ),
         execute_immediate: $ => seq(
@@ -1128,7 +1130,7 @@ module.exports = grammar({
         //     $.kw_in,
         //     choice(
         //         seq($.referenced_element, $.parameter),
-        //         seq(BRACKET_LEFT, $.select, BRACKET_RIGHT),
+        //         seq(BRACKET_LEFT, $.sql_statement_select, BRACKET_RIGHT),
         //     ),
         //     $.kw_loop,
         //     repeat1($.statement),
@@ -1142,7 +1144,7 @@ module.exports = grammar({
             optional($.cursor_declaration_parameters),
             optional(seq($.kw_return, $._cursor_declaration_return_datatype)),
             $.kw_is,
-            $.select,
+            $.sql_statement_select,
             SEMICOLON
         ),
         cursor_declaration: $ => seq(
@@ -1894,7 +1896,42 @@ module.exports = grammar({
         comment_sl: $ => token(
             seq("--", /.*/)
         ),
-        update: $ => seq(
+        sql_statement_merge: $ => seq(
+            $.kw_merge,
+            $.kw_into,
+            $.referenced_element,
+            $.kw_using,
+            choice(
+                $.referenced_element,
+                $._subquery,
+            ),
+            $.kw_on,
+            BRACKET_LEFT,
+            $.expression,
+            BRACKET_RIGHT,
+            optional($.merge_update_clause),
+            optional($.merge_insert_clause),
+            optional($._error_logging_clause),
+        ),
+        sql_statement_insert: $ => seq(
+            $.kw_insert,
+            choice(
+                $.single_table_insert,
+                // $.multi_table_insert,
+            ),
+        ),
+        single_table_insert: $ => seq(
+            $.kw_into,
+            $._query_table_expression,
+            optional($.identifier),
+            optional($._identifier_list),
+            choice(
+                $._subquery,
+                seq($.values_clause, optional($._returning_clause)),
+            ),
+            optional($._error_logging_clause),
+        ),
+        sql_statement_update: $ => seq(
             $.kw_update,
             choice(
                 $._table_reference,
@@ -1924,7 +1961,7 @@ module.exports = grammar({
             $._identifier_list,
             EQUAL,
             BRACKET_LEFT,
-            $.select,
+            $.sql_statement_select,
             BRACKET_RIGHT,
         ),
         _update_set_clause_value: $ => seq(
@@ -1935,7 +1972,7 @@ module.exports = grammar({
             EQUAL,
             $.expression,
         ),
-        delete: $ => seq(
+        sql_statement_delete: $ => seq(
             $.kw_delete,
             optional($.kw_from),
             choice(
@@ -1946,7 +1983,7 @@ module.exports = grammar({
             optional($._returning_clause),
             optional($._error_logging_clause),
         ),
-        select: $ => seq(
+        sql_statement_select: $ => seq(
             $._subquery,
             optional($.for_update_clause),
         ),
@@ -2411,6 +2448,36 @@ module.exports = grammar({
           $.expression,
           choice($.kw_row, $.kw_rows),
         ),
+        values_clause: $ => seq(
+          $.kw_values,
+            BRACKET_LEFT,
+            $.expression,
+            repeat(seq(COMMA,$.expression)),
+            BRACKET_RIGHT,
+        ),
+        merge_update_clause: $ => seq(
+          $.kw_when,
+          $.kw_matched,
+          $.kw_then,
+          $.kw_update,
+          $.update_set_clause,
+          optional($.where_clause),
+          optional(seq($.kw_delete,$.where_clause)),
+        ),
+        merge_insert_clause: $ => seq(
+          $.kw_when,
+          $.kw_not,
+          $.kw_matched,
+          $.kw_then,
+          $.kw_insert,
+          $._identifier_list,
+          $.kw_values,
+          BRACKET_LEFT,
+          $.expression,
+          repeat(seq(COMMA,$.expression)),
+          BRACKET_RIGHT,
+          optional($.where_clause),
+        ),
         for_update_clause: $ => seq(
           $.kw_for,
           $.kw_update,
@@ -2429,6 +2496,9 @@ module.exports = grammar({
           seq($.kw_skip,$.kw_locked),
         ),
         // KW
+        kw_insert: _ => reservedWord("insert"),
+        kw_matched: _ => reservedWord("matched"),
+        kw_merge: _ => reservedWord("merge"),
         kw_pairs: _ => reservedWord("pairs"),
         kw_indices: _ => reservedWord("indices"),
         kw_values: _ => reservedWord("values"),

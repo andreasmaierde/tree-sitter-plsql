@@ -3873,15 +3873,23 @@
         },
         {
           "type": "SYMBOL",
-          "name": "select"
+          "name": "sql_statement_select"
         },
         {
           "type": "SYMBOL",
-          "name": "delete"
+          "name": "sql_statement_delete"
         },
         {
           "type": "SYMBOL",
-          "name": "update"
+          "name": "sql_statement_update"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_statement_insert"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_statement_merge"
         }
       ]
     },
@@ -4842,7 +4850,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "select"
+          "name": "sql_statement_select"
         },
         {
           "type": "CHOICE",
@@ -5203,7 +5211,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "select"
+          "name": "sql_statement_select"
         },
         {
           "type": "STRING",
@@ -8367,7 +8375,190 @@
         ]
       }
     },
-    "update": {
+    "sql_statement_merge": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_merge"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_into"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "referenced_element"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_using"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "referenced_element"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_subquery"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_on"
+        },
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "SYMBOL",
+          "name": "expression"
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "merge_update_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "merge_insert_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_error_logging_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "sql_statement_insert": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_insert"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "single_table_insert"
+            }
+          ]
+        }
+      ]
+    },
+    "single_table_insert": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_into"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_query_table_expression"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "identifier"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_identifier_list"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_subquery"
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "values_clause"
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "_returning_clause"
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_error_logging_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "sql_statement_update": {
       "type": "SEQ",
       "members": [
         {
@@ -8539,7 +8730,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "select"
+          "name": "sql_statement_select"
         },
         {
           "type": "STRING",
@@ -8576,7 +8767,7 @@
         }
       ]
     },
-    "delete": {
+    "sql_statement_delete": {
       "type": "SEQ",
       "members": [
         {
@@ -8659,7 +8850,7 @@
         }
       ]
     },
-    "select": {
+    "sql_statement_select": {
       "type": "SEQ",
       "members": [
         {
@@ -11090,6 +11281,174 @@
         }
       ]
     },
+    "values_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_values"
+        },
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "SYMBOL",
+          "name": "expression"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": ","
+              },
+              {
+                "type": "SYMBOL",
+                "name": "expression"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
+    "merge_update_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_when"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_matched"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_then"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_update"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "update_set_clause"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "where_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_delete"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "where_clause"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "merge_insert_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_when"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_not"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_matched"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_then"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_insert"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_identifier_list"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_values"
+        },
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "SYMBOL",
+          "name": "expression"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": ","
+              },
+              {
+                "type": "SYMBOL",
+                "name": "expression"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "where_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
     "for_update_clause": {
       "type": "SEQ",
       "members": [
@@ -11178,6 +11537,39 @@
           ]
         }
       ]
+    },
+    "kw_insert": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[iI][nN][sS][eE][rR][tT]"
+        }
+      }
+    },
+    "kw_matched": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[mM][aA][tT][cC][hH][eE][dD]"
+        }
+      }
+    },
+    "kw_merge": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[mM][eE][rR][gG][eE]"
+        }
+      }
     },
     "kw_pairs": {
       "type": "TOKEN",
