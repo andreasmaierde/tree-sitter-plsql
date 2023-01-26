@@ -1251,6 +1251,150 @@
     }
   },
   {
+    "type": "create_function",
+    "named": true,
+    "fields": {
+      "fnc_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "body",
+          "named": true
+        },
+        {
+          "type": "call_spec_ext",
+          "named": true
+        },
+        {
+          "type": "create_obj",
+          "named": true
+        },
+        {
+          "type": "cursor_declaration",
+          "named": true
+        },
+        {
+          "type": "cursor_definition",
+          "named": true
+        },
+        {
+          "type": "end_obj_named",
+          "named": true
+        },
+        {
+          "type": "exception_declaration",
+          "named": true
+        },
+        {
+          "type": "function_declaration",
+          "named": true
+        },
+        {
+          "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "item_declaration",
+          "named": true
+        },
+        {
+          "type": "kw_as",
+          "named": true
+        },
+        {
+          "type": "kw_deterministic",
+          "named": true
+        },
+        {
+          "type": "kw_editionable",
+          "named": true
+        },
+        {
+          "type": "kw_function",
+          "named": true
+        },
+        {
+          "type": "kw_is",
+          "named": true
+        },
+        {
+          "type": "kw_noneditionable",
+          "named": true
+        },
+        {
+          "type": "kw_parallel_enable",
+          "named": true
+        },
+        {
+          "type": "kw_pipelined",
+          "named": true
+        },
+        {
+          "type": "kw_result_cache",
+          "named": true
+        },
+        {
+          "type": "parameter_declaration",
+          "named": true
+        },
+        {
+          "type": "procedure_declaration",
+          "named": true
+        },
+        {
+          "type": "procedure_definition",
+          "named": true
+        },
+        {
+          "type": "return_declaration",
+          "named": true
+        },
+        {
+          "type": "sharing_clause",
+          "named": true
+        },
+        {
+          "type": "type_definition_collection",
+          "named": true
+        },
+        {
+          "type": "type_definition_record",
+          "named": true
+        },
+        {
+          "type": "type_definition_ref_cursor_return",
+          "named": true
+        },
+        {
+          "type": "type_definition_sub",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "create_obj",
     "named": true,
     "fields": {},
@@ -1277,7 +1421,7 @@
     "type": "create_package",
     "named": true,
     "fields": {
-      "obj_name": {
+      "package_name": {
         "multiple": false,
         "required": true,
         "types": [
@@ -1389,7 +1533,7 @@
     "type": "create_package_body",
     "named": true,
     "fields": {
-      "obj_name": {
+      "package_name": {
         "multiple": false,
         "required": true,
         "types": [
@@ -1468,6 +1612,142 @@
         },
         {
           "type": "kw_package",
+          "named": true
+        },
+        {
+          "type": "procedure_declaration",
+          "named": true
+        },
+        {
+          "type": "procedure_definition",
+          "named": true
+        },
+        {
+          "type": "sharing_clause",
+          "named": true
+        },
+        {
+          "type": "type_definition_collection",
+          "named": true
+        },
+        {
+          "type": "type_definition_record",
+          "named": true
+        },
+        {
+          "type": "type_definition_ref_cursor_return",
+          "named": true
+        },
+        {
+          "type": "type_definition_sub",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "create_procedure",
+    "named": true,
+    "fields": {
+      "prc_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "accessible_by_clause",
+          "named": true
+        },
+        {
+          "type": "body",
+          "named": true
+        },
+        {
+          "type": "call_spec_ext",
+          "named": true
+        },
+        {
+          "type": "create_obj",
+          "named": true
+        },
+        {
+          "type": "cursor_declaration",
+          "named": true
+        },
+        {
+          "type": "cursor_definition",
+          "named": true
+        },
+        {
+          "type": "default_collation_clause",
+          "named": true
+        },
+        {
+          "type": "end_obj_named",
+          "named": true
+        },
+        {
+          "type": "exception_declaration",
+          "named": true
+        },
+        {
+          "type": "function_declaration",
+          "named": true
+        },
+        {
+          "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "invoker_rights_clause",
+          "named": true
+        },
+        {
+          "type": "item_declaration",
+          "named": true
+        },
+        {
+          "type": "kw_as",
+          "named": true
+        },
+        {
+          "type": "kw_editionable",
+          "named": true
+        },
+        {
+          "type": "kw_is",
+          "named": true
+        },
+        {
+          "type": "kw_noneditionable",
+          "named": true
+        },
+        {
+          "type": "kw_procedure",
+          "named": true
+        },
+        {
+          "type": "parameter_declaration",
           "named": true
         },
         {
@@ -5491,11 +5771,19 @@
           "named": true
         },
         {
+          "type": "create_function",
+          "named": true
+        },
+        {
           "type": "create_package",
           "named": true
         },
         {
           "type": "create_package_body",
+          "named": true
+        },
+        {
+          "type": "create_procedure",
           "named": true
         },
         {
