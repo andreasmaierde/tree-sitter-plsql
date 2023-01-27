@@ -7,8 +7,9 @@ A few sqlplus commands will probably also be supported
 
 ![screenshot nvim syntax highlighting](./img/screenshot_pks.png)
 
+
 # Status
-It's in development and some (or many - oracle syntax is huge) statements are missing or must optimized, but I use it at my daily job for syntax highlighting in nvim and it works in most files realy good.
+It's in development and some (or many -> oracle syntax is huge) statements are missing or must optimized, but I use it at my daily job for syntax highlighting in nvim and it works in most files realy good.
 
 This Oracle statements are at the moment implemented:
 
@@ -18,10 +19,12 @@ Statements for Stored PL/SQL Units
 - drop [package|function|procedure|library|type|type_body|trigger]
 
 Statements for Stored SQL
-- [SELECT|UPDATE|DELETE|INSERT|MERGE]
+- [select|update|delete|insert|merge]
+
 
 # Known Issues
 The expression rule must be rewritten and also the combination of the select and expression rule.
+
 
 # References
 * [Database PL/SQL Language Reference](https://docs.oracle.com/en/database/oracle/oracle-database/21/lnpls/index.html)
