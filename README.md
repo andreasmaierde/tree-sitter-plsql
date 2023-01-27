@@ -5,7 +5,7 @@ As oracle database developer you very often switch between pl/sql and sql elemen
 A few sqlplus commands will probably also be supported
 
 
-![alt text](https://github.com/AndreasMaierDe/tree-sitter-plsql/blob/main/img/screenshot_pks.png)
+![screenshot nvim syntax highlighting](./img/screenshot_pks.png)
 
 # Status
 It's in development and some (or many - oracle syntax is huge) statements are missing or must optimized, but I use it at my daily job for syntax highlighting in nvim and it works in most files realy good.
