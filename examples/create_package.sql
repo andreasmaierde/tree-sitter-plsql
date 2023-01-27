@@ -13,7 +13,8 @@ SUBTYPE Balance_2   IS NUMBER(8,2);
 SUBTYPE Under_100   IS PLS_INTEGER RANGE 0..99;
 SUBTYPE Text        IS VARCHAR2(15);
 
-TYPE t_rec_abc IS RECORD(
+TYPE t_rec_abc IS RECORD
+(
   mya    NUMBER NOT NULL,
   myb    VARCHAR2(100),
   myc    DATE DEFAULT sysdate

@@ -273,6 +273,107 @@
         {
           "type": "SYMBOL",
           "name": "create_function"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "create_trigger"
+        }
+      ]
+    },
+    "create_trigger": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "create_obj"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_editionable_noneditionable"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_trigger"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_schema"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "FIELD",
+          "name": "trigger_name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "sharing_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "default_collation_clause"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_simple_dml_trigger"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_instead_of_dml_trigger"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_compound_dml_trigger"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_system_trigger"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "/"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -2580,6 +2681,1055 @@
         {
           "type": "SYMBOL",
           "name": "kw_none"
+        }
+      ]
+    },
+    "_compound_dml_trigger": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_for"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "dml_event_clause"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_referencing_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_trigger_edition_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_trigger_ordering_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_enable_disable"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_when"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_condition_bracket"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_compound_trigger_body"
+        }
+      ]
+    },
+    "_system_trigger": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_before_after_instead_of"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_database_event_list_or"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_ddl_event_list_or"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_on"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "identifier"
+                },
+                {
+                  "type": "STRING",
+                  "value": "."
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_schema"
+                }
+              ]
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "kw_pluggable"
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_database"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_trigger_ordering_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_enable_disable"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_trigger_body"
+        }
+      ]
+    },
+    "_database_event_list_or": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_database_event"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "kw_or"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_database_event"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "_database_event": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_after"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_startup"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_before"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_shutdown"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_after"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_db_role_change"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_after"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_servererror"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_after"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_logon"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_before"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_logoff"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_after"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_suspend"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_after"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_clone"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_before"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_unplug"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_after"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_before"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_set"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_container"
+            }
+          ]
+        }
+      ]
+    },
+    "_ddl_event_list_or": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_ddl_event"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "kw_or"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_ddl_event"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "_ddl_event": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_alter"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_analyze"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_associate"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_statistics"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_audit"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_comment"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_create"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_disassociate"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_statistics"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_drop"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_grant"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_noaudit"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_rename"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_revoke"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_truncate"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_ddl"
+        }
+      ]
+    },
+    "_instead_of_dml_trigger": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_instead"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_of"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_delete"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_insert"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_update"
+            }
+          ]
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "kw_or"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "kw_delete"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "kw_insert"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "kw_update"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_on"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_nested_table"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "referenced_element"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_referencing_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_for_each_row"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_trigger_edition_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_trigger_ordering_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_enable_disable"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_trigger_body"
+        }
+      ]
+    },
+    "_simple_dml_trigger": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_before"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_after"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "dml_event_clause"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_referencing_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_for_each_row"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_trigger_edition_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_trigger_ordering_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_enable_disable"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_when"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_condition_bracket"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_trigger_body"
+        }
+      ]
+    },
+    "_compound_trigger_body": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_compound"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_trigger"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_declare_section_element"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_timing_point_section"
+        }
+      ]
+    },
+    "_timing_point_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_timing_point"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_is"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_begin"
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "SYMBOL",
+            "name": "statement"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "exception_block"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "end_obj_named"
+        }
+      ]
+    },
+    "_timing_point": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_before_after_instead_of"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_statement"
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_each"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_row"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "_trigger_body": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "plsql_block"
+        }
+      ]
+    },
+    "_before_after_instead_of": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_before"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_after"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_instead"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_of"
+            }
+          ]
+        }
+      ]
+    },
+    "_nested_table": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_nested"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_table"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "referenced_element"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_of"
+        }
+      ]
+    },
+    "_for_each_row": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_for"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_each"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_row"
+        }
+      ]
+    },
+    "_trigger_ordering_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_follows"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_precedes"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "referenced_element_repeat"
+        }
+      ]
+    },
+    "_trigger_edition_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_forward"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_reverse"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_crossedition"
+        }
+      ]
+    },
+    "_referencing_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "kw_referencing"
+        },
+        {
+          "type": "REPEAT1",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "kw_old"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "kw_new"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "kw_parent"
+                  }
+                ]
+              },
+              {
+                "type": "SYMBOL",
+                "name": "kw_as"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "_condition_bracket": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_condition"
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
+    "_condition": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "expression"
+        }
+      ]
+    },
+    "dml_event_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "kw_delete"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_insert"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "kw_update"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "kw_of"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_identifier_list"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "kw_on"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "referenced_element"
         }
       ]
     },
@@ -11783,6 +12933,435 @@
           ]
         }
       ]
+    },
+    "kw_database": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[dD][aA][tT][aA][bB][aA][sS][eE]"
+        }
+      }
+    },
+    "kw_pluggable": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[pP][lL][uU][gG][gG][aA][bB][lL][eE]"
+        }
+      }
+    },
+    "kw_schema": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[sS][cC][hH][eE][mM][aA]"
+        }
+      }
+    },
+    "kw_container": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[cC][oO][nN][tT][aA][iI][nN][eE][rR]"
+        }
+      }
+    },
+    "kw_unplug": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[uU][nN][pP][lL][uU][gG]"
+        }
+      }
+    },
+    "kw_clone": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[cC][lL][oO][nN][eE]"
+        }
+      }
+    },
+    "kw_suspend": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[sS][uU][sS][pP][eE][nN][dD]"
+        }
+      }
+    },
+    "kw_logon": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[lL][oO][gG][oO][nN]"
+        }
+      }
+    },
+    "kw_logoff": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[lL][oO][gG][oO][fF][fF]"
+        }
+      }
+    },
+    "kw_servererror": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[sS][eE][rR][vV][eE][rR][eE][rR][rR][oO][rR]"
+        }
+      }
+    },
+    "kw_db_role_change": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[dD][bB][__][rR][oO][lL][eE][__][cC][hH][aA][nN][gG][eE]"
+        }
+      }
+    },
+    "kw_shutdown": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[sS][hH][uU][tT][dD][oO][wW][nN]"
+        }
+      }
+    },
+    "kw_startup": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[sS][tT][aA][rR][tT][uU][pP]"
+        }
+      }
+    },
+    "kw_ddl": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[dD][dD][lL]"
+        }
+      }
+    },
+    "kw_truncate": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[tT][rR][uU][nN][cC][aA][tT][eE]"
+        }
+      }
+    },
+    "kw_revoke": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[rR][eE][vV][oO][kK][eE]"
+        }
+      }
+    },
+    "kw_grant": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[gG][rR][aA][nN][tT]"
+        }
+      }
+    },
+    "kw_disassociate": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[dD][iI][sS][aA][sS][sS][oO][cC][iI][aA][tT][eE]"
+        }
+      }
+    },
+    "kw_noaudit": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[nN][oO][aA][uU][dD][iI][tT]"
+        }
+      }
+    },
+    "kw_audit": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[aA][uU][dD][iI][tT]"
+        }
+      }
+    },
+    "kw_statistics": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[sS][tT][aA][tT][iI][sS][tT][iI][cC][sS]"
+        }
+      }
+    },
+    "kw_associate": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[aA][sS][sS][oO][cC][iI][aA][tT][eE]"
+        }
+      }
+    },
+    "kw_analyze": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[aA][nN][aA][lL][yY][zZ][eE]"
+        }
+      }
+    },
+    "kw_statement": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[sS][tT][aA][tT][eE][mM][eE][nN][tT]"
+        }
+      }
+    },
+    "kw_timing": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[tT][iI][mM][iI][nN][gG]"
+        }
+      }
+    },
+    "kw_compound": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[cC][oO][mM][pP][oO][uU][nN][dD]"
+        }
+      }
+    },
+    "kw_nested": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[nN][eE][sS][tT][eE][dD]"
+        }
+      }
+    },
+    "kw_instead": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[iI][nN][sS][tT][eE][aA][dD]"
+        }
+      }
+    },
+    "kw_precedes": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[pP][rR][eE][cC][eE][dD][eE][sS]"
+        }
+      }
+    },
+    "kw_follows": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[fF][oO][lL][lL][oO][wW][sS]"
+        }
+      }
+    },
+    "kw_crossedition": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[cC][rR][oO][sS][sS][eE][dD][iI][tT][iI][oO][nN]"
+        }
+      }
+    },
+    "kw_forward": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[fF][oO][rR][wW][aA][rR][dD]"
+        }
+      }
+    },
+    "kw_each": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[eE][aA][cC][hH]"
+        }
+      }
+    },
+    "kw_parent": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[pP][aA][rR][eE][nN][tT]"
+        }
+      }
+    },
+    "kw_new": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[nN][eE][wW]"
+        }
+      }
+    },
+    "kw_old": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[oO][lL][dD]"
+        }
+      }
+    },
+    "kw_referencing": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[rR][eE][fF][eE][rR][eE][nN][cC][iI][nN][gG]"
+        }
+      }
+    },
+    "kw_before": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[bB][eE][fF][oO][rR][eE]"
+        }
+      }
+    },
+    "kw_after": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[aA][fF][tT][eE][rR]"
+        }
+      }
     },
     "kw_insert": {
       "type": "TOKEN",
