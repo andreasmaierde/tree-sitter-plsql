@@ -135,6 +135,7 @@ module.exports = grammar({
             $.create_procedure,
             $.create_function,
             $.create_trigger,
+            $.create_type,
         ),
         create_trigger: $ => seq(
             $.create_obj,
@@ -150,6 +151,41 @@ module.exports = grammar({
                 $._compound_dml_trigger,
                 $._system_trigger,
             ),
+            optional(DIVISON),
+        ),
+        create_library: $ => seq(
+            $.create_obj,
+            optional($._editionable_noneditionable),
+            $.kw_library,
+            optional($._schema),
+            field("library_name", $.identifier),
+            optional($.sharing_clause),
+            $._is_as,
+            choice(
+                seq($.literal_string),
+                seq($.literal_string,$.kw_in,$.identifier),
+            ),
+            optional(seq($.kw_agent,$.literal_string)),
+            optional(seq($.kw_credential,$.referenced_element)),
+            SEMICOLON,
+            optional(DIVISON),
+        ),
+        create_type: $ => seq(
+            $.create_obj,
+            optional($._editionable_noneditionable),
+            $.kw_type,
+            optional($._schema),
+            field("type_name", $.identifier),
+            optional($.kw_force),
+            optional(seq($.kw_oid,$.literal_string)),
+            optional($.sharing_clause),
+            optional($.default_collation_clause),
+            repeat(choice($.invoker_rights_clause,$.accessible_by_clause)),
+            choice(
+                $._object_base_type_def,
+                $._object_subtype_def,
+            ),
+            $.end_obj_named,
             optional(DIVISON),
         ),
         create_function: $ => seq(
@@ -370,14 +406,12 @@ module.exports = grammar({
         ),
         alter_type_replace: $ => seq(
             $.kw_replace,
-            repeat(
-                choice(
-                    $.invoker_rights_clause,
-                    $.accessible_by_clause,
-                ),
-            ),
+            repeat(choice($.invoker_rights_clause, $.accessible_by_clause)),
             $.kw_as,
             $.kw_object,
+            $.type_attribute_datatype_element_spec,
+        ),
+        type_attribute_datatype_element_spec: $ => seq(
             BRACKET_LEFT,
             $.identifier,
             $.datatype,
@@ -521,6 +555,7 @@ module.exports = grammar({
                 $.kw_instantiable,
                 $.kw_final,
                 $.kw_overriding,
+                $.kw_persistable,
             )),
         ),
         _final_instantiable: $ => seq(
@@ -813,6 +848,27 @@ module.exports = grammar({
                 $.kw_current_user,
                 $.kw_definer,
             )
+        ),
+        _object_base_type_def: $ => seq(
+            $._is_as,
+            choice(
+                $._object_type_def,
+                $.type_definition_varray,
+                $.type_definition_nested_table,
+            ),
+        ),
+        _object_subtype_def: $ => seq(
+            $.kw_under,
+            $.referenced_element,
+            optional($.type_attribute_datatype_element_spec),
+            optional($.inheritance_clause),
+
+        ),
+        _object_type_def: $ => seq(
+            $.kw_object,
+            optional($.type_attribute_datatype_element_spec),
+            optional($.inheritance_clause),
+
         ),
         accessible_by_clause: $ => seq(
             $.kw_accessible,
@@ -1409,14 +1465,20 @@ module.exports = grammar({
             ),
             $._size,
             $.kw_of,
-            $.datatype,
-            optional($._not_null),
+            choice(
+                seq($.datatype, optional($._not_null)),
+                seq(BRACKET_LEFT,$.datatype, optional($._not_null),BRACKET_RIGHT),
+            ),
+            optional(seq($.kw_not,$.kw_persistable)),
         ),
         type_definition_nested_table: $ => seq(
             $.kw_table,
             $.kw_of,
-            $.datatype,
-            optional($._not_null),
+            choice(
+                seq($.datatype, optional($._not_null)),
+                seq(BRACKET_LEFT,$.datatype, optional($._not_null),BRACKET_RIGHT),
+            ),
+            optional(seq($.kw_not,$.kw_persistable)),
         ),
         type_definition_assoc_array: $ => seq(
           $.kw_table,
@@ -2706,6 +2768,10 @@ module.exports = grammar({
           seq($.kw_skip,$.kw_locked),
         ),
         // KW
+        kw_credential: _ => reservedWord("credential"),
+        kw_under: _ => reservedWord("under"),
+        kw_persistable: _ => reservedWord("persistable"),
+        kw_oid: _ => reservedWord("oid"),
         kw_database: _ => reservedWord("database"),
         kw_pluggable: _ => reservedWord("pluggable"),
         kw_schema: _ => reservedWord("schema"),

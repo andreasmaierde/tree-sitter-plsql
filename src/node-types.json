@@ -807,18 +807,6 @@
           "named": true
         },
         {
-          "type": "datatype",
-          "named": true
-        },
-        {
-          "type": "element_spec",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
           "type": "invoker_rights_clause",
           "named": true
         },
@@ -832,6 +820,10 @@
         },
         {
           "type": "kw_replace",
+          "named": true
+        },
+        {
+          "type": "type_attribute_datatype_element_spec",
           "named": true
         }
       ]
@@ -2156,6 +2148,122 @@
         },
         {
           "type": "type_definition_sub",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "create_type",
+    "named": true,
+    "fields": {
+      "schema_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "type_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "accessible_by_clause",
+          "named": true
+        },
+        {
+          "type": "create_obj",
+          "named": true
+        },
+        {
+          "type": "default_collation_clause",
+          "named": true
+        },
+        {
+          "type": "end_obj_named",
+          "named": true
+        },
+        {
+          "type": "inheritance_clause",
+          "named": true
+        },
+        {
+          "type": "invoker_rights_clause",
+          "named": true
+        },
+        {
+          "type": "kw_as",
+          "named": true
+        },
+        {
+          "type": "kw_editionable",
+          "named": true
+        },
+        {
+          "type": "kw_force",
+          "named": true
+        },
+        {
+          "type": "kw_is",
+          "named": true
+        },
+        {
+          "type": "kw_noneditionable",
+          "named": true
+        },
+        {
+          "type": "kw_object",
+          "named": true
+        },
+        {
+          "type": "kw_oid",
+          "named": true
+        },
+        {
+          "type": "kw_type",
+          "named": true
+        },
+        {
+          "type": "kw_under",
+          "named": true
+        },
+        {
+          "type": "literal_string",
+          "named": true
+        },
+        {
+          "type": "referenced_element",
+          "named": true
+        },
+        {
+          "type": "sharing_clause",
+          "named": true
+        },
+        {
+          "type": "type_attribute_datatype_element_spec",
+          "named": true
+        },
+        {
+          "type": "type_definition_nested_table",
+          "named": true
+        },
+        {
+          "type": "type_definition_varray",
           "named": true
         }
       ]
@@ -4233,6 +4341,10 @@
         {
           "type": "kw_overriding",
           "named": true
+        },
+        {
+          "type": "kw_persistable",
+          "named": true
         }
       ]
     }
@@ -6210,6 +6322,10 @@
           "named": true
         },
         {
+          "type": "create_type",
+          "named": true
+        },
+        {
           "type": "drop_function",
           "named": true
         },
@@ -7745,6 +7861,29 @@
     }
   },
   {
+    "type": "type_attribute_datatype_element_spec",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "datatype",
+          "named": true
+        },
+        {
+          "type": "element_spec",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "type_definition_assoc_array",
     "named": true,
     "fields": {},
@@ -7913,6 +8052,10 @@
           "named": true
         },
         {
+          "type": "kw_persistable",
+          "named": true
+        },
+        {
           "type": "kw_table",
           "named": true
         }
@@ -8064,6 +8207,10 @@
         },
         {
           "type": "kw_of",
+          "named": true
+        },
+        {
+          "type": "kw_persistable",
           "named": true
         },
         {
@@ -8887,6 +9034,10 @@
     "named": true
   },
   {
+    "type": "kw_credential",
+    "named": true
+  },
+  {
     "type": "kw_cross",
     "named": true
   },
@@ -9495,6 +9646,10 @@
     "named": true
   },
   {
+    "type": "kw_oid",
+    "named": true
+  },
+  {
     "type": "kw_old",
     "named": true
   },
@@ -9564,6 +9719,10 @@
   },
   {
     "type": "kw_percent",
+    "named": true
+  },
+  {
+    "type": "kw_persistable",
     "named": true
   },
   {
@@ -9916,6 +10075,10 @@
   },
   {
     "type": "kw_type",
+    "named": true
+  },
+  {
+    "type": "kw_under",
     "named": true
   },
   {
