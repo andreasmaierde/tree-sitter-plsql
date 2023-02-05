@@ -1957,7 +1957,7 @@ module.exports = grammar({
         ref_call: $ => seq(
             prec(5,$.referenced_element),
             $.parameter,
-            optional(seq(POINT,$.referenced_element)),
+            repeat(seq(POINT,$.referenced_element,optional($.parameter))),
         ),
         parameter_declaration: $ => seq(
             BRACKET_LEFT,
