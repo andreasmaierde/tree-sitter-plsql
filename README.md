@@ -9,17 +9,13 @@ A few sqlplus commands will probably also be supported
 
 
 # Status
-It's in development and some (or many -> oracle syntax is huge) statements are missing or must optimized, but I use it at my daily job for syntax highlighting in nvim and it works in most files realy good.
+It's in development and some (or many -> oracle syntax is huge) statements are missing or must optimized, but I use it at my daily job for syntax highlighting in neovim and it works in most files realy good.
 
-This Oracle statements are at the moment implemented:
-
-Statements for Stored PL/SQL Units
+This Oracle statements are at the moment supported:
 - alter [package|function|procedure|library|type|trigger]
-- create [package|procedure|function|trigger]
+- create [package|function|procedure|library|type|trigger]
 - drop [package|function|procedure|library|type|type_body|trigger]
-
-Statements for Stored SQL
-- [select|update|delete|insert|merge]
+- sql [select|update|delete|insert|merge]
 
 
 # Known Issues
