@@ -129,13 +129,13 @@ module.exports = grammar({
             SEMICOLON,
         ),
         _create_statement: $ => choice(
-            // TODO
             $.create_package,
             $.create_package_body,
             $.create_procedure,
             $.create_function,
             $.create_trigger,
             $.create_type,
+            $.create_type_body,
         ),
         create_trigger: $ => seq(
             $.create_obj,
@@ -185,6 +185,20 @@ module.exports = grammar({
                 $._object_base_type_def,
                 $._object_subtype_def,
             ),
+            $.end_obj_named,
+            optional(DIVISON),
+        ),
+        create_type_body: $ => seq(
+            $.create_obj,
+            optional($._editionable_noneditionable),
+            $.kw_type,
+            $.kw_body,
+            optional($._schema),
+            field("type_name", $.identifier),
+            optional($.sharing_clause),
+            $._is_as,
+            choice($._subprog_decl_in_type, $.element_spec_map_order_function_spec),
+            repeat(seq(COMMA,choice($._subprog_decl_in_type, $.element_spec_map_order_function_spec))),
             $.end_obj_named,
             optional(DIVISON),
         ),
@@ -422,6 +436,42 @@ module.exports = grammar({
                 seq(COMMA, $.element_spec),
             ),
             BRACKET_RIGHT,
+        ),
+        _subprog_decl_in_type: $ => choice(
+            $.func_decl_in_type,
+            $.proc_decl_in_type,
+            $.element_spec_constructor_spec,
+        ),
+        proc_decl_in_type: $ => seq(
+            $.kw_procedure,
+            field("prc_name", $.identifier),
+            $.parameter_declaration,
+            $._is_as,
+            choice(
+                $.call_spec_ext,
+                seq(repeat($._declare_section_element),$.body),
+            ),
+        ),
+        func_decl_in_type: $ => seq(
+            $.kw_function,
+            field("fnc_name", $.identifier),
+            $.parameter_declaration,
+            $.return_declaration,
+            repeat(
+                choice(
+                    $.invoker_rights_clause,
+                    $.accessible_by_clause,
+                    $.parallel_enable_clause,
+                    $.result_cache_clause,
+                    $.kw_deterministic,
+                ),
+            ),
+            optional($.kw_pipelined),
+            $._is_as,
+            choice(
+                $.call_spec_ext,
+                seq(repeat($._declare_section_element),$.body),
+            ),
         ),
         element_spec: $ => seq(
             optional($.inheritance_clause),
@@ -869,6 +919,42 @@ module.exports = grammar({
             optional($.type_attribute_datatype_element_spec),
             optional($.inheritance_clause),
 
+        ),
+        result_cache_clause: $ => seq(
+            $.kw_result_cache,
+            optional(
+                seq(
+                    $.kw_relies_on,
+                    BRACKET_LEFT,
+                    $.identifier_list_repeat,
+                    BRACKET_RIGHT,
+                ),
+            ),
+        ),
+        parallel_enable_clause: $ => seq(
+            $.kw_parallel_enable,
+            optional(
+                seq(
+                    BRACKET_LEFT,
+                    $.kw_partition,
+                    $.identifier,
+                    $.kw_by,
+                    choice(
+                        $.kw_any,
+                        seq($.kw_value,BRACKET_LEFT, $.identifier,BRACKET_RIGHT,),
+                        seq(choice($.kw_hash,$.kw_range),BRACKET_LEFT, $.identifier,BRACKET_RIGHT,optional($.streaming_clause)),
+                    ),
+                    BRACKET_RIGHT,
+                ),
+            ),
+        ),
+        streaming_clause: $ => seq(
+            choice($.kw_order,$.kw_cluster),
+            $.expression,
+            $.kw_by,
+            BRACKET_LEFT,
+            repeat1($.identifier_list_repeat),
+            BRACKET_RIGHT,
         ),
         accessible_by_clause: $ => seq(
             $.kw_accessible,
@@ -2768,6 +2854,11 @@ module.exports = grammar({
           seq($.kw_skip,$.kw_locked),
         ),
         // KW
+        kw_relies_on: _ => reservedWord("relies_on"),
+        kw_cluster: _ => reservedWord("cluster"),
+        kw_hash: _ => reservedWord("hash"),
+        kw_range: _ => reservedWord("range"),
+        kw_any: _ => reservedWord("any"),
         kw_credential: _ => reservedWord("credential"),
         kw_under: _ => reservedWord("under"),
         kw_persistable: _ => reservedWord("persistable"),
